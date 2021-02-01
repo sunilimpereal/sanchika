@@ -1,14 +1,25 @@
 class CustomerModel {
   String email;
   String firstName;
-  String lastname;
+  String lastName;
   String password;
 
   CustomerModel({
     this.email,
     this.firstName,
-    this.lastname,
-    this.lastname,
-    this.lastname,
+    this.lastName,
+    this.password,
   });
+
+  // to JSON
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> map = {};
+    map.addAll({
+      'email': email,
+      'first_name': firstName,
+      'last_name': lastName,
+      'password': password,
+      'username': email
+    });
+  }
 }
