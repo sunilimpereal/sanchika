@@ -6,7 +6,7 @@ import 'package:sanchika/model/customer.dart';
 
 class APIService {
   //Create Customer(User)
-  Future<bool> createCustomer(CustomerModel model) async {
+  Future<bool> createUser(User model) async {
     var authtoken = base64.encode(
       utf8.encode(Config.key + ":" + Config.seceret),
     );

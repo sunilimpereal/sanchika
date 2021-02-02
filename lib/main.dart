@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sanchika/pages/login_page.dart';
-import 'package:sanchika/pages/signup_page.dart';
 
 void main() {
   runApp(MyApp());

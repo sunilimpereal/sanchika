@@ -1,10 +1,10 @@
-class CustomerModel {
+class User {
   String email;
   String firstName;
   String lastName;
   String password;
 
-  CustomerModel({
+  User({
     this.email,
     this.firstName,
     this.lastName,
