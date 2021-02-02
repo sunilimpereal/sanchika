@@ -21,5 +21,7 @@ class CustomerModel {
       'password': password,
       'username': email
     });
+
+    return map;
   }
 }

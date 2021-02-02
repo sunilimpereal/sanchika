@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-
 import 'package:sanchika/config.dart';
 import 'package:sanchika/model/customer.dart';
 
@@ -32,3 +31,23 @@ class APIService {
     return ret;
   }
 }
+
+//login customer
+
+// Future<LoginModel> loginCustomer(String username, String password) async {
+//   LoginModel model;
+//   try{
+//     var response = await Dio().post(
+//       Config.tokenURL,
+//       data: {
+//         "username": username,
+//         "password": password,
+//       },
+//       options: new Options(
+//         headers:{
+//           HttpHeaders.contentTypeHeader: "application/x-www-form- urlencoded",
+//         }
+//       )
+//     );
+//   }
+// }

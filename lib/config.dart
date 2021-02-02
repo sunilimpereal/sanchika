@@ -3,4 +3,5 @@ class Config {
   static String seceret = "";
   static String url = "";
   static String customerURL = "";
+  static String tokenURL = "";
 }
