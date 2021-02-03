@@ -64,7 +64,11 @@ class _SignupPageState extends State<SignupPage> {
                                   borderSide: new BorderSide(),
                                 ),
                               ),
-                              onChanged: (val) {},
+                              onChanged: (val) {
+                                setState(() {
+                                  user.firstName = val;
+                                });
+                              },
                               validator: (val) {
                                 if (val.length == 0) {
                                   return 'First name be empty';
@@ -87,7 +91,11 @@ class _SignupPageState extends State<SignupPage> {
                                   borderSide: new BorderSide(),
                                 ),
                               ),
-                              onChanged: (val) {},
+                              onChanged: (val) {
+                                setState(() {
+                                  user.lastName = val;
+                                });
+                              },
                               validator: (val) {
                                 if (val.length == 0) {
                                   return 'Last Name be empty';
@@ -110,7 +118,11 @@ class _SignupPageState extends State<SignupPage> {
                                   borderSide: new BorderSide(),
                                 ),
                               ),
-                              onChanged: (val) {},
+                              onChanged: (val) {
+                                setState(() {
+                                  user.email = val;
+                                });
+                              },
                               validator: (val) {
                                 if (val.length == 0) {
                                   return 'Email cannot be empty';
@@ -133,7 +145,11 @@ class _SignupPageState extends State<SignupPage> {
                                   borderSide: new BorderSide(),
                                 ),
                               ),
-                              onChanged: (val) {},
+                              onChanged: (val) {
+                                setState(() {
+                                  user.password = val;
+                                });
+                              },
                               validator: (val) {
                                 if (val.length == 0) {
                                   return 'Password cannot be empty';
@@ -183,10 +199,12 @@ class _SignupPageState extends State<SignupPage> {
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        print(user.toJson);
+                                      },
                                       child: Center(
                                         child: Text(
-                                          "SIGNIN",
+                                          "SIGN UP",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontFamily: "Poppins-Bold",

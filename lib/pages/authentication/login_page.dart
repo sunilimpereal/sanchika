@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sanchika/model/user.dart';
-import 'package:sanchika/pages/signup_page.dart';
+import 'package:sanchika/pages/authentication/signup_page.dart';
 import 'package:sanchika/utils/CustomIcons.dart';
 import 'package:sanchika/utils/constants.dart';
 import 'package:sanchika/widgets/header_login.dart';
@@ -33,6 +33,18 @@ class _LoginPageState extends State<LoginPage> {
               textTop: "Order and",
               textBottom: "Get to door steps",
               offset: offset,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 400,
+                  height: 70,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage("assets/images/logo.png"))),
+                )
+              ],
             ),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20, top: 0),
@@ -162,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: InkWell(
                                     onTap: () {},
                                     child: Center(
-                                      child: Text("SIGNIN",
+                                      child: Text("SIGN IN",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontFamily: "Poppins-Bold",
