@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:sanchika/config.dart';
-import 'package:sanchika/model/customer.dart';
+import 'package:sanchika/model/user.dart';
 
 class APIService {
   //Create Customer(User)

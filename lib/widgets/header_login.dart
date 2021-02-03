@@ -29,8 +29,8 @@ class _MyHeaderState extends State<MyHeader> {
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
               colors: [
-                Color(0xFF3383CD),
-                Color(0xFF11249F),
+                Color(0xFF3383CD).withOpacity(0.7),
+                Color(0xFF11249F).withOpacity(0.8),
               ]),
           image: DecorationImage(image: AssetImage("assets/images/virus.png")),
         ),
@@ -38,12 +38,13 @@ class _MyHeaderState extends State<MyHeader> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             SizedBox(
-              height: 30,
+              height: 10,
             ),
             Expanded(
               child: Stack(
                 children: <Widget>[
                   Positioned(
+                    left: -40,
                     top: (widget.offset < 0) ? 0 : widget.offset,
                     child: SvgPicture.asset(
                       widget.image,
@@ -53,12 +54,32 @@ class _MyHeaderState extends State<MyHeader> {
                     ),
                   ),
                   Positioned(
-                    top: 20 - widget.offset / 2,
-                    left: 140,
-                    child: Text(
-                      "${widget.textTop} \n ${widget.textBottom}",
-                      style: kHeadingTextStyle.copyWith(
-                        color: Colors.white,
+                    top: 0,
+                    left: 110,
+                    child: Container(
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 120,
+                            width: 250,
+                            padding: EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image:
+                                        AssetImage("assets/images/logo.png"))),
+                          ),
+                          SizedBox(),
+                          Positioned(
+                            top: 20 - widget.offset / 2,
+                            left: 140,
+                            child: Text(
+                              "${widget.textTop} \n${widget.textBottom}",
+                              style: kHeadingTextStyle.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sanchika/model/user.dart';
+import 'package:sanchika/pages/signup_page.dart';
 import 'package:sanchika/utils/CustomIcons.dart';
 import 'package:sanchika/utils/constants.dart';
 import 'package:sanchika/widgets/header_login.dart';
-import 'package:sanchika/widgets/logincard.dart';
 import 'package:sanchika/widgets/socialIcons.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool passwordInvisible = true;
+    User user = new User();
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
     ScreenUtil.instance =
         ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
@@ -47,10 +48,10 @@ class _LoginPageState extends State<LoginPage> {
                         boxShadow: [
                           BoxShadow(
                               color: Colors.black12,
-                              offset: Offset(0.0, 15.0),
-                              blurRadius: 15.0),
+                              offset: Offset(0.0, 0.0),
+                              blurRadius: 0.0),
                           BoxShadow(
-                              color: Colors.black12,
+                              color: Colors.white,
                               offset: Offset(0.0, -10.0),
                               blurRadius: 10.0),
                         ]),
@@ -68,44 +69,60 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(
                             height: ScreenUtil.getInstance().setHeight(30),
                           ),
-                          Text("Username",
-                              style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize:
-                                      ScreenUtil.getInstance().setSp(26))),
-                          TextField(
+                          TextFormField(
                             decoration: InputDecoration(
-                                hintText: "eg: chromicle",
-                                hintStyle: TextStyle(
-                                    color: Colors.grey, fontSize: 12.0)),
+                              labelText: 'Enter Email',
+                              fillColor: Colors.white,
+                              border: new OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: new BorderSide(),
+                              ),
+                            ),
+                            onChanged: (val) {
+                              setState(() {
+                                user.email = val;
+                              });
+                            },
+                            validator: (val) {
+                              if (val.length == 0) {
+                                return 'Email cannot be empty';
+                              } else {
+                                return null;
+                              }
+                            },
+                            keyboardType: TextInputType.emailAddress,
+                            style: new TextStyle(
+                              fontFamily: 'Poppins',
+                            ),
                           ),
                           SizedBox(
                             height: ScreenUtil.getInstance().setHeight(30),
                           ),
-                          Text("Password",
-                              style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize:
-                                      ScreenUtil.getInstance().setSp(26))),
                           TextFormField(
-                            obscureText: passwordInvisible,
                             decoration: InputDecoration(
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    passwordInvisible
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    color: Colors.black,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      passwordInvisible = false;
-                                    });
-                                  },
-                                ),
-                                hintText: "**********",
-                                hintStyle: TextStyle(
-                                    color: Colors.grey, fontSize: 12.0)),
+                              labelText: 'Enter Password',
+                              fillColor: Colors.white,
+                              border: new OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: new BorderSide(),
+                              ),
+                            ),
+                            onChanged: (val) {
+                              setState(() {
+                                user.password = val;
+                              });
+                            },
+                            validator: (val) {
+                              if (val.length == 0) {
+                                return 'Password cannot be empty';
+                              } else {
+                                return null;
+                              }
+                            },
+                            keyboardType: TextInputType.visiblePassword,
+                            style: new TextStyle(
+                              fontFamily: 'Poppins',
+                            ),
                           ),
                           SizedBox(
                             height: ScreenUtil.getInstance().setHeight(35),
@@ -170,7 +187,13 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(fontFamily: "Poppins-Medium"),
                           ),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignupPage()),
+                              );
+                            },
                             child: Text("SignUp",
                                 style: TextStyle(
                                     color: Color(0xFF5d74e3),
