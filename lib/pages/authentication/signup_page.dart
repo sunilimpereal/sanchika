@@ -226,7 +226,7 @@ class _SignupPageState extends State<SignupPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                                "By sign up you accept our tearms and conditions")
+                                "By sign up you accept our terms and conditions")
                           ],
                         ),
                         SizedBox(

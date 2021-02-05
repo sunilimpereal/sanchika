@@ -39,12 +39,15 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Container(
                   width: 400,
-                  height: 70,
+                  height: 80,
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage("assets/images/logo.png"))),
                 )
               ],
+            ),
+            SizedBox(
+              height: 10,
             ),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20, top: 0),
@@ -83,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           TextFormField(
                             decoration: InputDecoration(
-                              labelText: 'Enter Email',
+                              labelText: 'Email',
                               fillColor: Colors.white,
                               border: new OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25.0),
@@ -112,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           TextFormField(
                             decoration: InputDecoration(
-                              labelText: 'Enter Password',
+                              labelText: 'Password',
                               fillColor: Colors.white,
                               border: new OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25.0),
