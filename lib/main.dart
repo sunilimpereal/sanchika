@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sanchika/menu_dashboard/menu_dashboard.dart';
 import 'package:sanchika/pages/authentication/login_page.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LoginPage(),
+      home: MenuDashboard(),
     );
   }
 }

@@ -31,10 +31,13 @@ dependencies:
   dio: ^3.0.10
   flutter_screenutil: ^0.4.2
   flutter_svg: ^0.18.0
+  kf_drawer: ^1.1.2
+  flutter_bloc: ^2.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+   
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
