@@ -105,6 +105,7 @@ class _HomeState extends State<Home> {
                   Icons.shopping_cart,
                   size: 24,
                 ),
+                onPressed: () {},
               )
             ],
             leading: Padding(

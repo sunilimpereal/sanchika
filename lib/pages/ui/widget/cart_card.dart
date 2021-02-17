@@ -133,6 +133,7 @@ class _CartCardState extends State<CartCard> {
                                     ),
                                     child: IconButton(
                                       icon: Icon(Icons.delete),
+                                      onPressed: () {},
                                     ),
                                   ),
                                 )

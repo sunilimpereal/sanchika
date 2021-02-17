@@ -48,6 +48,7 @@ class _ProductViewState extends State<ProductView> {
               Icons.shopping_cart,
               size: 28,
             ),
+            onPressed: () {},
           )
         ],
       ),

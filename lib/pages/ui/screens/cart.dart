@@ -73,6 +73,7 @@ class _CartState extends State<Cart> {
             padding: const EdgeInsets.all(8.0),
             child: IconButton(
               icon: Icon(Icons.favorite),
+              onPressed: () {},
             ),
           )
         ],
