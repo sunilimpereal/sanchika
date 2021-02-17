@@ -42,7 +42,7 @@ class _MenuState extends State<Menu> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 18.0),
                     child: Text(
-                      "Hello ,\n Name",
+                      "Hello ,\nName",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 25,
@@ -68,16 +68,30 @@ class _MenuState extends State<Menu> {
                                 .add(NavigationEvents.DashboardClickedEvent);
                             widget.onMenuItemClicked();
                           },
-                          child: Text(
-                            "Home",
-                            style: TextStyle(
-                                color: widget.selectedIndex == 0
-                                    ? Colors.white
-                                    : Colors.white70,
-                                fontSize: 22,
-                                fontWeight: widget.selectedIndex == 0
-                                    ? FontWeight.w800
-                                    : FontWeight.normal),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Icon(
+                                  Icons.home,
+                                  color: widget.selectedIndex == 0
+                                      ? Colors.white
+                                      : Colors.white70,
+                                  size: 22,
+                                ),
+                              ),
+                              Text(
+                                "Home",
+                                style: TextStyle(
+                                    color: widget.selectedIndex == 0
+                                        ? Colors.white
+                                        : Colors.white70,
+                                    fontSize: 20,
+                                    fontWeight: widget.selectedIndex == 0
+                                        ? FontWeight.w700
+                                        : FontWeight.normal),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(
@@ -89,16 +103,29 @@ class _MenuState extends State<Menu> {
                                 .add(NavigationEvents.CategoriesClickedEvent);
                             widget.onMenuItemClicked();
                           },
-                          child: Text(
-                            "Categories",
-                            style: TextStyle(
-                                color: widget.selectedIndex == 1
-                                    ? Colors.white
-                                    : Colors.white70,
-                                fontSize: 22,
-                                fontWeight: widget.selectedIndex == 1
-                                    ? FontWeight.w900
-                                    : FontWeight.normal),
+                          child: Row(
+                            children: [
+                              Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Icon(
+                                    Icons.category,
+                                    color: widget.selectedIndex == 1
+                                        ? Colors.white
+                                        : Colors.white70,
+                                    size: 22,
+                                  )),
+                              Text(
+                                "Categories",
+                                style: TextStyle(
+                                    color: widget.selectedIndex == 1
+                                        ? Colors.white
+                                        : Colors.white70,
+                                    fontSize: 20,
+                                    fontWeight: widget.selectedIndex == 1
+                                        ? FontWeight.w700
+                                        : FontWeight.normal),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(
@@ -110,16 +137,29 @@ class _MenuState extends State<Menu> {
                                 .add(NavigationEvents.CategoriesClickedEvent);
                             widget.onMenuItemClicked();
                           },
-                          child: Text(
-                            "Offers",
-                            style: TextStyle(
-                                color: widget.selectedIndex == 2
-                                    ? Colors.white
-                                    : Colors.white70,
-                                fontSize: 22,
-                                fontWeight: widget.selectedIndex == 2
-                                    ? FontWeight.w900
-                                    : FontWeight.normal),
+                          child: Row(
+                            children: [
+                              Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Icon(
+                                    Icons.local_offer,
+                                    color: widget.selectedIndex == 2
+                                        ? Colors.white
+                                        : Colors.white70,
+                                    size: 22,
+                                  )),
+                              Text(
+                                "Offers",
+                                style: TextStyle(
+                                    color: widget.selectedIndex == 2
+                                        ? Colors.white
+                                        : Colors.white70,
+                                    fontSize: 20,
+                                    fontWeight: widget.selectedIndex == 2
+                                        ? FontWeight.w700
+                                        : FontWeight.normal),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(
@@ -131,16 +171,29 @@ class _MenuState extends State<Menu> {
                                 .add(NavigationEvents.WishlistClickedEvent);
                             widget.onMenuItemClicked();
                           },
-                          child: Text(
-                            "Wishlist",
-                            style: TextStyle(
-                                color: widget.selectedIndex == 2
-                                    ? Colors.white
-                                    : Colors.white70,
-                                fontSize: 22,
-                                fontWeight: widget.selectedIndex == 2
-                                    ? FontWeight.w900
-                                    : FontWeight.normal),
+                          child: Row(
+                            children: [
+                              Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Icon(
+                                    Icons.favorite_rounded,
+                                    size: 22,
+                                    color: widget.selectedIndex == 2
+                                        ? Colors.white
+                                        : Colors.white70,
+                                  )),
+                              Text(
+                                "Wishlist",
+                                style: TextStyle(
+                                    color: widget.selectedIndex == 2
+                                        ? Colors.white
+                                        : Colors.white70,
+                                    fontSize: 20,
+                                    fontWeight: widget.selectedIndex == 2
+                                        ? FontWeight.w700
+                                        : FontWeight.normal),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(
@@ -152,16 +205,29 @@ class _MenuState extends State<Menu> {
                                 .add(NavigationEvents.CartClickedEvent);
                             widget.onMenuItemClicked();
                           },
-                          child: Text(
-                            "My Cart",
-                            style: TextStyle(
-                                color: widget.selectedIndex == 3
-                                    ? Colors.white
-                                    : Colors.white70,
-                                fontSize: 22,
-                                fontWeight: widget.selectedIndex == 3
-                                    ? FontWeight.w900
-                                    : FontWeight.normal),
+                          child: Row(
+                            children: [
+                              Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Icon(
+                                    Icons.shopping_cart_rounded,
+                                    size: 22,
+                                    color: widget.selectedIndex == 3
+                                        ? Colors.white
+                                        : Colors.white70,
+                                  )),
+                              Text(
+                                "My Cart",
+                                style: TextStyle(
+                                    color: widget.selectedIndex == 3
+                                        ? Colors.white
+                                        : Colors.white70,
+                                    fontSize: 20,
+                                    fontWeight: widget.selectedIndex == 3
+                                        ? FontWeight.w700
+                                        : FontWeight.normal),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(
@@ -173,16 +239,29 @@ class _MenuState extends State<Menu> {
                                 .add(NavigationEvents.MyOrdersclickedEvent);
                             widget.onMenuItemClicked();
                           },
-                          child: Text(
-                            "My Orders",
-                            style: TextStyle(
-                                color: widget.selectedIndex == 4
-                                    ? Colors.white
-                                    : Colors.white70,
-                                fontSize: 22,
-                                fontWeight: widget.selectedIndex == 4
-                                    ? FontWeight.w900
-                                    : FontWeight.normal),
+                          child: Row(
+                            children: [
+                              Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Icon(
+                                    Icons.shopping_bag,
+                                    color: widget.selectedIndex == 4
+                                        ? Colors.white
+                                        : Colors.white70,
+                                    size: 22,
+                                  )),
+                              Text(
+                                "My Orders",
+                                style: TextStyle(
+                                    color: widget.selectedIndex == 4
+                                        ? Colors.white
+                                        : Colors.white70,
+                                    fontSize: 20,
+                                    fontWeight: widget.selectedIndex == 4
+                                        ? FontWeight.w700
+                                        : FontWeight.normal),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(
@@ -194,16 +273,30 @@ class _MenuState extends State<Menu> {
                                 .add(NavigationEvents.ProfileClickedevent);
                             widget.onMenuItemClicked();
                           },
-                          child: Text(
-                            "Profile",
-                            style: TextStyle(
-                                fontSize: 22,
-                                color: widget.selectedIndex == 5
-                                    ? Colors.white
-                                    : Colors.white70,
-                                fontWeight: widget.selectedIndex == 5
-                                    ? FontWeight.w900
-                                    : FontWeight.normal),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Icon(
+                                  Icons.person,
+                                  color: widget.selectedIndex == 5
+                                      ? Colors.white
+                                      : Colors.white70,
+                                  size: 22,
+                                ),
+                              ),
+                              Text(
+                                "Profile",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: widget.selectedIndex == 5
+                                        ? Colors.white
+                                        : Colors.white70,
+                                    fontWeight: widget.selectedIndex == 5
+                                        ? FontWeight.w700
+                                        : FontWeight.normal),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(
@@ -215,16 +308,30 @@ class _MenuState extends State<Menu> {
                                 .add(NavigationEvents.SettingsClickedevent);
                             widget.onMenuItemClicked();
                           },
-                          child: Text(
-                            "Settings",
-                            style: TextStyle(
-                                color: widget.selectedIndex == 6
-                                    ? Colors.white
-                                    : Colors.white70,
-                                fontSize: 22,
-                                fontWeight: widget.selectedIndex == 6
-                                    ? FontWeight.w900
-                                    : FontWeight.normal),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Icon(
+                                  Icons.settings,
+                                  color: widget.selectedIndex == 6
+                                      ? Colors.white
+                                      : Colors.white70,
+                                  size: 22,
+                                ),
+                              ),
+                              Text(
+                                "Settings",
+                                style: TextStyle(
+                                    color: widget.selectedIndex == 6
+                                        ? Colors.white
+                                        : Colors.white70,
+                                    fontSize: 20,
+                                    fontWeight: widget.selectedIndex == 6
+                                        ? FontWeight.w700
+                                        : FontWeight.normal),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(
