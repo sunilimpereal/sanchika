@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 400,
+                  width: 350,
                   height: 80,
                   decoration: BoxDecoration(
                       image: DecorationImage(
@@ -139,8 +139,21 @@ class _LoginPageState extends State<LoginPage> {
                               fontFamily: 'Poppins',
                             ),
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 8.0, left: 0),
+                                child: Text(
+                                  'forgot Password?',
+                                  style: TextStyle(color: Colors.redAccent),
+                                ),
+                              ),
+                            ],
+                          ),
                           SizedBox(
-                            height: ScreenUtil.getInstance().setHeight(35),
+                            height: ScreenUtil.getInstance().setHeight(25),
                           ),
                         ],
                       ),
@@ -175,7 +188,13 @@ class _LoginPageState extends State<LoginPage> {
                                 child: Material(
                                   color: Colors.transparent,
                                   child: InkWell(
-                                    onTap: () {},
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => SignupPage()),
+                                      );
+                                    },
                                     child: Center(
                                       child: Text("SIGN IN",
                                           style: TextStyle(

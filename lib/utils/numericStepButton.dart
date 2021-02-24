@@ -23,15 +23,15 @@ class _NumericStepButtonState extends State<NumericStepButton> {
   Widget build(BuildContext context) {
     return Container(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
             icon: Icon(
               Icons.remove,
               color: Colors.redAccent,
             ),
-            padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 9.0),
-            iconSize: 28.0,
+            padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 5.0),
+            iconSize: 23.0,
             color: Theme.of(context).primaryColor,
             onPressed: () {
               setState(() {
@@ -56,8 +56,8 @@ class _NumericStepButtonState extends State<NumericStepButton> {
               Icons.add,
               color: Colors.greenAccent,
             ),
-            padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 9.0),
-            iconSize: 28.0,
+            padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 5.0),
+            iconSize: 23.0,
             color: Theme.of(context).primaryColor,
             onPressed: () {
               setState(() {

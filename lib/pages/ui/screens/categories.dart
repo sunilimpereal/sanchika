@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
+import 'package:sanchika/pages/ui/sub_screens/ProcessedFood.dart';
 
 class Categories extends StatefulWidget with NavigationStates {
   final Function onMenuTap;
-
-  const Categories({Key key, this.onMenuTap}) : super(key: key);
+  final Function onMenuItemClicked;
+  const Categories({Key key, this.onMenuTap, this.onMenuItemClicked})
+      : super(key: key);
   @override
   _CategoriesState createState() => _CategoriesState();
 }
@@ -25,7 +28,57 @@ class _CategoriesState extends State<Categories> {
             "Categories",
             style: TextStyle(color: Colors.black),
           ),
-          actions: [],
+          actions: [
+            IconButton(
+              padding: EdgeInsets.only(top: 0),
+              icon: Icon(
+                Icons.favorite_rounded,
+                color: Colors.grey[800],
+                size: 24,
+              ),
+              onPressed: () {
+                BlocProvider.of<NavigationBloc>(context)
+                    .add(NavigationEvents.WishlistClickedEvent);
+                widget.onMenuItemClicked();
+              },
+            ),
+            Stack(
+              children: [
+                IconButton(
+                  padding: EdgeInsets.only(top: 8),
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: Colors.grey[800],
+                    size: 24,
+                  ),
+                  onPressed: () {
+                    BlocProvider.of<NavigationBloc>(context)
+                        .add(NavigationEvents.CartClickedEvent);
+                    widget.onMenuItemClicked();
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 25),
+                  child: Container(
+                    height: 18,
+                    width: 18,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.red,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '3',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
         body: Container(
           child: Column(
@@ -39,9 +92,18 @@ class _CategoriesState extends State<Categories> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CategoryCard(
-                      name: 'PROCESSED FOOD',
-                      img: 'assets/images/processedfood.png',
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProcessedFood()),
+                        );
+                      },
+                      child: CategoryCard(
+                        name: 'PROCESSED FOOD',
+                        img: 'assets/images/processedfood.png',
+                      ),
                     ),
                     CategoryCard(
                       name: 'BEVERAGES',

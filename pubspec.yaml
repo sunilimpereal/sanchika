@@ -38,6 +38,8 @@ dependencies:
   carousel_slider: ^3.0.0
   swipedetector: ^1.2.0
   readmore: ^1.0.1
+  flutter_launcher_icons: "^0.8.1"
+  otp_screen:
 
 dev_dependencies:
   flutter_test:
@@ -48,6 +50,10 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
+flutter_icons:
+  image_path: "assets/images/appicon.png" 
+  android: true
+  ios: true
 flutter:
   uses-material-design: true
 

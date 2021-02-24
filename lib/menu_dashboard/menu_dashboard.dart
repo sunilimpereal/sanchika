@@ -7,6 +7,7 @@ import 'package:sanchika/pages/ui/screens/cart.dart';
 import 'package:sanchika/pages/ui/screens/categories.dart';
 import 'package:sanchika/pages/ui/screens/home.dart';
 import 'package:sanchika/pages/ui/screens/myOrders.dart';
+import 'package:sanchika/pages/ui/screens/offers.dart';
 import 'package:sanchika/pages/ui/screens/profile.dart';
 import 'package:sanchika/pages/ui/screens/settings.dart';
 import 'package:sanchika/pages/ui/screens/wishlist.dart';
@@ -70,7 +71,8 @@ class _MenuDashboardState extends State<MenuDashboard>
     return Scaffold(
       backgroundColor: kBackgroundColor,
       body: BlocProvider<NavigationBloc>(
-        create: (context) => NavigationBloc(onMenuTap: onMenuTap),
+        create: (context) => NavigationBloc(
+            onMenuTap: onMenuTap, onMenuItemClicked: onMenuItemClicked),
         child: Stack(
           children: [
             BlocBuilder<NavigationBloc, NavigationStates>(
@@ -88,6 +90,7 @@ class _MenuDashboardState extends State<MenuDashboard>
               scaleAnimation: _scaleAnimation,
               isCollapsed: isCollapsed,
               screenWidth: screenWidth,
+              onMenuItemClicked: onMenuItemClicked,
               child: BlocBuilder<NavigationBloc, NavigationStates>(builder: (
                 context,
                 NavigationStates navigationState,
@@ -106,16 +109,18 @@ class _MenuDashboardState extends State<MenuDashboard>
       return 0;
     } else if (navigationState is Categories) {
       return 1;
-    } else if (navigationState is Wishlist) {
+    } else if (navigationState is Offers) {
       return 2;
-    } else if (navigationState is Cart) {
+    } else if (navigationState is Wishlist) {
       return 3;
-    } else if (navigationState is MyOrders) {
+    } else if (navigationState is Cart) {
       return 4;
-    } else if (navigationState is Profile) {
+    } else if (navigationState is MyOrders) {
       return 5;
-    } else if (navigationState is Settings) {
+    } else if (navigationState is Profile) {
       return 6;
+    } else if (navigationState is Settings) {
+      return 7;
     } else {
       return 0;
     }

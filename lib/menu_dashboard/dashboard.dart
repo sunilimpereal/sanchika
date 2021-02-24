@@ -6,6 +6,7 @@ class Dashboard extends StatelessWidget {
   final Duration duration;
   final Animation<double> scaleAnimation;
   final Function onMenuTap;
+  final Function onMenuItemClicked;
   final Widget child;
 
   const Dashboard(
@@ -15,7 +16,8 @@ class Dashboard extends StatelessWidget {
       this.duration,
       this.scaleAnimation,
       this.onMenuTap,
-      this.child})
+      this.child,
+      this.onMenuItemClicked})
       : super(key: key);
 
   @override
@@ -31,7 +33,17 @@ class Dashboard extends StatelessWidget {
         child: Material(
           animationDuration: duration,
           elevation: 8,
-          child: child,
+          borderOnForeground: true,
+          clipBehavior: Clip.hardEdge,
+          borderRadius: BorderRadius.circular(isCollapsed ? 0 : 30),
+          child: GestureDetector(
+              onTap: () {
+                if (isCollapsed) {
+                } else {
+                  print('tap on dash');
+                }
+              },
+              child: child),
         ),
       ),
     );

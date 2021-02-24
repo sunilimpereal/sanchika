@@ -134,7 +134,7 @@ class _MenuState extends State<Menu> {
                         GestureDetector(
                           onTap: () {
                             BlocProvider.of<NavigationBloc>(context)
-                                .add(NavigationEvents.CategoriesClickedEvent);
+                                .add(NavigationEvents.Offersclickedevent);
                             widget.onMenuItemClicked();
                           },
                           child: Row(
@@ -178,18 +178,18 @@ class _MenuState extends State<Menu> {
                                   child: Icon(
                                     Icons.favorite_rounded,
                                     size: 22,
-                                    color: widget.selectedIndex == 2
+                                    color: widget.selectedIndex == 3
                                         ? Colors.white
                                         : Colors.white70,
                                   )),
                               Text(
                                 "Wishlist",
                                 style: TextStyle(
-                                    color: widget.selectedIndex == 2
+                                    color: widget.selectedIndex == 3
                                         ? Colors.white
                                         : Colors.white70,
                                     fontSize: 20,
-                                    fontWeight: widget.selectedIndex == 2
+                                    fontWeight: widget.selectedIndex == 3
                                         ? FontWeight.w700
                                         : FontWeight.normal),
                               ),
@@ -212,18 +212,18 @@ class _MenuState extends State<Menu> {
                                   child: Icon(
                                     Icons.shopping_cart_rounded,
                                     size: 22,
-                                    color: widget.selectedIndex == 3
+                                    color: widget.selectedIndex == 4
                                         ? Colors.white
                                         : Colors.white70,
                                   )),
                               Text(
                                 "My Cart",
                                 style: TextStyle(
-                                    color: widget.selectedIndex == 3
+                                    color: widget.selectedIndex == 4
                                         ? Colors.white
                                         : Colors.white70,
                                     fontSize: 20,
-                                    fontWeight: widget.selectedIndex == 3
+                                    fontWeight: widget.selectedIndex == 4
                                         ? FontWeight.w700
                                         : FontWeight.normal),
                               ),
@@ -245,7 +245,7 @@ class _MenuState extends State<Menu> {
                                   padding: const EdgeInsets.all(4.0),
                                   child: Icon(
                                     Icons.shopping_bag,
-                                    color: widget.selectedIndex == 4
+                                    color: widget.selectedIndex == 5
                                         ? Colors.white
                                         : Colors.white70,
                                     size: 22,
@@ -253,11 +253,11 @@ class _MenuState extends State<Menu> {
                               Text(
                                 "My Orders",
                                 style: TextStyle(
-                                    color: widget.selectedIndex == 4
+                                    color: widget.selectedIndex == 5
                                         ? Colors.white
                                         : Colors.white70,
                                     fontSize: 20,
-                                    fontWeight: widget.selectedIndex == 4
+                                    fontWeight: widget.selectedIndex == 5
                                         ? FontWeight.w700
                                         : FontWeight.normal),
                               ),
@@ -279,7 +279,7 @@ class _MenuState extends State<Menu> {
                                 padding: const EdgeInsets.all(4.0),
                                 child: Icon(
                                   Icons.person,
-                                  color: widget.selectedIndex == 5
+                                  color: widget.selectedIndex == 6
                                       ? Colors.white
                                       : Colors.white70,
                                   size: 22,
@@ -289,44 +289,9 @@ class _MenuState extends State<Menu> {
                                 "Profile",
                                 style: TextStyle(
                                     fontSize: 20,
-                                    color: widget.selectedIndex == 5
-                                        ? Colors.white
-                                        : Colors.white70,
-                                    fontWeight: widget.selectedIndex == 5
-                                        ? FontWeight.w700
-                                        : FontWeight.normal),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            BlocProvider.of<NavigationBloc>(context)
-                                .add(NavigationEvents.SettingsClickedevent);
-                            widget.onMenuItemClicked();
-                          },
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Icon(
-                                  Icons.settings,
-                                  color: widget.selectedIndex == 6
-                                      ? Colors.white
-                                      : Colors.white70,
-                                  size: 22,
-                                ),
-                              ),
-                              Text(
-                                "Settings",
-                                style: TextStyle(
                                     color: widget.selectedIndex == 6
                                         ? Colors.white
                                         : Colors.white70,
-                                    fontSize: 20,
                                     fontWeight: widget.selectedIndex == 6
                                         ? FontWeight.w700
                                         : FontWeight.normal),
@@ -337,16 +302,38 @@ class _MenuState extends State<Menu> {
                         SizedBox(
                           height: 20,
                         ),
-                        Text(
-                          "etc",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        )
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     BlocProvider.of<NavigationBloc>(context)
+                        //         .add(NavigationEvents.SettingsClickedevent);
+                        //     widget.onMenuItemClicked();
+                        //   },
+                        //   child: Row(
+                        //     children: [
+                        //       Padding(
+                        //         padding: const EdgeInsets.all(4.0),
+                        //         child: Icon(
+                        //           Icons.settings,
+                        //           color: widget.selectedIndex == 7
+                        //               ? Colors.white
+                        //               : Colors.white70,
+                        //           size: 22,
+                        //         ),
+                        //       ),
+                        //       Text(
+                        //         "Settings",
+                        //         style: TextStyle(
+                        //             color: widget.selectedIndex == 7
+                        //                 ? Colors.white
+                        //                 : Colors.white70,
+                        //             fontSize: 20,
+                        //             fontWeight: widget.selectedIndex == 7
+                        //                 ? FontWeight.w700
+                        //                 : FontWeight.normal),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

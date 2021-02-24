@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sanchika/menu_dashboard/menu_dashboard.dart';
 import 'package:sanchika/model/user.dart';
+import 'package:sanchika/pages/ui/widget/otp.dart';
+import 'package:sanchika/pages/ui/widget/termsConditions.dart';
 import 'package:sanchika/utils/CustomIcons.dart';
 import 'package:sanchika/utils/constants.dart';
 import 'package:sanchika/widgets/header_login.dart';
@@ -200,7 +203,11 @@ class _SignupPageState extends State<SignupPage> {
                                     color: Colors.transparent,
                                     child: InkWell(
                                       onTap: () {
-                                        print(user.toJson);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Otp()),
+                                        );
                                       },
                                       child: Center(
                                         child: Text(
@@ -225,8 +232,22 @@ class _SignupPageState extends State<SignupPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                                "By sign up you accept our terms and conditions")
+                            Text("By sign up you accept our "),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TermsConditions()),
+                                );
+                              },
+                              child: Text(
+                                "Terms and Conditions",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            )
                           ],
                         ),
                         SizedBox(

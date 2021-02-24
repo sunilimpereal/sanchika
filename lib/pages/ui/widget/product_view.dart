@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/model/product.dart';
+import 'package:sanchika/pages/ui/screens/cart.dart';
 import 'package:sanchika/pages/ui/widget/crousal.dart';
 import 'package:sanchika/utils/numericStepButton.dart';
 import 'package:readmore/readmore.dart';
 
 class ProductView extends StatefulWidget {
   Product product;
-  ProductView({this.product});
+  Function onMenuItemClicked;
+  ProductView({this.product, this.onMenuItemClicked});
   @override
   _ProductViewState createState() => _ProductViewState();
 }
 
 class _ProductViewState extends State<ProductView> {
-  String _selectedValue = "100g";
+  String _selectedValue;
+  void initState() {
+    setState(() {
+      _selectedValue =
+          widget.product.typeList == null ? '' : widget.product.typeList[0];
+    });
+
+    super.initState();
+  }
+
   int count;
   @override
   Widget build(BuildContext context) {
@@ -37,19 +50,47 @@ class _ProductViewState extends State<ProductView> {
           widget.product.name,
           style: TextStyle(
             fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w400,
             color: Colors.black,
           ),
         ),
         actions: [
-          IconButton(
-            padding: EdgeInsets.only(top: 8),
-            icon: Icon(
-              Icons.shopping_cart,
-              size: 28,
-            ),
-            onPressed: () {},
-          )
+          Stack(
+            children: [
+              IconButton(
+                  padding: EdgeInsets.only(top: 8),
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: Colors.grey[800],
+                    size: 24,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Cart()),
+                    );
+                  }),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, left: 25),
+                child: Container(
+                  height: 18,
+                  width: 18,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.red,
+                  ),
+                  child: Center(
+                    child: Text(
+                      '3',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
       body: Padding(
@@ -112,8 +153,8 @@ class _ProductViewState extends State<ProductView> {
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 22,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20,
                                         fontFamily: 'Poppins'),
                                   ),
                                 ),
@@ -126,21 +167,57 @@ class _ProductViewState extends State<ProductView> {
                               ],
                             ),
                           ),
+                          Row(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.green[400],
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(4),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        ' ${widget.product.discount}% Off ',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                            ],
+                          ),
 
                           //Price Row
-                          Padding(
-                            padding: EdgeInsets.all(4),
-                            child: Row(
-                              children: [
-                                Text(
-                                  '₹ ${widget.product.price}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 26,
-                                  ),
-                                )
-                              ],
-                            ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(4),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      '₹ ${widget.product.price}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 26,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              price1(widget.product.price1),
+                            ],
                           ),
                           Container(
                             child: Row(
@@ -155,33 +232,7 @@ class _ProductViewState extends State<ProductView> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(width: 10),
-                                    Container(
-                                      child: Center(
-                                        child: DropdownButton<String>(
-                                          value: _selectedValue,
-                                          items: <String>[
-                                            "100g",
-                                            "200g",
-                                            "300g"
-                                          ].map((String value) {
-                                            return new DropdownMenuItem(
-                                              value: value,
-                                              child: new Text(value),
-                                            );
-                                          }).toList(),
-                                          onChanged: (newValue) {
-                                            setState(() {
-                                              _selectedValue = newValue;
-                                            });
-                                          },
-                                          dropdownColor: Colors.grey[200],
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                    ),
+                                    dropdown(),
                                   ],
                                 ),
                                 Container(
@@ -210,7 +261,7 @@ class _ProductViewState extends State<ProductView> {
                                         "Description",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 20),
+                                            fontSize: 18),
                                       ),
                                     ],
                                   ),
@@ -225,7 +276,7 @@ class _ProductViewState extends State<ProductView> {
                                     trimExpandedText: 'less',
                                     style: TextStyle(
                                         color: Colors.grey[800],
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w400,
                                         fontFamily: 'Open Sans',
                                         fontSize: 16),
                                   ),
@@ -245,7 +296,7 @@ class _ProductViewState extends State<ProductView> {
                                         "Ingredients",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 20),
+                                            fontSize: 18),
                                       ),
                                     ],
                                   ),
@@ -260,7 +311,7 @@ class _ProductViewState extends State<ProductView> {
                                     trimExpandedText: 'less',
                                     style: TextStyle(
                                         color: Colors.grey[800],
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w400,
                                         fontFamily: 'Open Sans',
                                         fontSize: 16),
                                   ),
@@ -280,7 +331,7 @@ class _ProductViewState extends State<ProductView> {
                                         "Info",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 20),
+                                            fontSize: 18),
                                       ),
                                     ],
                                   ),
@@ -295,7 +346,7 @@ class _ProductViewState extends State<ProductView> {
                                     trimExpandedText: 'less',
                                     style: TextStyle(
                                         color: Colors.grey[800],
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w400,
                                         fontFamily: 'Open Sans',
                                         fontSize: 16),
                                   ),
@@ -341,6 +392,7 @@ class _ProductViewState extends State<ProductView> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Color(0xff0B3666),
         onPressed: () {},
         label: Padding(
           padding: EdgeInsets.all(80),
@@ -350,5 +402,49 @@ class _ProductViewState extends State<ProductView> {
             borderRadius: BorderRadius.all(Radius.circular(16.0))),
       ),
     );
+  }
+
+  Container dropdown() {
+    if (widget.product.type == null || widget.product.typeList == null) {
+      return Container();
+    } else {
+      return Container(
+        child: Center(
+          child: DropdownButton<String>(
+            value: _selectedValue,
+            items: widget.product.typeList.map((String value) {
+              return new DropdownMenuItem(
+                value: value,
+                child: new Text(value),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                _selectedValue = newValue;
+              });
+            },
+            dropdownColor: Colors.grey[200],
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+          ),
+        ),
+      );
+    }
+  }
+
+  //scrached price
+  Text price1(int price1) {
+    if (price1 != null) {
+      return Text(
+        '₹${widget.product.price1}',
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.normal,
+          decoration: TextDecoration.lineThrough,
+        ),
+      );
+    } else {
+      return Text('');
+    }
   }
 }

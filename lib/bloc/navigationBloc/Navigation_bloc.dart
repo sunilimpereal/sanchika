@@ -4,6 +4,7 @@ import 'package:sanchika/pages/ui/screens/categories.dart';
 import 'package:sanchika/pages/ui/screens/home.dart';
 import 'package:bloc/bloc.dart';
 import 'package:sanchika/pages/ui/screens/myOrders.dart';
+import 'package:sanchika/pages/ui/screens/offers.dart';
 import 'package:sanchika/pages/ui/screens/profile.dart';
 import 'package:sanchika/pages/ui/screens/settings.dart';
 import 'package:sanchika/pages/ui/screens/wishlist.dart';
@@ -16,14 +17,17 @@ enum NavigationEvents {
   MyOrdersclickedEvent,
   SettingsClickedevent,
   ProfileClickedevent,
+  Offersclickedevent,
+  Productview
 }
 
 abstract class NavigationStates {}
 
 class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
   final Function onMenuTap;
+  final Function onMenuItemClicked;
 
-  NavigationBloc({this.onMenuTap});
+  NavigationBloc({this.onMenuItemClicked, this.onMenuTap});
   @override
   NavigationStates get initialState => Home(onMenuTap: onMenuTap);
   @override
@@ -32,6 +36,7 @@ class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
       case NavigationEvents.DashboardClickedEvent:
         yield Home(
           onMenuTap: onMenuTap,
+          onMenuItemClicked: onMenuItemClicked,
         );
         break;
       case NavigationEvents.CategoriesClickedEvent:
@@ -62,6 +67,11 @@ class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
         break;
       case NavigationEvents.SettingsClickedevent:
         yield Settings(
+          onMenuTap: onMenuTap,
+        );
+        break;
+      case NavigationEvents.Offersclickedevent:
+        yield Offers(
           onMenuTap: onMenuTap,
         );
         break;
