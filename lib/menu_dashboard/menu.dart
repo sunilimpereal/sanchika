@@ -58,290 +58,141 @@ class _MenuState extends State<Menu> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            BlocProvider.of<NavigationBloc>(context)
-                                .add(NavigationEvents.DashboardClickedEvent);
-                            widget.onMenuItemClicked();
-                          },
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Icon(
-                                  Icons.home,
-                                  color: widget.selectedIndex == 0
-                                      ? Colors.white
-                                      : Colors.white70,
-                                  size: 22,
-                                ),
-                              ),
-                              Text(
-                                "Home",
-                                style: TextStyle(
-                                    color: widget.selectedIndex == 0
-                                        ? Colors.white
-                                        : Colors.white70,
-                                    fontSize: 20,
-                                    fontWeight: widget.selectedIndex == 0
-                                        ? FontWeight.w700
-                                        : FontWeight.normal),
-                              ),
-                            ],
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          menuItem(
+                            context: context,
+                            navigationEvents:
+                                NavigationEvents.DashboardClickedEvent,
+                            title: 'Home',
+                            icon: Icons.home,
+                            selectednumber: 0,
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            BlocProvider.of<NavigationBloc>(context)
-                                .add(NavigationEvents.CategoriesClickedEvent);
-                            widget.onMenuItemClicked();
-                          },
-                          child: Row(
-                            children: [
-                              Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Icon(
-                                    Icons.category,
-                                    color: widget.selectedIndex == 1
-                                        ? Colors.white
-                                        : Colors.white70,
-                                    size: 22,
-                                  )),
-                              Text(
-                                "Categories",
-                                style: TextStyle(
-                                    color: widget.selectedIndex == 1
-                                        ? Colors.white
-                                        : Colors.white70,
-                                    fontSize: 20,
-                                    fontWeight: widget.selectedIndex == 1
-                                        ? FontWeight.w700
-                                        : FontWeight.normal),
-                              ),
-                            ],
+                          SizedBox(
+                            height: 20,
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            BlocProvider.of<NavigationBloc>(context)
-                                .add(NavigationEvents.Offersclickedevent);
-                            widget.onMenuItemClicked();
-                          },
-                          child: Row(
-                            children: [
-                              Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Icon(
-                                    Icons.local_offer,
-                                    color: widget.selectedIndex == 2
-                                        ? Colors.white
-                                        : Colors.white70,
-                                    size: 22,
-                                  )),
-                              Text(
-                                "Offers",
-                                style: TextStyle(
-                                    color: widget.selectedIndex == 2
-                                        ? Colors.white
-                                        : Colors.white70,
-                                    fontSize: 20,
-                                    fontWeight: widget.selectedIndex == 2
-                                        ? FontWeight.w700
-                                        : FontWeight.normal),
-                              ),
-                            ],
+                          menuItem(
+                            context: context,
+                            navigationEvents:
+                                NavigationEvents.CategoriesClickedEvent,
+                            title: 'Categories',
+                            icon: Icons.category,
+                            selectednumber: 1,
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            BlocProvider.of<NavigationBloc>(context)
-                                .add(NavigationEvents.WishlistClickedEvent);
-                            widget.onMenuItemClicked();
-                          },
-                          child: Row(
-                            children: [
-                              Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Icon(
-                                    Icons.favorite_rounded,
-                                    size: 22,
-                                    color: widget.selectedIndex == 3
-                                        ? Colors.white
-                                        : Colors.white70,
-                                  )),
-                              Text(
-                                "Wishlist",
-                                style: TextStyle(
-                                    color: widget.selectedIndex == 3
-                                        ? Colors.white
-                                        : Colors.white70,
-                                    fontSize: 20,
-                                    fontWeight: widget.selectedIndex == 3
-                                        ? FontWeight.w700
-                                        : FontWeight.normal),
-                              ),
-                            ],
+                          SizedBox(
+                            height: 20,
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            BlocProvider.of<NavigationBloc>(context)
-                                .add(NavigationEvents.CartClickedEvent);
-                            widget.onMenuItemClicked();
-                          },
-                          child: Row(
-                            children: [
-                              Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Icon(
-                                    Icons.shopping_cart_rounded,
-                                    size: 22,
-                                    color: widget.selectedIndex == 4
-                                        ? Colors.white
-                                        : Colors.white70,
-                                  )),
-                              Text(
-                                "My Cart",
-                                style: TextStyle(
-                                    color: widget.selectedIndex == 4
-                                        ? Colors.white
-                                        : Colors.white70,
-                                    fontSize: 20,
-                                    fontWeight: widget.selectedIndex == 4
-                                        ? FontWeight.w700
-                                        : FontWeight.normal),
-                              ),
-                            ],
+                          menuItem(
+                            context: context,
+                            navigationEvents:
+                                NavigationEvents.Offersclickedevent,
+                            title: 'Offers',
+                            icon: Icons.local_offer,
+                            selectednumber: 2,
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            BlocProvider.of<NavigationBloc>(context)
-                                .add(NavigationEvents.MyOrdersclickedEvent);
-                            widget.onMenuItemClicked();
-                          },
-                          child: Row(
-                            children: [
-                              Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Icon(
-                                    Icons.shopping_bag,
-                                    color: widget.selectedIndex == 5
-                                        ? Colors.white
-                                        : Colors.white70,
-                                    size: 22,
-                                  )),
-                              Text(
-                                "My Orders",
-                                style: TextStyle(
-                                    color: widget.selectedIndex == 5
-                                        ? Colors.white
-                                        : Colors.white70,
-                                    fontSize: 20,
-                                    fontWeight: widget.selectedIndex == 5
-                                        ? FontWeight.w700
-                                        : FontWeight.normal),
-                              ),
-                            ],
+                          SizedBox(
+                            height: 20,
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            BlocProvider.of<NavigationBloc>(context)
-                                .add(NavigationEvents.ProfileClickedevent);
-                            widget.onMenuItemClicked();
-                          },
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Icon(
-                                  Icons.person,
-                                  color: widget.selectedIndex == 6
-                                      ? Colors.white
-                                      : Colors.white70,
-                                  size: 22,
-                                ),
-                              ),
-                              Text(
-                                "Profile",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: widget.selectedIndex == 6
-                                        ? Colors.white
-                                        : Colors.white70,
-                                    fontWeight: widget.selectedIndex == 6
-                                        ? FontWeight.w700
-                                        : FontWeight.normal),
-                              ),
-                            ],
+                          menuItem(
+                            context: context,
+                            navigationEvents:
+                                NavigationEvents.WishlistClickedEvent,
+                            title: 'Wishlist',
+                            icon: Icons.favorite_rounded,
+                            selectednumber: 3,
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        // GestureDetector(
-                        //   onTap: () {
-                        //     BlocProvider.of<NavigationBloc>(context)
-                        //         .add(NavigationEvents.SettingsClickedevent);
-                        //     widget.onMenuItemClicked();
-                        //   },
-                        //   child: Row(
-                        //     children: [
-                        //       Padding(
-                        //         padding: const EdgeInsets.all(4.0),
-                        //         child: Icon(
-                        //           Icons.settings,
-                        //           color: widget.selectedIndex == 7
-                        //               ? Colors.white
-                        //               : Colors.white70,
-                        //           size: 22,
-                        //         ),
-                        //       ),
-                        //       Text(
-                        //         "Settings",
-                        //         style: TextStyle(
-                        //             color: widget.selectedIndex == 7
-                        //                 ? Colors.white
-                        //                 : Colors.white70,
-                        //             fontSize: 20,
-                        //             fontWeight: widget.selectedIndex == 7
-                        //                 ? FontWeight.w700
-                        //                 : FontWeight.normal),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                      ],
-                    ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          menuItem(
+                            context: context,
+                            navigationEvents: NavigationEvents.CartClickedEvent,
+                            title: 'My Cart',
+                            icon: Icons.shopping_cart_rounded,
+                            selectednumber: 4,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          menuItem(
+                            context: context,
+                            navigationEvents:
+                                NavigationEvents.MyOrdersclickedEvent,
+                            title: 'My Orders',
+                            icon: Icons.shopping_bag,
+                            selectednumber: 5,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          menuItem(
+                            context: context,
+                            navigationEvents:
+                                NavigationEvents.ProfileClickedevent,
+                            title: 'Profile',
+                            icon: Icons.person,
+                            selectednumber: 6,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          menuItem(
+                            context: context,
+                            navigationEvents:
+                                NavigationEvents.HelpSupportClicked,
+                            title: 'Help & Support',
+                            icon: Icons.help_center,
+                            selectednumber: 7,
+                          ),
+                        ]),
                   ),
                 ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  GestureDetector menuItem({
+    final BuildContext context,
+    final NavigationEvents navigationEvents,
+    final String title,
+    final IconData icon,
+    final int selectednumber,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        BlocProvider.of<NavigationBloc>(context).add(navigationEvents);
+        widget.onMenuItemClicked();
+      },
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Icon(
+              icon,
+              color: widget.selectedIndex == selectednumber
+                  ? Colors.white
+                  : Colors.white70,
+              size: 22,
+            ),
+          ),
+          Text(
+            title,
+            style: TextStyle(
+                fontSize: 20,
+                color: widget.selectedIndex == selectednumber
+                    ? Colors.white
+                    : Colors.white70,
+                fontWeight: widget.selectedIndex == selectednumber
+                    ? FontWeight.w700
+                    : FontWeight.normal),
+          ),
+        ],
       ),
     );
   }

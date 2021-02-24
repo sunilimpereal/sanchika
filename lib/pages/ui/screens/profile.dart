@@ -239,6 +239,27 @@ class PprofileState extends State<Profile> {
                 ),
                 child: ListTile(
                   tileColor: Colors.white,
+                  leading: Icon(Icons.translate),
+                  title: Text('Language'),
+                  trailing: Icon(Icons.keyboard_arrow_right),
+                ),
+              ),
+              SizedBox(
+                height: 1,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      offset: const Offset(3.0, 2.0),
+                      color: Colors.grey[300],
+                      blurRadius: 2.0,
+                      spreadRadius: 2.0,
+                    ),
+                  ],
+                ),
+                child: ListTile(
+                  tileColor: Colors.white,
                   leading: Icon(Icons.call),
                   title: Text('customer Support'),
                   trailing: Icon(Icons.keyboard_arrow_right),

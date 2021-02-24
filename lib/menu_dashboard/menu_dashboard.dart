@@ -4,12 +4,12 @@ import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/menu_dashboard/dashboard.dart';
 import 'package:sanchika/menu_dashboard/menu.dart';
 import 'package:sanchika/pages/ui/screens/cart.dart';
-import 'package:sanchika/pages/ui/screens/categories.dart';
-import 'package:sanchika/pages/ui/screens/home.dart';
+import 'package:sanchika/pages/ui/screens/categories/categories.dart';
+import 'package:sanchika/pages/ui/screens/help_support.dart';
+import 'package:sanchika/pages/ui/screens/home/home.dart';
 import 'package:sanchika/pages/ui/screens/myOrders.dart';
 import 'package:sanchika/pages/ui/screens/offers.dart';
 import 'package:sanchika/pages/ui/screens/profile.dart';
-import 'package:sanchika/pages/ui/screens/settings.dart';
 import 'package:sanchika/pages/ui/screens/wishlist.dart';
 import 'package:sanchika/utils/constants.dart';
 
@@ -119,7 +119,7 @@ class _MenuDashboardState extends State<MenuDashboard>
       return 5;
     } else if (navigationState is Profile) {
       return 6;
-    } else if (navigationState is Settings) {
+    } else if (navigationState is HelpSupportPage) {
       return 7;
     } else {
       return 0;

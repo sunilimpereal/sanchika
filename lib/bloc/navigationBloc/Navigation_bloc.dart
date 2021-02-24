@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:sanchika/pages/ui/screens/cart.dart';
-import 'package:sanchika/pages/ui/screens/categories.dart';
-import 'package:sanchika/pages/ui/screens/home.dart';
+import 'package:sanchika/pages/ui/screens/categories/categories.dart';
+import 'package:sanchika/pages/ui/screens/help_support.dart';
 import 'package:bloc/bloc.dart';
+import 'package:sanchika/pages/ui/screens/home/home.dart';
 import 'package:sanchika/pages/ui/screens/myOrders.dart';
 import 'package:sanchika/pages/ui/screens/offers.dart';
 import 'package:sanchika/pages/ui/screens/profile.dart';
@@ -18,7 +18,7 @@ enum NavigationEvents {
   SettingsClickedevent,
   ProfileClickedevent,
   Offersclickedevent,
-  Productview
+  HelpSupportClicked,
 }
 
 abstract class NavigationStates {}
@@ -72,6 +72,11 @@ class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
         break;
       case NavigationEvents.Offersclickedevent:
         yield Offers(
+          onMenuTap: onMenuTap,
+        );
+        break;
+      case NavigationEvents.HelpSupportClicked:
+        yield HelpSupportPage(
           onMenuTap: onMenuTap,
         );
         break;
