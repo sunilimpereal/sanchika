@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sanchika/menu_dashboard/menu_dashboard.dart';
+import 'package:sanchika/pages/ui/widget/admin_wait.dart';
 
 class CheckAddress extends StatefulWidget {
   @override
@@ -241,7 +242,7 @@ class _CheckAddressState extends State<CheckAddress> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => MenuDashboard()),
+                                  builder: (context) => AdminWait()),
                             );
                           },
                           child: Container(

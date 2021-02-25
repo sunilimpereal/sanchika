@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sanchika/model/user.dart';
 import 'package:sanchika/pages/authentication/signup_page.dart';
+import 'package:sanchika/pages/ui/widget/forgotPassword.dart';
 import 'package:sanchika/utils/CustomIcons.dart';
 import 'package:sanchika/utils/constants.dart';
 import 'package:sanchika/widgets/header_login.dart';
@@ -151,9 +152,19 @@ class _LoginPageState extends State<LoginPage> {
                               Padding(
                                 padding:
                                     const EdgeInsets.only(top: 8.0, left: 0),
-                                child: Text(
-                                  'forgot Password?',
-                                  style: TextStyle(color: Colors.redAccent),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ForgotPassword()),
+                                    );
+                                  },
+                                  child: Text(
+                                    'forgot Password?',
+                                    style: TextStyle(color: Colors.redAccent),
+                                  ),
                                 ),
                               ),
                             ],
