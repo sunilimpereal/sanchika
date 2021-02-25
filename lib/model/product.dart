@@ -8,6 +8,7 @@ class Product {
   String description;
   String ingredients;
   List<String> images;
+  List<String> relatedproducts;
   Product({
     this.name,
     this.price,
@@ -18,5 +19,6 @@ class Product {
     this.description,
     this.ingredients,
     this.images,
+    this.relatedproducts,
   });
 }

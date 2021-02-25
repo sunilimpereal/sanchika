@@ -17,10 +17,10 @@ class CategoryHomeCard extends StatelessWidget {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              offset: const Offset(3.0, 2.0),
-              color: Colors.grey[200],
-              blurRadius: 2.0,
-              spreadRadius: 1.0,
+              offset: const Offset(1.0, 1.0),
+              color: Colors.grey[100],
+              blurRadius: 1.0,
+              spreadRadius: 0.2,
             ),
           ],
         ),

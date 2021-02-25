@@ -33,7 +33,8 @@ class _HomeState extends State<Home> {
       images: [
         'assets/images/lays.png',
         'assets/images/lays2.jpg',
-      ]);
+      ],
+      relatedproducts: []);
   Product product1 = Product(
       name: 'Milky Mist Paneer',
       typeList: ['100g', '200g', '300g'],
@@ -89,6 +90,7 @@ class _HomeState extends State<Home> {
         'assets/images/goldwinner.png',
         'assets/images/countrysweet.png'
       ]);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -96,7 +98,7 @@ class _HomeState extends State<Home> {
       child: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 125,
+            expandedHeight: 135,
             flexibleSpace: FlexibleSpaceBar(
               background: Column(
                 children: <Widget>[
@@ -218,42 +220,45 @@ class _HomeState extends State<Home> {
                   child: Column(
                     children: [
                       HomeCrousal(),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            // categories list
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => PersonalCare()),
-                                );
-                              },
-                              child: CategoryHomeCard(
-                                name: 'Personal Care',
-                                image: 'assets/images/skincare.png',
+                      Container(
+                        color: Color(0xffEDE2DC),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              // categories list
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PersonalCare()),
+                                  );
+                                },
+                                child: CategoryHomeCard(
+                                  name: 'Personal Care',
+                                  image: 'assets/images/skincare.png',
+                                ),
                               ),
-                            ),
-                            CategoryHomeCard(
-                              name: 'Processed Food',
-                              image: 'assets/images/processedfood.png',
-                            ),
-                            CategoryHomeCard(
-                              name: 'Stationary',
-                              image: 'assets/images/stationary.png',
-                            ),
-                            CategoryHomeCard(
-                              name: 'CEREALS',
-                              image: 'assets/images/cereal.png',
-                            ),
-                            CategoryHomeCard(
-                              name: 'Household',
-                              image: 'assets/images/household.png',
-                            ),
-                          ],
+                              CategoryHomeCard(
+                                name: 'Processed Food',
+                                image: 'assets/images/processedfood.png',
+                              ),
+                              CategoryHomeCard(
+                                name: 'Stationary',
+                                image: 'assets/images/stationary.png',
+                              ),
+                              CategoryHomeCard(
+                                name: 'CEREALS',
+                                image: 'assets/images/cereal.png',
+                              ),
+                              CategoryHomeCard(
+                                name: 'Household',
+                                image: 'assets/images/household.png',
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Row(

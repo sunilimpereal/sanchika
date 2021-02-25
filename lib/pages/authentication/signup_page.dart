@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sanchika/menu_dashboard/menu_dashboard.dart';
 import 'package:sanchika/model/user.dart';
 import 'package:sanchika/pages/ui/widget/otp.dart';
 import 'package:sanchika/pages/ui/widget/termsConditions.dart';
-import 'package:sanchika/utils/CustomIcons.dart';
 import 'package:sanchika/utils/constants.dart';
 import 'package:sanchika/widgets/header_login.dart';
-import 'package:sanchika/widgets/socialIcons.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -58,111 +55,153 @@ class _SignupPageState extends State<SignupPage> {
                                   letterSpacing: .6),
                             ),
                             SizedBox(height: 15),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'First Name',
-                                fillColor: Colors.white,
-                                border: new OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                  borderSide: new BorderSide(),
+                            Container(
+                              height: 50,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'First Name',
+                                  fillColor: Colors.white,
+                                  border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(25.0),
+                                    borderSide: new BorderSide(),
+                                  ),
                                 ),
-                              ),
-                              onChanged: (val) {
-                                setState(() {
-                                  user.firstName = val;
-                                });
-                              },
-                              validator: (val) {
-                                if (val.length == 0) {
-                                  return 'First name be empty';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              keyboardType: TextInputType.emailAddress,
-                              style: new TextStyle(
-                                fontFamily: 'Poppins',
+                                onChanged: (val) {
+                                  setState(() {
+                                    user.firstName = val;
+                                  });
+                                },
+                                validator: (val) {
+                                  if (val.length == 0) {
+                                    return 'First name be empty';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                keyboardType: TextInputType.emailAddress,
+                                style: new TextStyle(
+                                  fontFamily: 'Poppins',
+                                ),
                               ),
                             ),
                             SizedBox(height: 15),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Last Name',
-                                fillColor: Colors.white,
-                                border: new OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                  borderSide: new BorderSide(),
+                            Container(
+                              height: 50,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Last Name',
+                                  fillColor: Colors.white,
+                                  border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(25.0),
+                                    borderSide: new BorderSide(),
+                                  ),
                                 ),
-                              ),
-                              onChanged: (val) {
-                                setState(() {
-                                  user.lastName = val;
-                                });
-                              },
-                              validator: (val) {
-                                if (val.length == 0) {
-                                  return 'Last Name be empty';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              keyboardType: TextInputType.emailAddress,
-                              style: new TextStyle(
-                                fontFamily: 'Poppins',
+                                onChanged: (val) {
+                                  setState(() {
+                                    user.lastName = val;
+                                  });
+                                },
+                                validator: (val) {
+                                  if (val.length == 0) {
+                                    return 'Last Name be empty';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                keyboardType: TextInputType.emailAddress,
+                                style: new TextStyle(
+                                  fontFamily: 'Poppins',
+                                ),
                               ),
                             ),
                             SizedBox(height: 15),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                                fillColor: Colors.white,
-                                border: new OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                  borderSide: new BorderSide(),
+                            Container(
+                              height: 50,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Email',
+                                  fillColor: Colors.white,
+                                  border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(25.0),
+                                    borderSide: new BorderSide(),
+                                  ),
                                 ),
-                              ),
-                              onChanged: (val) {
-                                setState(() {
-                                  user.email = val;
-                                });
-                              },
-                              validator: (val) {
-                                if (val.length == 0) {
-                                  return 'Email cannot be empty';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              keyboardType: TextInputType.emailAddress,
-                              style: new TextStyle(
-                                fontFamily: 'Poppins',
+                                onChanged: (val) {
+                                  setState(() {
+                                    user.email = val;
+                                  });
+                                },
+                                validator: (val) {
+                                  if (val.length == 0) {
+                                    return 'Email cannot be empty';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                keyboardType: TextInputType.emailAddress,
+                                style: new TextStyle(
+                                  fontFamily: 'Poppins',
+                                ),
                               ),
                             ),
                             SizedBox(height: 15),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                fillColor: Colors.white,
-                                border: new OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                  borderSide: new BorderSide(),
+                            Container(
+                              height: 50,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Password',
+                                  fillColor: Colors.white,
+                                  border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(25.0),
+                                    borderSide: new BorderSide(),
+                                  ),
+                                ),
+                                onChanged: (val) {
+                                  setState(() {
+                                    user.password = val;
+                                  });
+                                },
+                                validator: (val) {
+                                  if (val.length == 0) {
+                                    return 'Password cannot be empty';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                keyboardType: TextInputType.visiblePassword,
+                                style: new TextStyle(
+                                  fontFamily: 'Poppins',
                                 ),
                               ),
-                              onChanged: (val) {
-                                setState(() {
-                                  user.password = val;
-                                });
-                              },
-                              validator: (val) {
-                                if (val.length == 0) {
-                                  return 'Password cannot be empty';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              keyboardType: TextInputType.visiblePassword,
-                              style: new TextStyle(
-                                fontFamily: 'Poppins',
+                            ),
+                            SizedBox(height: 15),
+                            Container(
+                              height: 50,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Confirm Password',
+                                  fillColor: Colors.white,
+                                  border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(25.0),
+                                    borderSide: new BorderSide(),
+                                  ),
+                                ),
+                                onChanged: (val) {
+                                  setState(() {
+                                    user.password = val;
+                                  });
+                                },
+                                validator: (val) {
+                                  if (val.length == 0) {
+                                    return 'Password cannot be empty';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                keyboardType: TextInputType.visiblePassword,
+                                style: new TextStyle(
+                                  fontFamily: 'Poppins',
+                                ),
                               ),
                             ),
                           ],

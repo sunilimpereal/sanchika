@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sanchika/model/product.dart';
+import 'package:sanchika/pages/ui/screens/cart.dart';
 import 'package:sanchika/pages/ui/widget/product_card.dart';
+import 'package:sanchika/pages/ui/widget/product_view.dart';
 
 class ProcessedFood extends StatefulWidget {
   @override
@@ -16,8 +18,44 @@ class ProcessedFoodState extends State<ProcessedFood> {
         appBar: AppBar(
           actions: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(10.0),
               child: Icon(Icons.filter_list),
+            ),
+            Stack(
+              children: [
+                IconButton(
+                    padding: EdgeInsets.only(top: 8),
+                    icon: Icon(
+                      Icons.shopping_cart,
+                      color: Colors.grey[800],
+                      size: 24,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Cart()),
+                      );
+                    }),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 25),
+                  child: Container(
+                    height: 18,
+                    width: 18,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.red,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '3',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
           centerTitle: true,

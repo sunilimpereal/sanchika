@@ -84,59 +84,65 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(
                             height: ScreenUtil.getInstance().setHeight(30),
                           ),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              fillColor: Colors.white,
-                              border: new OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25.0),
-                                borderSide: new BorderSide(),
+                          Container(
+                            height: 60,
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                fillColor: Colors.white,
+                                border: new OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  borderSide: new BorderSide(),
+                                ),
                               ),
-                            ),
-                            onChanged: (val) {
-                              setState(() {
-                                user.email = val;
-                              });
-                            },
-                            validator: (val) {
-                              if (val.length == 0) {
-                                return 'Email cannot be empty';
-                              } else {
-                                return null;
-                              }
-                            },
-                            keyboardType: TextInputType.emailAddress,
-                            style: new TextStyle(
-                              fontFamily: 'Poppins',
+                              onChanged: (val) {
+                                setState(() {
+                                  user.email = val;
+                                });
+                              },
+                              validator: (val) {
+                                if (val.length == 0) {
+                                  return 'Email cannot be empty';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              keyboardType: TextInputType.emailAddress,
+                              style: new TextStyle(
+                                fontFamily: 'Poppins',
+                              ),
                             ),
                           ),
                           SizedBox(
-                            height: ScreenUtil.getInstance().setHeight(30),
+                            height: ScreenUtil.getInstance().setHeight(25),
                           ),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              fillColor: Colors.white,
-                              border: new OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25.0),
-                                borderSide: new BorderSide(),
+                          Container(
+                            height: 60,
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                fillColor: Colors.white,
+                                border: new OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  borderSide: new BorderSide(),
+                                ),
                               ),
-                            ),
-                            onChanged: (val) {
-                              setState(() {
-                                user.password = val;
-                              });
-                            },
-                            validator: (val) {
-                              if (val.length == 0) {
-                                return 'Password cannot be empty';
-                              } else {
-                                return null;
-                              }
-                            },
-                            keyboardType: TextInputType.visiblePassword,
-                            style: new TextStyle(
-                              fontFamily: 'Poppins',
+                              onChanged: (val) {
+                                setState(() {
+                                  user.password = val;
+                                });
+                              },
+                              validator: (val) {
+                                if (val.length == 0) {
+                                  return 'Password cannot be empty';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              keyboardType: TextInputType.visiblePassword,
+                              style: new TextStyle(
+                                fontFamily: 'Poppins',
+                              ),
                             ),
                           ),
                           Row(
@@ -160,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   SizedBox(
-                    height: ScreenUtil.getInstance().setHeight(40),
+                    height: ScreenUtil.getInstance().setHeight(30),
                   ),
                   Column(
                     children: <Widget>[
@@ -211,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       SizedBox(
-                        height: ScreenUtil.getInstance().setHeight(40),
+                        height: ScreenUtil.getInstance().setHeight(30),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -233,41 +239,6 @@ class _LoginPageState extends State<LoginPage> {
                                     color: Color(0xFF5d74e3),
                                     fontFamily: "Poppins-Bold")),
                           )
-                        ],
-                      ),
-                      SizedBox(
-                        height: ScreenUtil.getInstance().setHeight(40),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          horizontalLine(),
-                          Text("Social Login",
-                              style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontFamily: "Poppins-Medium")),
-                          horizontalLine()
-                        ],
-                      ),
-                      SizedBox(
-                        height: ScreenUtil.getInstance().setHeight(40),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          SocialIcon(
-                            color: kFaceBookColor,
-                            iconData: CustomIcons.facebook,
-                            onPressed: () {},
-                          ),
-                          SocialIcon(
-                            color: kGoogleColor,
-                            iconData: CustomIcons.googlePlus,
-                            onPressed: () {},
-                          ),
-                          SizedBox(
-                            height: ScreenUtil.getInstance().setHeight(30),
-                          ),
                         ],
                       ),
                       SizedBox(
