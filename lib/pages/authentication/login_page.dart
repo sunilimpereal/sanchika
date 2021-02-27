@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sanchika/model/login_model.dart';
 import 'package:sanchika/model/user.dart';
 import 'package:sanchika/pages/authentication/signup_page.dart';
 import 'package:sanchika/pages/ui/widget/forgotPassword.dart';
-import 'package:sanchika/utils/CustomIcons.dart';
+import 'package:sanchika/services/api_service.dart';
 import 'package:sanchika/utils/constants.dart';
 import 'package:sanchika/widgets/header_login.dart';
-import 'package:sanchika/widgets/socialIcons.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -14,8 +14,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+  GlobalKey<FormState> globalFormKey = new GlobalKey<FormState>();
   final controller = ScrollController();
   double offset = 0;
+  LoginRequestModel requestModel;
+  @override
+  void initState() {
+    super.initState();
+    requestModel = new LoginRequestModel();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,105 +82,110 @@ class _LoginPageState extends State<LoginPage> {
                     child: Padding(
                       padding: EdgeInsets.only(
                           left: 16.0, right: 16.0, top: 16.0, bottom: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("Login",
-                              style: TextStyle(
-                                  fontSize: ScreenUtil.getInstance().setSp(45),
-                                  fontFamily: "Poppins-Bold",
-                                  letterSpacing: .6)),
-                          SizedBox(
-                            height: ScreenUtil.getInstance().setHeight(30),
-                          ),
-                          Container(
-                            height: 60,
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                                fillColor: Colors.white,
-                                border: new OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                  borderSide: new BorderSide(),
-                                ),
-                              ),
-                              onChanged: (val) {
-                                setState(() {
-                                  user.email = val;
-                                });
-                              },
-                              validator: (val) {
-                                if (val.length == 0) {
-                                  return 'Email cannot be empty';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              keyboardType: TextInputType.emailAddress,
-                              style: new TextStyle(
-                                fontFamily: 'Poppins',
-                              ),
+                      // Form Starts here
+                      child: Form(
+                        key: globalFormKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text("Login",
+                                style: TextStyle(
+                                    fontSize:
+                                        ScreenUtil.getInstance().setSp(45),
+                                    fontFamily: "Poppins-Bold",
+                                    letterSpacing: .6)),
+                            SizedBox(
+                              height: ScreenUtil.getInstance().setHeight(30),
                             ),
-                          ),
-                          SizedBox(
-                            height: ScreenUtil.getInstance().setHeight(25),
-                          ),
-                          Container(
-                            height: 60,
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                fillColor: Colors.white,
-                                border: new OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                  borderSide: new BorderSide(),
-                                ),
-                              ),
-                              onChanged: (val) {
-                                setState(() {
-                                  user.password = val;
-                                });
-                              },
-                              validator: (val) {
-                                if (val.length == 0) {
-                                  return 'Password cannot be empty';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              keyboardType: TextInputType.visiblePassword,
-                              style: new TextStyle(
-                                fontFamily: 'Poppins',
-                              ),
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8.0, left: 0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ForgotPassword()),
-                                    );
-                                  },
-                                  child: Text(
-                                    'forgot Password?',
-                                    style: TextStyle(color: Colors.redAccent),
+                            Container(
+                              height: 60,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Email',
+                                  fillColor: Colors.white,
+                                  border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(25.0),
+                                    borderSide: new BorderSide(),
                                   ),
                                 ),
+                                onChanged: (val) {
+                                  setState(() {
+                                    requestModel.email = val;
+                                  });
+                                },
+                                validator: (val) {
+                                  if (val.length == 0) {
+                                    return 'Email cannot be empty';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                keyboardType: TextInputType.emailAddress,
+                                style: new TextStyle(
+                                  fontFamily: 'Poppins',
+                                ),
                               ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: ScreenUtil.getInstance().setHeight(25),
-                          ),
-                        ],
+                            ),
+                            SizedBox(
+                              height: ScreenUtil.getInstance().setHeight(25),
+                            ),
+                            Container(
+                              height: 60,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Password',
+                                  fillColor: Colors.white,
+                                  border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(25.0),
+                                    borderSide: new BorderSide(),
+                                  ),
+                                ),
+                                onChanged: (val) {
+                                  setState(() {
+                                    requestModel.password = val;
+                                  });
+                                },
+                                validator: (val) {
+                                  if (val.length == 0) {
+                                    return 'Password cannot be empty';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                keyboardType: TextInputType.visiblePassword,
+                                style: new TextStyle(
+                                  fontFamily: 'Poppins',
+                                ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 8.0, left: 0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ForgotPassword()),
+                                      );
+                                    },
+                                    child: Text(
+                                      'forgot Password?',
+                                      style: TextStyle(color: Colors.redAccent),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: ScreenUtil.getInstance().setHeight(25),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -206,11 +219,22 @@ class _LoginPageState extends State<LoginPage> {
                                   color: Colors.transparent,
                                   child: InkWell(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => SignupPage()),
-                                      );
+                                      //Login Button
+                                      if (validateAndSave()) {
+                                        APIService apiService = APIService();
+
+                                        apiService
+                                            .login(requestModel)
+                                            .then((value) {
+                                          print(value.toJson());
+                                        });
+                                        print(requestModel.toJson());
+                                      }
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //       builder: (context) => SignupPage()),
+                                      // );
                                     },
                                     child: Center(
                                       child: Text("SIGN IN",
@@ -266,6 +290,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  bool validateAndSave() {
+    final form = globalFormKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -281,13 +314,6 @@ class _LoginPageState extends State<LoginPage> {
           color: Colors.black26.withOpacity(.2),
         ),
       );
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    controller.addListener(onScroll);
-  }
 
   void onScroll() {
     setState(() {

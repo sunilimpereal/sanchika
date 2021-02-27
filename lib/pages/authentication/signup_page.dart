@@ -67,9 +67,7 @@ class _SignupPageState extends State<SignupPage> {
                                   ),
                                 ),
                                 onChanged: (val) {
-                                  setState(() {
-                                    user.firstName = val;
-                                  });
+                                  setState(() {});
                                 },
                                 validator: (val) {
                                   if (val.length == 0) {
@@ -97,9 +95,7 @@ class _SignupPageState extends State<SignupPage> {
                                   ),
                                 ),
                                 onChanged: (val) {
-                                  setState(() {
-                                    user.lastName = val;
-                                  });
+                                  setState(() {});
                                 },
                                 validator: (val) {
                                   if (val.length == 0) {
@@ -127,9 +123,7 @@ class _SignupPageState extends State<SignupPage> {
                                   ),
                                 ),
                                 onChanged: (val) {
-                                  setState(() {
-                                    user.email = val;
-                                  });
+                                  setState(() {});
                                 },
                                 validator: (val) {
                                   if (val.length == 0) {
@@ -157,9 +151,7 @@ class _SignupPageState extends State<SignupPage> {
                                   ),
                                 ),
                                 onChanged: (val) {
-                                  setState(() {
-                                    user.password = val;
-                                  });
+                                  setState(() {});
                                 },
                                 validator: (val) {
                                   if (val.length == 0) {
@@ -187,9 +179,7 @@ class _SignupPageState extends State<SignupPage> {
                                   ),
                                 ),
                                 onChanged: (val) {
-                                  setState(() {
-                                    user.password = val;
-                                  });
+                                  setState(() {});
                                 },
                                 validator: (val) {
                                   if (val.length == 0) {

@@ -1,27 +1,22 @@
 class User {
   String email;
   String firstName;
-  String lastName;
   String password;
-
+  String mobile;
   User({
     this.email,
     this.firstName,
-    this.lastName,
     this.password,
+    this.mobile,
   });
-
-  // to JSON
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {};
     map.addAll({
       'email': email,
-      'first_name': firstName,
-      'last_name': lastName,
+      'name': firstName,
       'password': password,
-      'username': email
+      'mobile': mobile,
     });
-
     return map;
   }
 }
