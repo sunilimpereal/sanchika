@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sanchika/menu_dashboard/menu_dashboard.dart';
 import 'package:sanchika/model/login_model.dart';
 import 'package:sanchika/model/user.dart';
 import 'package:sanchika/pages/authentication/signup_page.dart';
+import 'package:sanchika/pages/ui/widget/admin_wait.dart';
 import 'package:sanchika/pages/ui/widget/forgotPassword.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:sanchika/utils/constants.dart';
@@ -222,19 +224,20 @@ class _LoginPageState extends State<LoginPage> {
                                       //Login Button
                                       if (validateAndSave()) {
                                         APIService apiService = APIService();
-
+                                        print(requestModel.toJson());
                                         apiService
                                             .login(requestModel)
                                             .then((value) {
                                           print(value.toJson());
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AdminWait()),
+                                          );
                                         });
-                                        print(requestModel.toJson());
+                                        print('Skipped');
                                       }
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //       builder: (context) => SignupPage()),
-                                      // );
                                     },
                                     child: Center(
                                       child: Text("SIGN IN",

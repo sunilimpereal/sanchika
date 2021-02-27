@@ -39,15 +39,36 @@ class Data {
     this.login,
   });
 
-  LoginRequestModel login;
+  Login login;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        login: LoginRequestModel.fromJson(json["Login "]),
+        login: Login.fromJson(json["Login "]),
       );
 
   Map<String, dynamic> toJson() => {
         "Login ": login.toJson(),
       };
+}
+
+class Login {
+  String email;
+  String name;
+  Login({
+    this.email,
+    this.name,
+  });
+  factory Login.fromJson(Map<String, dynamic> json) => Login(
+        email: json["email"],
+        name: json["name"],
+      );
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> map = {
+      "email": email,
+      "password": name,
+    };
+    return map;
+  }
 }
 
 class LoginRequestModel {
