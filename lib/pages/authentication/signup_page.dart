@@ -6,6 +6,7 @@ import 'package:sanchika/pages/ui/widget/otp.dart';
 import 'package:sanchika/pages/ui/widget/termsConditions.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:sanchika/utils/constants.dart';
+import 'package:sanchika/utils/progressHUD.dart';
 import 'package:sanchika/widgets/header_login.dart';
 
 class SignupPage extends StatefulWidget {
@@ -20,6 +21,7 @@ class _SignupPageState extends State<SignupPage> {
 
   RegisterRequestModel requestModel;
   APIService apiService;
+  bool isApiCallProcess = false;
   @override
   void initState() {
     super.initState();
@@ -29,6 +31,15 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    return ProgressHUD(
+      child: _uiSetup(context),
+      inAsyncCall: isApiCallProcess,
+      opacity: 0.2,
+    );
+  }
+
+  @override
+  Widget _uiSetup(BuildContext context) {
     User user = new User();
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
     ScreenUtil.instance =
@@ -256,19 +267,34 @@ class _SignupPageState extends State<SignupPage> {
                                     child: InkWell(
                                       onTap: () {
                                         if (validateAndSave()) {
+                                          setState(() {
+                                            isApiCallProcess = true;
+                                          });
                                           APIService apiService = APIService();
                                           print(requestModel.toJson());
                                           apiService
                                               .register(requestModel)
                                               .then((value) {
                                             print(value.toJson());
+                                            apiService
+                                                .getotp(requestModel.mobile)
+                                                .then((value) {
+                                              setState(() {
+                                                isApiCallProcess = true;
+                                              });
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => Otp(
+                                                          otp: value,
+                                                          mobileNumber:
+                                                              requestModel
+                                                                  .mobile,
+                                                        )),
+                                              );
+                                            });
                                           });
                                         }
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //       builder: (context) => Otp()),
-                                        // );
                                       },
                                       child: Center(
                                         child: Text(

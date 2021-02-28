@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
+import 'package:sanchika/pages/authentication/login_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 
 class Profile extends StatefulWidget with NavigationStates {
   final Function onMenuTap;
@@ -14,6 +17,15 @@ class Profile extends StatefulWidget with NavigationStates {
 }
 
 class PprofileState extends State<Profile> {
+  // Logout
+  Future logOut(BuildContext context) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.remove('login');
+    showToast("Logging Out...", gravity: Toast.BOTTOM);
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -289,21 +301,26 @@ class PprofileState extends State<Profile> {
               SizedBox(
                 height: 1,
               ),
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      offset: const Offset(3.0, 2.0),
-                      color: Colors.grey[300],
-                      blurRadius: 2.0,
-                      spreadRadius: 2.0,
-                    ),
-                  ],
-                ),
-                child: ListTile(
-                  tileColor: Colors.white,
-                  leading: Icon(Icons.logout),
-                  title: Text('Logout'),
+              GestureDetector(
+                onTap: () {
+                  logOut(context);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(3.0, 2.0),
+                        color: Colors.grey[300],
+                        blurRadius: 2.0,
+                        spreadRadius: 2.0,
+                      ),
+                    ],
+                  ),
+                  child: ListTile(
+                    tileColor: Colors.white,
+                    leading: Icon(Icons.logout),
+                    title: Text('Logout'),
+                  ),
                 ),
               ),
             ],
@@ -311,5 +328,9 @@ class PprofileState extends State<Profile> {
         ),
       ),
     );
+  }
+
+  void showToast(String msg, {int duration, int gravity}) {
+    Toast.show(msg, context, duration: duration, gravity: gravity);
   }
 }

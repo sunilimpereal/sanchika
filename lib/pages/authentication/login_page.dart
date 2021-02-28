@@ -8,7 +8,9 @@ import 'package:sanchika/pages/ui/widget/admin_wait.dart';
 import 'package:sanchika/pages/ui/widget/forgotPassword.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:sanchika/utils/constants.dart';
+import 'package:sanchika/utils/progressHUD.dart';
 import 'package:sanchika/widgets/header_login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -21,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   final controller = ScrollController();
   double offset = 0;
   LoginRequestModel requestModel;
+  bool isApiCallProcess = false;
   @override
   void initState() {
     super.initState();
@@ -29,6 +32,15 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    return ProgressHUD(
+      child: _uiSetup(context),
+      inAsyncCall: isApiCallProcess,
+      opacity: 0.4,
+    );
+  }
+
+  @override
+  Widget _uiSetup(BuildContext context) {
     User user = new User();
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
     ScreenUtil.instance =
@@ -223,12 +235,23 @@ class _LoginPageState extends State<LoginPage> {
                                     onTap: () {
                                       //Login Button
                                       if (validateAndSave()) {
+                                        setState(() {
+                                          isApiCallProcess = true;
+                                        });
                                         APIService apiService = APIService();
                                         print(requestModel.toJson());
                                         apiService
                                             .login(requestModel)
-                                            .then((value) {
+                                            .then((value) async {
+                                          SharedPreferences preferences =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          preferences.setString(
+                                              'login', 'logged');
                                           print(value.toJson());
+                                          setState(() {
+                                            isApiCallProcess = false;
+                                          });
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(

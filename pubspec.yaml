@@ -41,6 +41,8 @@ dependencies:
   flutter_launcher_icons: "^0.8.1"
   otp_screen:
   http: ^0.12.2
+  shared_preferences:
+  toast: ^0.1.5
 
 dev_dependencies:
   flutter_test:
