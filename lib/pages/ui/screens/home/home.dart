@@ -7,6 +7,8 @@ import 'package:sanchika/pages/ui/sub_screens/personalCare.dart';
 import 'package:sanchika/pages/ui/widget/categories_home_card.dart';
 import 'package:sanchika/pages/ui/widget/home_crousal.dart';
 import 'package:sanchika/pages/ui/widget/product_card.dart';
+import 'package:sanchika/services/api_service.dart';
+import 'package:translator/translator.dart';
 
 class Home extends StatefulWidget with NavigationStates {
   final Function onMenuTap;
@@ -19,77 +21,25 @@ class Home extends StatefulWidget with NavigationStates {
 }
 
 class _HomeState extends State<Home> {
-  Product product0 = Product(
-      name: 'Lays Classic',
-      type: '200g',
-      typeList: ['100g', '200g', '300g'],
-      description:
-          'Lay\'s is a brand of potato chip varieties, as well as the name of the company that founded the chip brand in the United States. It has also been called Frito-Lay with Fritos. Lay\'s has been owned by PepsiCo through Frito-Lay since 1965.',
-      price: 120,
-      price1: 125,
-      discount: 5,
-      ingredients:
-          'Paneer or cottage cheese is prepared by curing and draining blanched milk. It is an excellent source of nutrients like protein and calcium. The Premium Fresh paneer from the stable of Milky Mist is free of preservatives and packed with freshness. It is prepared in hygienic industrial set ups where high standards of production are followed.',
-      images: [
-        'assets/images/lays.png',
-        'assets/images/lays2.jpg',
-      ],
-      relatedproducts: []);
-  Product product1 = Product(
-      name: 'Milky Mist Paneer',
-      typeList: ['100g', '200g', '300g'],
-      description:
-          'Milky Mist is a brand that is known for its various dairy products. The pure and protein rich products are renowned for their high quality goodness. Paneer is a product which is also known as cottage cheese. This is a healthy dairy product that is produced and marketed by Milky Mist.',
-      price: 599,
-      ingredients:
-          'Paneer or cottage cheese is prepared by curing and draining blanched milk. It is an excellent source of nutrients like protein and calcium. The Premium Fresh paneer from the stable of Milky Mist is free of preservatives and packed with freshness. It is prepared in hygienic industrial set ups where high standards of production are followed.',
-      images: ['assets/images/milkymist1.png', 'assets/images/milkymist2.png']);
-  Product product2 = Product(
-      name: 'Philips Electronic Induction Stove',
-      description:
-          'Milky Mist is a brand that is known for its various dairy products. The pure and protein rich products are renowned for their high quality goodness. Paneer is a product which is also known as cottage cheese. This is a healthy dairy product that is produced and marketed by Milky Mist.',
-      price: 1200,
-      price1: 1500,
-      discount: 30,
-      ingredients: 'Paneer or cottage cheese is prepared by curing and draining blanched milk. It is an excellent source of nutrients like protein and calcium. The Premium Fresh paneer from the stable of Milky Mist is free of preservatives and packed with freshness. It is prepared in hygienic industrial set ups where high standards of production are followed.',
-      images: ['assets/images/pan1.png', 'assets/images/pan2.jpeg']);
-  Product product3 = Product(
-      name: 'Country Sweets',
-      description:
-          'Made from all natural ingredients, it\'s the perfect mix of sweet and tangy with just the right kick to bring any food to life. Not a traditional barbecue sauce, Country Sweet is the all-purpose flavor enhancer that has no boundaries. Add a delicious zest to chicken, pork, beef, seafood and even pizza.',
-      price: 50,
-      ingredients: 'First developed in a home kitchen in Rochester, New York, this sauce is unlike anything you’ve ever tried. Made from all natural ingredients, it’s the perfect mix of sweet and tangy with just the right kick to bring any food to life.',
-      images: [
-        'assets/images/countrysweet.png',
-        'assets/images/countrysweet.png'
-      ]);
-  Product product4 = Product(
-      name: 'RICE',
-      type: '1Kg',
-      typeList: ['1Kg', '3Kg', '5Kg'],
-      description:
-          'Naturally aged for 12 months \nAffordable Authentic Basmati Rice Basmati for regular use \nGluten freeIdeal for dishes like Pulao, Jeera Rice, khichdi & steam rice\nCountry of Origin: India',
-      price: 30,
-      price1: 38,
-      discount: 15,
-      ingredients:
-          'First developed in a home kitchen in Rochester, New York, this sauce is unlike anything you’ve ever tried. Made from all natural ingredients, it’s the perfect mix of sweet and tangy with just the right kick to bring any food to life.',
-      images: ['assets/images/rice.png', 'assets/images/countrysweet.png']);
-  Product product5 = Product(
-      name: 'Gold Winner',
-      type: '1 L',
-      typeList: ['1L', '2L', '3L'],
-      description:
-          'BLRs \nLight and healthy that is easy to digest \nRich in vitamins, which keeps skin healthy\nGood for the heart\nCountry of Origin: India\nGood for the heart',
-      price: 30,
-      price1: 38,
-      discount: 15,
-      ingredients:
-          'First developed in a home kitchen in Rochester, New York, this sauce is unlike anything you’ve ever tried. Made from all natural ingredients, it’s the perfect mix of sweet and tangy with just the right kick to bring any food to life.',
-      images: [
-        'assets/images/goldwinner.png',
-        'assets/images/countrysweet.png'
-      ]);
+  APIService apiService = APIService();
+  final translator = GoogleTranslator();
+
+  List<Product> products;
+  // Future<List<Product>> _getProduct;
+  @override
+  void initState() {
+    super.initState();
+    // products = apiService.getProducts();
+    // Future<List<Product>> _getProduct = apiService.getProducts();
+  }
+
+  Future getProductListHo() async {
+    List<Product> productList =
+        await apiService.getProductList(apiService.getProducts());
+    print('i am home');
+    print(productList);
+    return productList;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -230,6 +180,7 @@ class _HomeState extends State<Home> {
                               // categories list
                               GestureDetector(
                                 onTap: () {
+                                  print(apiService.getProducts());
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -277,28 +228,57 @@ class _HomeState extends State<Home> {
                           ),
                         ],
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Productcard(product: product2),
-                            Productcard(product: product0),
-                            Productcard(product: product2),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 8.0, left: 16.0, bottom: 8.0, right: 15),
-                              child: Text(
-                                "See more >>",
-                                style: TextStyle(
-                                    color: Color(0xff032e6b),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ],
-                        ),
+
+                      FutureBuilder(
+                        future: getProductListHo(),
+                        builder: (BuildContext context, snapshot) {
+                          print(snapshot);
+                          if (snapshot.hasData) {
+                            return Row(
+                              children: [
+                                Expanded(
+                                  child: SizedBox(
+                                    height: 300,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: snapshot.data.length,
+                                      itemBuilder: (context, index) {
+                                        Product product = snapshot.data[index];
+                                        return Productcard(
+                                          product: product,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return CircularProgressIndicator();
+                          }
+                        },
                       ),
+
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     Productcard(product: products[0]),
+                      //     Productcard(product: products[1]),
+                      //     Productcard(product: products[2]),
+                      //     Padding(
+                      //       padding: const EdgeInsets.only(
+                      //           top: 8.0, left: 16.0, bottom: 8.0, right: 15),
+                      //       child: Text(
+                      //         "See more >>",
+                      //         style: TextStyle(
+                      //             color: Color(0xff032e6b),
+                      //             fontSize: 14,
+                      //             fontWeight: FontWeight.w600),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -320,9 +300,9 @@ class _HomeState extends State<Home> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Productcard(product: product4),
-                            Productcard(product: product5),
-                            Productcard(product: product2),
+                            // Productcard(product: products[3]),
+                            // Productcard(product: products[4]),
+                            // Productcard(product: products[4]),
                             Padding(
                               padding: const EdgeInsets.only(
                                   top: 8.0, left: 16.0, bottom: 8.0, right: 14),

@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
+import 'package:sanchika/localization/localization_methods.dart';
+import 'package:sanchika/main.dart';
+import 'package:sanchika/model/language.dart';
 import 'package:sanchika/pages/authentication/login_page.dart';
+import 'package:sanchika/pages/ui/sub_screens/changePassword/password%20change.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
@@ -17,12 +21,28 @@ class Profile extends StatefulWidget with NavigationStates {
 }
 
 class PprofileState extends State<Profile> {
+  void _changeLanguage(Language language) {
+    Locale _temp;
+    print(language.languageCode);
+    switch (language.languageCode) {
+      case 'en':
+        _temp = Locale(language.languageCode, 'US');
+        break;
+      case 'ml':
+        _temp = Locale(language.languageCode, 'IN');
+        break;
+      default:
+        _temp = Locale(language.languageCode, 'US');
+    }
+    MyApp.setLocale(context, _temp);
+  }
+
   // Logout
   Future logOut(BuildContext context) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove('login');
     showToast("Logging Out...", gravity: Toast.BOTTOM);
-    Navigator.push(
+    Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
@@ -33,7 +53,7 @@ class PprofileState extends State<Profile> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          "Profile",
+          getTranslated(context, "Profile"),
           style: TextStyle(color: Colors.black),
         ),
         actions: [
@@ -231,29 +251,35 @@ class PprofileState extends State<Profile> {
                 child: ListTile(
                   tileColor: Colors.white,
                   leading: Icon(Icons.history),
-                  title: Text('My Orders'),
+                  title: Text(getTranslated(context, "My_Orders")),
                   trailing: Icon(Icons.keyboard_arrow_right),
                 ),
               ),
               SizedBox(
                 height: 1,
               ),
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      offset: const Offset(3.0, 2.0),
-                      color: Colors.grey[300],
-                      blurRadius: 2.0,
-                      spreadRadius: 2.0,
-                    ),
-                  ],
-                ),
-                child: ListTile(
-                  tileColor: Colors.white,
-                  leading: Icon(Icons.translate),
-                  title: Text('Language'),
-                  trailing: Icon(Icons.keyboard_arrow_right),
+              GestureDetector(
+                onTap: () {
+                  Language lan = Language(2, 'Malayalam', 'ml');
+                  _changeLanguage(lan);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(3.0, 2.0),
+                        color: Colors.grey[300],
+                        blurRadius: 2.0,
+                        spreadRadius: 2.0,
+                      ),
+                    ],
+                  ),
+                  child: ListTile(
+                    tileColor: Colors.white,
+                    leading: Icon(Icons.translate),
+                    title: Text(getTranslated(context, "Language")),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                  ),
                 ),
               ),
               SizedBox(
@@ -273,7 +299,7 @@ class PprofileState extends State<Profile> {
                 child: ListTile(
                   tileColor: Colors.white,
                   leading: Icon(Icons.call),
-                  title: Text('customer Support'),
+                  title: Text(getTranslated(context, 'Customer_Support')),
                   trailing: Icon(Icons.keyboard_arrow_right),
                 ),
               ),
@@ -294,8 +320,37 @@ class PprofileState extends State<Profile> {
                 child: ListTile(
                   tileColor: Colors.white,
                   leading: Icon(Icons.notifications),
-                  title: Text('Notifaction'),
+                  title: Text(getTranslated(context, 'Notification')),
                   trailing: Icon(Icons.keyboard_arrow_right),
+                ),
+              ),
+              SizedBox(
+                height: 1,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PasswordChange()));
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(3.0, 2.0),
+                        color: Colors.grey[300],
+                        blurRadius: 2.0,
+                        spreadRadius: 2.0,
+                      ),
+                    ],
+                  ),
+                  child: ListTile(
+                    tileColor: Colors.white,
+                    leading: Icon(Icons.lock),
+                    title: Text(getTranslated(context, 'Change_Password')),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                  ),
                 ),
               ),
               SizedBox(
@@ -319,7 +374,7 @@ class PprofileState extends State<Profile> {
                   child: ListTile(
                     tileColor: Colors.white,
                     leading: Icon(Icons.logout),
-                    title: Text('Logout'),
+                    title: Text(getTranslated(context, 'Logout')),
                   ),
                 ),
               ),

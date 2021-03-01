@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
+import 'package:sanchika/localization/localization_methods.dart';
 
 class Menu extends StatefulWidget {
   final Animation<Offset> slideAnimation;
@@ -42,7 +43,7 @@ class _MenuState extends State<Menu> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 18.0),
                     child: Text(
-                      "Hello ,\nName",
+                      getTranslated(context, 'Hello'),
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 25,
@@ -66,7 +67,7 @@ class _MenuState extends State<Menu> {
                             context: context,
                             navigationEvents:
                                 NavigationEvents.DashboardClickedEvent,
-                            title: 'Home',
+                            title: getTranslated(context, 'Home'),
                             icon: Icons.home,
                             selectednumber: 0,
                           ),
@@ -77,7 +78,7 @@ class _MenuState extends State<Menu> {
                             context: context,
                             navigationEvents:
                                 NavigationEvents.CategoriesClickedEvent,
-                            title: 'Categories',
+                            title: getTranslated(context, 'Categories'),
                             icon: Icons.category,
                             selectednumber: 1,
                           ),
@@ -88,7 +89,7 @@ class _MenuState extends State<Menu> {
                             context: context,
                             navigationEvents:
                                 NavigationEvents.Offersclickedevent,
-                            title: 'Offers',
+                            title: getTranslated(context, 'Offers'),
                             icon: Icons.local_offer,
                             selectednumber: 2,
                           ),
@@ -99,7 +100,7 @@ class _MenuState extends State<Menu> {
                             context: context,
                             navigationEvents:
                                 NavigationEvents.WishlistClickedEvent,
-                            title: 'Wishlist',
+                            title: getTranslated(context, 'Wishlist'),
                             icon: Icons.favorite_rounded,
                             selectednumber: 3,
                           ),
@@ -109,7 +110,7 @@ class _MenuState extends State<Menu> {
                           menuItem(
                             context: context,
                             navigationEvents: NavigationEvents.CartClickedEvent,
-                            title: 'My Cart',
+                            title: getTranslated(context, 'My_Cart'),
                             icon: Icons.shopping_cart_rounded,
                             selectednumber: 4,
                           ),
@@ -120,7 +121,7 @@ class _MenuState extends State<Menu> {
                             context: context,
                             navigationEvents:
                                 NavigationEvents.MyOrdersclickedEvent,
-                            title: 'My Orders',
+                            title: getTranslated(context, 'Orders'),
                             icon: Icons.shopping_bag,
                             selectednumber: 5,
                           ),
@@ -131,7 +132,7 @@ class _MenuState extends State<Menu> {
                             context: context,
                             navigationEvents:
                                 NavigationEvents.ProfileClickedevent,
-                            title: 'Profile',
+                            title: getTranslated(context, 'Profile'),
                             icon: Icons.person,
                             selectednumber: 6,
                           ),
@@ -142,7 +143,7 @@ class _MenuState extends State<Menu> {
                             context: context,
                             navigationEvents:
                                 NavigationEvents.HelpSupportClicked,
-                            title: 'Help & Support',
+                            title: getTranslated(context, 'Help_Support'),
                             icon: Icons.help_center,
                             selectednumber: 7,
                           ),

@@ -248,15 +248,17 @@ class _LoginPageState extends State<LoginPage> {
                                                   .getInstance();
                                           preferences.setString(
                                               'login', 'logged');
+                                          preferences.setString(
+                                              'email', requestModel.email);
                                           print(value.toJson());
                                           setState(() {
                                             isApiCallProcess = false;
                                           });
-                                          Navigator.push(
+                                          Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    AdminWait()),
+                                                    MenuDashboard()),
                                           );
                                         });
                                         print('Skipped');

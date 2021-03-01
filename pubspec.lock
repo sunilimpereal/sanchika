@@ -146,6 +146,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.8.1"
+  flutter_localizations:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_screenutil:
     dependency: "direct main"
     description:
@@ -438,6 +443,13 @@ packages:
     dependency: "direct main"
     description:
       name: toast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.5"
+  translator:
+    dependency: "direct main"
+    description:
+      name: translator
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.5"

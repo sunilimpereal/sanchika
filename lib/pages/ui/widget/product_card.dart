@@ -43,22 +43,25 @@ class _ProductcardState extends State<Productcard> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * .28 * 0.5,
-                    width: MediaQuery.of(context).size.width * 0.45 - 5,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, bottom: 0.0),
-                      child: Stack(children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            image: DecorationImage(
-                                image: AssetImage(widget.product.images[0]),
-                                fit: BoxFit.contain),
+                  Hero(
+                    tag: 'image' + widget.product.name,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * .28 * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.45 - 5,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 10.0, right: 10.0, bottom: 0.0),
+                        child: Stack(children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              image: DecorationImage(
+                                  image: AssetImage(widget.product.images[0]),
+                                  fit: BoxFit.contain),
+                            ),
                           ),
-                        ),
-                      ]),
+                        ]),
+                      ),
                     ),
                   ),
                   SizedBox(

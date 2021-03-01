@@ -184,8 +184,11 @@ class _ProductViewState extends State<ProductView> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                       ),
-                      child: Crousal(
-                        photos: widget.product.images,
+                      child: Hero(
+                        tag: 'image' + widget.product.name,
+                        child: Crousal(
+                          photos: widget.product.images,
+                        ),
                       ),
                     ),
                   ),
@@ -513,18 +516,56 @@ class _ProductViewState extends State<ProductView> {
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children: [
-                                    Productcard(
-                                      product: product0,
-                                    ),
-                                    Productcard(
-                                      product: product5,
-                                    ),
-                                    Productcard(
-                                      product: product3,
-                                    ),
-                                    Productcard(
-                                      product: product4,
-                                    )
+                                    (() {
+                                      if (widget.product.name !=
+                                          product0.name) {
+                                        return Productcard(
+                                          product: product0,
+                                        );
+                                      } else {
+                                        return Container();
+                                      }
+                                    }()),
+                                    (() {
+                                      if (widget.product.name !=
+                                          product1.name) {
+                                        return Productcard(
+                                          product: product1,
+                                        );
+                                      } else {
+                                        return Container();
+                                      }
+                                    }()),
+                                    (() {
+                                      if (widget.product.name !=
+                                          product2.name) {
+                                        return Productcard(
+                                          product: product2,
+                                        );
+                                      } else {
+                                        return Container();
+                                      }
+                                    }()),
+                                    (() {
+                                      if (widget.product.name !=
+                                          product3.name) {
+                                        return Productcard(
+                                          product: product3,
+                                        );
+                                      } else {
+                                        return Container();
+                                      }
+                                    }()),
+                                    (() {
+                                      if (widget.product.name !=
+                                          product4.name) {
+                                        return Productcard(
+                                          product: product4,
+                                        );
+                                      } else {
+                                        return Container();
+                                      }
+                                    }()),
                                   ],
                                 ),
                               ),
@@ -546,6 +587,7 @@ class _ProductViewState extends State<ProductView> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: null,
         backgroundColor: Color(0xff0B3666),
         onPressed: () {},
         label: Padding(
