@@ -8,6 +8,7 @@ import 'package:sanchika/model/language.dart';
 import 'package:sanchika/pages/authentication/login_page.dart';
 import 'package:sanchika/pages/ui/sub_screens/changePassword/password%20change.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:toast/toast.dart';
 
 class Profile extends StatefulWidget with NavigationStates {
@@ -21,15 +22,43 @@ class Profile extends StatefulWidget with NavigationStates {
 }
 
 class PprofileState extends State<Profile> {
-  void _changeLanguage(Language language) {
+  bool english;
+  bool malayalam;
+  void getLanguageTick() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (preferences.getString('language') == 'malayalam') {
+      setState(() {
+        english = false;
+        malayalam = true;
+      });
+    } else {
+      setState(() {
+        english = true;
+        malayalam = false;
+      });
+    }
+  }
+
+  void _changeLanguage(Language language) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
     Locale _temp;
     print(language.languageCode);
     switch (language.languageCode) {
       case 'en':
         _temp = Locale(language.languageCode, 'US');
+        preferences.setString('language', 'english');
+        setState(() {
+          english = true;
+          malayalam = false;
+        });
         break;
       case 'ml':
         _temp = Locale(language.languageCode, 'IN');
+        preferences.setString('language', 'malayalam');
+        setState(() {
+          english = false;
+          malayalam = true;
+        });
         break;
       default:
         _temp = Locale(language.languageCode, 'US');
@@ -260,8 +289,87 @@ class PprofileState extends State<Profile> {
               ),
               GestureDetector(
                 onTap: () {
-                  Language lan = Language(2, 'Malayalam', 'ml');
-                  _changeLanguage(lan);
+                  getLanguageTick();
+                  showMaterialModalBottomSheet(
+                    context: context,
+                    builder: (context) => Container(
+                      height: 180,
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Icon(Icons.translate),
+                                Text(
+                                  '  Choosse language',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Card(
+                            elevation: 0.5,
+                            child: ListTile(
+                              onTap: () {
+                                Language lan = Language(1, 'English', 'en');
+                                _changeLanguage(lan);
+                              },
+                              title: Text(
+                                'English',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              trailing: english
+                                  ? Icon(
+                                      Icons.check_circle,
+                                      color: Colors.blue,
+                                    )
+                                  : SizedBox(
+                                      width: 10,
+                                      height: 10,
+                                    ),
+                            ),
+                          ),
+                          Card(
+                            elevation: 0.5,
+                            borderOnForeground: true,
+                            semanticContainer: true,
+                            child: ListTile(
+                              onTap: () {
+                                Language lan = Language(2, 'Malayalam', 'ml');
+                                _changeLanguage(lan);
+                              },
+                              title: Text(
+                                'Malayalam',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              trailing: malayalam
+                                  ? Icon(
+                                      Icons.check_circle,
+                                      color: Colors.blue,
+                                    )
+                                  : SizedBox(
+                                      width: 10,
+                                      height: 10,
+                                    ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
                 },
                 child: Container(
                   decoration: BoxDecoration(

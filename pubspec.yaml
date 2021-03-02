@@ -46,6 +46,7 @@ dependencies:
   flutter_localizations: # Add this line
     sdk: flutter         # Add this line
   translator: ^0.1.5
+  modal_bottom_sheet: ^1.0.0+1
 dev_dependencies:
   flutter_test:
     sdk: flutter

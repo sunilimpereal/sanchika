@@ -30,6 +30,21 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Locale _locale;
+  void initState() {
+    super.initState();
+    checkLanguage();
+  }
+
+  void checkLanguage() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var language = preferences.getString('language');
+    if (language == 'malayalam') {
+      setState(() {
+        _locale = Locale('ml', 'IN');
+      });
+    }
+  }
+
   void setLocale(Locale locale) {
     setState(() {
       _locale = locale;

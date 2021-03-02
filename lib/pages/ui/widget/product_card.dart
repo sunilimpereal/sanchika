@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sanchika/model/product.dart';
 import 'package:sanchika/pages/ui/widget/crousal.dart';
 import 'package:sanchika/pages/ui/widget/product_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
 
 class Productcard extends StatefulWidget {
@@ -18,15 +19,24 @@ class Productcard extends StatefulWidget {
 class _ProductcardState extends State<Productcard> {
   String _selectedValue;
   String nameml = '';
-  @override
-  void initState() {
-    super.initState();
+  void translate() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
     final translator = GoogleTranslator();
     translator.translate(widget.product.name, to: 'ml').then((result) {
       setState(() {
-        nameml = result.text;
+        if (preferences.getString('language') == 'malayalam') {
+          nameml = result.text;
+        } else {
+          nameml = widget.product.name;
+        }
       });
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    translate();
   }
 
   @override
@@ -261,12 +271,12 @@ class _ProductcardState extends State<Productcard> {
     }
   }
 
-  String translate(String text) {
-    final translator = GoogleTranslator();
-    translator.translate(text, to: 'ml').then((result) {
-      print('result');
-      print(result);
-      return result.text;
-    });
-  }
+  // String translate(String text) {
+  //   final translator = GoogleTranslator();
+  //   translator.translate(text, to: 'ml').then((result) {
+  //     print('result');
+  //     print(result);
+  //     return result.text;
+  //   });
+  // }
 }
