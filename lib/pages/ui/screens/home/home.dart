@@ -2,12 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
+import 'package:sanchika/model/login_model.dart';
 import 'package:sanchika/model/product.dart';
+import 'package:sanchika/pages/authentication/login_page.dart';
 import 'package:sanchika/pages/ui/sub_screens/personalCare.dart';
 import 'package:sanchika/pages/ui/widget/categories_home_card.dart';
 import 'package:sanchika/pages/ui/widget/home_crousal.dart';
 import 'package:sanchika/pages/ui/widget/product_card.dart';
+import 'package:sanchika/search/product_search_delegate.dart';
 import 'package:sanchika/services/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
 
 class Home extends StatefulWidget with NavigationStates {
@@ -26,28 +30,42 @@ class _HomeState extends State<Home> {
 
   List<Product> products;
 
-  String search = '';
+  String search = 'Search';
   String personalcare = 'Personal Care';
   String processedFood = 'Processed Food';
-  @override
-  void initState() {
-    super.initState();
+  void translate() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
     final translator = GoogleTranslator();
     translator.translate('Search', to: 'ml').then((result) {
       setState(() {
-        search = result.text;
+        if (preferences.getString('language') == 'malayalam') {
+          search = result.text;
+        } else {
+          search = 'Search';
+        }
       });
     });
     translator.translate(personalcare, to: 'ml').then((result) {
       setState(() {
-        personalcare = result.text;
+        if (preferences.getString('language') == 'malayalam') {
+          personalcare = result.text;
+        } else {}
       });
     });
     translator.translate(processedFood, to: 'ml').then((result) {
       setState(() {
-        processedFood = result.text;
+        if (preferences.getString('language') == 'malayalam') {
+          processedFood = result.text;
+        }
       });
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // translate();
+    getProductListHo();
   }
 
   Future getProductListHo() async {
@@ -55,11 +73,16 @@ class _HomeState extends State<Home> {
         await apiService.getProductList(apiService.getProducts());
     print('i am home');
     print(productList);
+    setState(() {
+      products = productList;
+    });
     return productList;
   }
 
   @override
   Widget build(BuildContext context) {
+    print('product');
+    print(products);
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(0)),
       child: CustomScrollView(
@@ -76,6 +99,11 @@ class _HomeState extends State<Home> {
                       height: 45.0,
                       width: double.infinity,
                       child: CupertinoTextField(
+                        onTap: () {
+                          showSearch(
+                              context: context, delegate: ProductSearch());
+                        },
+                        readOnly: true,
                         keyboardType: TextInputType.text,
                         placeholder: search,
                         placeholderStyle: TextStyle(
@@ -261,7 +289,7 @@ class _HomeState extends State<Home> {
                                       itemCount: snapshot.data.length,
                                       itemBuilder: (context, index) {
                                         Product product = snapshot.data[index];
-                                        return Productcard(
+                                        return ProductCard(
                                           product: product,
                                         );
                                       },

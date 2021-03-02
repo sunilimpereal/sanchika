@@ -139,4 +139,6 @@ class APIService {
         Duration(seconds: 3),
         () => productList,
       );
+
+  // get wishlist for the user
 }

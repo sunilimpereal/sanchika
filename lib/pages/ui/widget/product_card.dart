@@ -6,49 +6,74 @@ import 'package:sanchika/pages/ui/widget/product_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
 
-class Productcard extends StatefulWidget {
+class ProductCard extends StatefulWidget {
   Product product;
   final translator = GoogleTranslator();
   Function onMenuItemClicked;
-  Productcard({this.product, this.onMenuItemClicked});
+  ProductCard({this.product, this.onMenuItemClicked});
 
   @override
-  _ProductcardState createState() => _ProductcardState();
+  _ProductCardState createState() => _ProductCardState();
 }
 
-class _ProductcardState extends State<Productcard> {
+class _ProductCardState extends State<ProductCard> {
   String _selectedValue;
-  String nameml = '';
-  void translate() async {
+
+  Future<Product> translate(Product product) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    final translator = GoogleTranslator();
-    translator.translate(widget.product.name, to: 'ml').then((result) {
-      setState(() {
-        if (preferences.getString('language') == 'malayalam') {
-          nameml = result.text;
-        } else {
-          nameml = widget.product.name;
-        }
+
+    if (preferences.getString('language') == 'malayalam') {
+      Product productmal = widget.product;
+      final translator = GoogleTranslator();
+      translator.translate(widget.product.name, to: 'ml').then((result) {
+        setState(() {
+          productmal.name = result.text;
+          print(result.text);
+        });
       });
-    });
+      translator.translate(widget.product.description, to: 'ml').then((result) {
+        setState(() {
+          productmal.description = result.text;
+        });
+      });
+      translator.translate(widget.product.ingredients, to: 'ml').then((result) {
+        setState(() {
+          productmal.ingredients = result.text;
+        });
+      });
+      return productmal;
+    }
+    return product;
   }
 
   @override
   void initState() {
     super.initState();
-    translate();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(nameml);
+    return FutureBuilder(
+      future: translate(widget.product),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return _cardUi(context: context, product: snapshot.data);
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+
+  @override
+  Widget _cardUi({BuildContext context, Product product}) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => ProductView(
-                    product: widget.product,
+                    product: product,
                     onMenuItemClicked: widget.onMenuItemClicked,
                   )),
         );
@@ -95,7 +120,7 @@ class _ProductcardState extends State<Productcard> {
                   Container(
                     width: double.maxFinite,
                     child: Text(
-                      nameml,
+                      product.name,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: TextStyle(

@@ -176,32 +176,32 @@ class _BreakfastState extends State<Breakfast> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Productcard(product: product4),
-                Productcard(product: product3),
+                ProductCard(product: product4),
+                ProductCard(product: product3),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Productcard(product: product1),
-                Productcard(product: product2),
+                ProductCard(product: product1),
+                ProductCard(product: product2),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Productcard(product: product5),
-                Productcard(product: product0),
+                ProductCard(product: product5),
+                ProductCard(product: product0),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Productcard(product: product2),
-                Productcard(product: product0),
+                ProductCard(product: product2),
+                ProductCard(product: product0),
               ],
             ),
           ],

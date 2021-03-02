@@ -41,12 +41,13 @@ dependencies:
   flutter_launcher_icons: "^0.8.1"
   otp_screen:
   http: ^0.12.2
-  shared_preferences:
+  shared_preferences: ^0.5.6
   toast: ^0.1.5
   flutter_localizations: # Add this line
     sdk: flutter         # Add this line
   translator: ^0.1.5
   modal_bottom_sheet: ^1.0.0+1
+  provider: ^3.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

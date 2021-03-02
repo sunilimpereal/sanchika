@@ -1,10 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:translator/translator.dart';
 
-class CategoryHomeCard extends StatelessWidget {
-  final String name;
-  final String image;
+class CategoryHomeCard extends StatefulWidget {
+  String name;
+  String image;
 
-  const CategoryHomeCard({Key key, this.name, this.image}) : super(key: key);
+  CategoryHomeCard({Key key, this.name, this.image}) : super(key: key);
+
+  @override
+  _CategoryHomeCardState createState() => _CategoryHomeCardState();
+}
+
+class _CategoryHomeCardState extends State<CategoryHomeCard> {
+  void translate() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final translator = GoogleTranslator();
+    translator.translate(widget.name, to: 'ml').then((result) {
+      setState(() {
+        if (preferences.getString('language') == 'malayalam') {
+          widget.name = result.text;
+        } else {}
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    translate();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -37,7 +63,7 @@ class CategoryHomeCard extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(image),
+                    image: AssetImage(widget.image),
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -50,7 +76,7 @@ class CategoryHomeCard extends StatelessWidget {
               decoration: BoxDecoration(),
               child: Center(
                   child: Text(
-                name,
+                widget.name,
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,

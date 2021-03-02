@@ -519,7 +519,7 @@ class _ProductViewState extends State<ProductView> {
                                     (() {
                                       if (widget.product.name !=
                                           product0.name) {
-                                        return Productcard(
+                                        return ProductCard(
                                           product: product0,
                                         );
                                       } else {
@@ -529,7 +529,7 @@ class _ProductViewState extends State<ProductView> {
                                     (() {
                                       if (widget.product.name !=
                                           product1.name) {
-                                        return Productcard(
+                                        return ProductCard(
                                           product: product1,
                                         );
                                       } else {
@@ -539,7 +539,7 @@ class _ProductViewState extends State<ProductView> {
                                     (() {
                                       if (widget.product.name !=
                                           product2.name) {
-                                        return Productcard(
+                                        return ProductCard(
                                           product: product2,
                                         );
                                       } else {
@@ -549,7 +549,7 @@ class _ProductViewState extends State<ProductView> {
                                     (() {
                                       if (widget.product.name !=
                                           product3.name) {
-                                        return Productcard(
+                                        return ProductCard(
                                           product: product3,
                                         );
                                       } else {
@@ -559,7 +559,7 @@ class _ProductViewState extends State<ProductView> {
                                     (() {
                                       if (widget.product.name !=
                                           product4.name) {
-                                        return Productcard(
+                                        return ProductCard(
                                           product: product4,
                                         );
                                       } else {
