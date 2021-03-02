@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
+import 'package:sanchika/localization/localization_methods.dart';
 
 class Settings extends StatefulWidget with NavigationStates {
   final Function onMenuTap;
@@ -28,7 +29,7 @@ class _SettingsState extends State<Settings> {
                   child: Icon(Icons.menu, color: Colors.black),
                   onTap: widget.onMenuTap,
                 ),
-                Text("Settings")
+                Text(getTranslated(context, "Settings"))
               ],
             )
           ],

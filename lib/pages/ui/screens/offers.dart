@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
+import 'package:sanchika/localization/localization_methods.dart';
 import 'package:sanchika/pages/ui/widget/home_crousal.dart';
 
 class Offers extends StatefulWidget with NavigationStates {
@@ -25,7 +26,7 @@ class _OffersState extends State<Offers> {
           onTap: widget.onMenuTap,
         ),
         title: Text(
-          "Offers",
+          getTranslated(context, "Offers"),
           style: TextStyle(color: Colors.black),
         ),
         actions: [

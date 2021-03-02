@@ -235,32 +235,38 @@ class _LoginPageState extends State<LoginPage> {
                                     onTap: () {
                                       //Login Button
                                       if (validateAndSave()) {
-                                        setState(() {
-                                          isApiCallProcess = true;
-                                        });
-                                        APIService apiService = APIService();
-                                        print(requestModel.toJson());
-                                        apiService
-                                            .login(requestModel)
-                                            .then((value) async {
-                                          SharedPreferences preferences =
-                                              await SharedPreferences
-                                                  .getInstance();
-                                          preferences.setString(
-                                              'login', 'logged');
-                                          preferences.setString(
-                                              'email', requestModel.email);
-                                          print(value.toJson());
-                                          setState(() {
-                                            isApiCallProcess = false;
-                                          });
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MenuDashboard()),
-                                          );
-                                        });
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MenuDashboard()),
+                                        );
+                                        // setState(() {
+                                        //   isApiCallProcess = true;
+                                        // });
+                                        // APIService apiService = APIService();
+                                        // print(requestModel.toJson());
+                                        // apiService
+                                        //     .login(requestModel)
+                                        //     .then((value) async {
+                                        //   SharedPreferences preferences =
+                                        //       await SharedPreferences
+                                        //           .getInstance();
+                                        //   preferences.setString(
+                                        //       'login', 'logged');
+                                        //   preferences.setString(
+                                        //       'email', requestModel.email);
+                                        //   print(value.toJson());
+                                        //   setState(() {
+                                        //     isApiCallProcess = false;
+                                        //   });
+                                        //   Navigator.pushReplacement(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) =>
+                                        //             MenuDashboard()),
+                                        //   );
+                                        // });
                                         print('Skipped');
                                       }
                                     },

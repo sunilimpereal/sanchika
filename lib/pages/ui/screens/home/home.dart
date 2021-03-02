@@ -25,12 +25,29 @@ class _HomeState extends State<Home> {
   final translator = GoogleTranslator();
 
   List<Product> products;
-  // Future<List<Product>> _getProduct;
+
+  String search = '';
+  String personalcare = 'Personal Care';
+  String processedFood = 'Processed Food';
   @override
   void initState() {
     super.initState();
-    // products = apiService.getProducts();
-    // Future<List<Product>> _getProduct = apiService.getProducts();
+    final translator = GoogleTranslator();
+    translator.translate('Search', to: 'ml').then((result) {
+      setState(() {
+        search = result.text;
+      });
+    });
+    translator.translate(personalcare, to: 'ml').then((result) {
+      setState(() {
+        personalcare = result.text;
+      });
+    });
+    translator.translate(processedFood, to: 'ml').then((result) {
+      setState(() {
+        processedFood = result.text;
+      });
+    });
   }
 
   Future getProductListHo() async {
@@ -60,7 +77,7 @@ class _HomeState extends State<Home> {
                       width: double.infinity,
                       child: CupertinoTextField(
                         keyboardType: TextInputType.text,
-                        placeholder: 'Search',
+                        placeholder: search,
                         placeholderStyle: TextStyle(
                           color: Color(0xffC4C6CC),
                           fontSize: 14.0,
@@ -188,12 +205,12 @@ class _HomeState extends State<Home> {
                                   );
                                 },
                                 child: CategoryHomeCard(
-                                  name: 'Personal Care',
+                                  name: personalcare,
                                   image: 'assets/images/skincare.png',
                                 ),
                               ),
                               CategoryHomeCard(
-                                name: 'Processed Food',
+                                name: processedFood,
                                 image: 'assets/images/processedfood.png',
                               ),
                               CategoryHomeCard(

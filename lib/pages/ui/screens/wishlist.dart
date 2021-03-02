@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
+import 'package:sanchika/localization/localization_methods.dart';
 import 'package:sanchika/model/product.dart';
 import 'package:sanchika/pages/ui/widget/wishlist_card.dart';
 
@@ -82,7 +83,7 @@ class _WishlistState extends State<Wishlist> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          "Wishlist",
+          getTranslated(context, "Wishlist"),
           style: TextStyle(color: Colors.black),
         ),
         leading: InkWell(

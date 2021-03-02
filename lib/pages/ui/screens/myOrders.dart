@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
+import 'package:sanchika/localization/localization_methods.dart';
 
 class MyOrders extends StatefulWidget with NavigationStates {
   final Function onMenuTap;
@@ -20,7 +21,7 @@ class _MyOrdersState extends State<MyOrders> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          "My Orders",
+          getTranslated(context, "Orders"),
           style: TextStyle(color: Colors.black),
         ),
         actions: [
