@@ -73,9 +73,9 @@ class _HomeState extends State<Home> {
         await apiService.getProductList(apiService.getProducts());
     print('i am home');
     print(productList);
-    setState(() {
-      products = productList;
-    });
+    // setState(() {
+    //   products = productList;
+    // });
     return productList;
   }
 

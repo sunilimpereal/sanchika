@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences preferences = await SharedPreferences.getInstance();
+  preferences.setStringList('recentSearch', []); //for recent search in search
   var logged = preferences.getString('login');
 
   runApp(MyApp(logged: logged));
