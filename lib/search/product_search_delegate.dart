@@ -53,16 +53,6 @@ class ProductSearch extends SearchDelegate<Product> {
     return productList;
   }
 
-  List<String> filter = [
-    'Relavance',
-    'Discount',
-    'Sort High to Low',
-    'Sort Low to High',
-  ];
-  String type = 'Relavance';
-
-  void getType() {}
-
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -72,69 +62,6 @@ class ProductSearch extends SearchDelegate<Product> {
           query = '';
         },
       ),
-      IconButton(
-        icon: Icon(Icons.sort),
-        onPressed: () {
-          showMaterialModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    color: Colors.white,
-                    height: 300,
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              'Sort By',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Colors.blueGrey,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          child: SizedBox(
-                            height: 300,
-                            child: ListView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: filter.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  onTap: () {
-                                    type = filter[index];
-                                    print('type to search');
-                                    print(type);
-                                    // _changetype(context, type: filter[index]);
-                                  },
-                                  title: Text(filter[index]),
-                                  trailing: filter[index] == type
-                                      ? Icon(
-                                          Icons.select_all,
-                                          color: Colors.blue,
-                                        )
-                                      : Container(
-                                          height: 5,
-                                          width: 5,
-                                        ),
-                                );
-                              },
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              });
-        },
-      )
     ];
   }
 
@@ -218,14 +145,14 @@ class ProductSearch extends SearchDelegate<Product> {
                             },
                             leading: Icon(
                               Icons.history,
-                              color: Colors.blue[100],
+                              color: Colors.grey[300],
                             ),
-                            title: RichText(
-                              text: TextSpan(
-                                  text: snapshot.data[index],
+                            title: Transform.translate(
+                              offset: Offset(-16, -3),
+                              child: Text(snapshot.data[index],
                                   style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.normal,
                                     fontSize: 16,
                                   )),
                             ),
@@ -244,7 +171,13 @@ class ProductSearch extends SearchDelegate<Product> {
                               showToast("Search Cleared",
                                   gravity: Toast.CENTER);
                             },
-                            title: Text('Clear Search'),
+                            title: Text(
+                              'Clear Search',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
                           );
                         }
                       });
@@ -255,6 +188,18 @@ class ProductSearch extends SearchDelegate<Product> {
         }
       },
     );
+  }
+}
+
+class RecentSearch extends StatefulWidget {
+  @override
+  _RecentSearchState createState() => _RecentSearchState();
+}
+
+class _RecentSearchState extends State<RecentSearch> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
 
@@ -357,60 +302,94 @@ class _SearchResultState extends State<SearchResult> {
                     child: RaisedButton(
                       onPressed: () {
                         showMaterialModalBottomSheet(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.white70, width: 1),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20)),
+                            ),
                             context: context,
                             builder: (context) {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
                                   color: Colors.white,
-                                  height: 300,
+                                  height: 280,
                                   width: MediaQuery.of(context).size.width,
                                   child: Column(
                                     children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 16.0, left: 8),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'Sort By',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,
+                                                color: Colors.blueGrey,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                       Row(
                                         children: [
-                                          Text(
-                                            'Sort By',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                              color: Colors.blueGrey,
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 8.0, left: 8.0),
+                                            child: Container(
+                                              height: 5,
+                                              width: 40,
+                                              decoration: BoxDecoration(
+                                                  color: Color(0xff0B3666)
+                                                      .withOpacity(0.9),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
                                             ),
-                                          ),
+                                          )
                                         ],
                                       ),
-                                      Expanded(
-                                        child: SizedBox(
-                                          height: 300,
-                                          child: ListView.builder(
-                                            physics:
-                                                NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            itemCount: filter.length,
-                                            itemBuilder: (context, index) {
-                                              return ListTile(
-                                                onTap: () {
-                                                  type = filter[index];
-                                                  filterProducts(
-                                                      productList:
-                                                          widget.productList,
-                                                      type: filter[index]);
-                                                  _changeSortBy(filter[index]);
-                                                  print(type);
-                                                  Navigator.pop(context);
-                                                },
-                                                title: Text(filter[index]),
-                                                trailing: filter[index] == type
-                                                    ? Icon(
-                                                        Icons.select_all,
-                                                        color: Colors.blue,
-                                                      )
-                                                    : Container(
-                                                        height: 5,
-                                                        width: 5,
-                                                      ),
-                                              );
-                                            },
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 8.0),
+                                        child: Expanded(
+                                          child: SizedBox(
+                                            height: 300,
+                                            child: ListView.builder(
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              itemCount: filter.length,
+                                              itemBuilder: (context, index) {
+                                                return ListTile(
+                                                  onTap: () {
+                                                    type = filter[index];
+                                                    filterProducts(
+                                                        productList:
+                                                            widget.productList,
+                                                        type: filter[index]);
+                                                    _changeSortBy(
+                                                        filter[index]);
+                                                    print(type);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  title: Text(filter[index]),
+                                                  trailing: filter[index] ==
+                                                          type
+                                                      ? Icon(
+                                                          Icons.select_all,
+                                                          color: Colors.blue,
+                                                        )
+                                                      : Container(
+                                                          height: 5,
+                                                          width: 5,
+                                                        ),
+                                                );
+                                              },
+                                            ),
                                           ),
                                         ),
                                       )
@@ -486,17 +465,15 @@ class _SearchResultState extends State<SearchResult> {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: MediaQuery.of(context).size.width *
-                  0.43 /
-                  (MediaQuery.of(context).size.height * .35),
+                  0.5 /
+                  (MediaQuery.of(context).size.height * .37),
             ),
             itemCount: widget.productList.length,
             itemBuilder: (context, index) {
-              return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Container(
-                      child: ProductCard(product: widget.productList[index])),
-                ),
+              Product product = widget.productList[index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Container(child: ProductCard(product: product)),
               );
             },
           ),
