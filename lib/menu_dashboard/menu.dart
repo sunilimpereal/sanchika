@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/localization/localization_methods.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Menu extends StatefulWidget {
   final Animation<Offset> slideAnimation;
@@ -22,6 +23,25 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
+  String name = '';
+  void getName() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String getname = preferences.getString('name');
+    setState(() {
+      if (getName != null) {
+        name = getname;
+      } else {
+        name = '';
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getName();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,12 +62,23 @@ class _MenuState extends State<Menu> {
                   alignment: Alignment.centerLeft,
                   child: Container(
                     padding: const EdgeInsets.only(left: 18.0),
-                    child: Text(
-                      getTranslated(context, 'Hello'),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
+                    child: Column(
+                      children: [
+                        Text(
+                          getTranslated(context, 'Hello'),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          name,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ),
                 ),

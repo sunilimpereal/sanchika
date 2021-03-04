@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -15,20 +16,28 @@ class APIService {
   };
   Future<LoginResponseModel> login(LoginRequestModel login) async {
     String url =
-        'http://justerp.in:9191/sanchika/user/login/getEmailAndPassword';
+        'http://sanchika.in//sanchikaapi/sanchika/user/login/getEmailAndPassword';
     final response = await http.get(
       url + '?email=${login.email}&password=${login.password}',
     );
+    FlutterError.onError = (FlutterErrorDetails details) {
+      return null;
+    };
     if (response.statusCode == 200) {
+      print('login');
       return loginResponseModelFromJson(response.body);
-      print('got');
+    } else {
+      return null;
     }
   }
 
   Future<RegisterResponseModel> register(RegisterRequestModel register) async {
-    String url = "http://justerp.in:9191/sanchika/user/register";
+    String url = "http://sanchika.in//sanchikaapi/sanchika/user/register";
     final response = await http.post(url,
         body: jsonEncode(register.toJson()), headers: headerList);
+    FlutterError.onError = (FlutterErrorDetails details) {
+      return null;
+    };
     if (response.statusCode == 200) {
       print('signed up');
       return registerResponseModelFromJson(response.body);
@@ -38,10 +47,13 @@ class APIService {
   }
 
   Future<String> getotp(String mobileNumber) async {
-    String url = "http://justerp.in:9191/sanchika/user/genrateotp";
+    String url = "http://sanchika.in//sanchikaapi/sanchika/user/genrateotp";
     final response = await http.post(url,
         headers: headerList,
         body: jsonEncode(<String, String>{"mobileNumber": "$mobileNumber"}));
+    FlutterError.onError = (FlutterErrorDetails details) {
+      return null;
+    };
     if (response.statusCode == 200) {
       print("otp Sent");
       print(response.body);

@@ -1,10 +1,13 @@
+import 'dart:math';
+
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:sanchika/model/product.dart';
-import 'package:sanchika/pages/ui/widget/crousal.dart';
 import 'package:sanchika/pages/ui/widget/product_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
+import 'package:progress_state_button/iconed_button.dart';
+import 'package:progress_state_button/progress_button.dart';
 
 class ProductCard extends StatefulWidget {
   Product product;
@@ -16,9 +19,10 @@ class ProductCard extends StatefulWidget {
   _ProductCardState createState() => _ProductCardState();
 }
 
-class _ProductCardState extends State<ProductCard> {
+class _ProductCardState extends State<ProductCard>
+    with SingleTickerProviderStateMixin {
   String _selectedValue;
-
+  //tratlate function to malylam and retun the product item
   Future<Product> translate(Product product) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
@@ -26,30 +30,38 @@ class _ProductCardState extends State<ProductCard> {
       Product productmal = widget.product;
       final translator = GoogleTranslator();
       translator.translate(widget.product.name, to: 'ml').then((result) {
-        setState(() {
-          productmal.name = result.text;
-          print(result.text);
-        });
-      });
-      translator.translate(widget.product.description, to: 'ml').then((result) {
-        setState(() {
+        productmal.name = result.text;
+        translator
+            .translate(widget.product.description, to: 'ml')
+            .then((result) {
           productmal.description = result.text;
+          translator
+              .translate(widget.product.ingredients, to: 'ml')
+              .then((result) {
+            productmal.ingredients = result.text;
+          });
         });
       });
-      translator.translate(widget.product.ingredients, to: 'ml').then((result) {
-        setState(() {
-          productmal.ingredients = result.text;
-        });
-      });
+
       return productmal;
     }
     return product;
   }
 
+  //Animation for button
+
   @override
   void initState() {
     super.initState();
   }
+
+  //dispose for animation
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  ButtonState stateTextWithIcon = ButtonState.idle;
 
   @override
   Widget build(BuildContext context) {
@@ -171,39 +183,74 @@ class _ProductCardState extends State<ProductCard> {
                       height: 10,
                     ),
                     //button
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Container(
-                            width: 134,
-                            height: 38,
-                            padding: EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                                color: Color(0xff0B3666).withOpacity(0.9),
-                                borderRadius: BorderRadius.circular(50)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  " ADD ",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.add_shopping_cart_rounded,
-                                  size: 18,
-                                  color: Colors.white,
-                                )
-                              ],
-                            ),
+                    Container(
+                      width: 130,
+                      height: 40,
+                      child: ProgressButton.icon(
+                        progressIndicatorSize: 28.0,
+                        iconedButtons: {
+                          ButtonState.idle: IconedButton(
+                            text: "Add to Cart",
+                            icon: Icon(Icons.shopping_cart_outlined,
+                                size: 23, color: Colors.white),
+                            color: Color(0xff032e6b),
                           ),
-                        )
-                      ],
-                    )
+                          ButtonState.loading: IconedButton(
+                            text: "Loading",
+                            icon: Icon(Icons.blur_circular),
+                            color: Color(0xff032e6b),
+                          ),
+                          ButtonState.fail: IconedButton(
+                              text: "Failed",
+                              icon: Icon(Icons.cancel, color: Colors.white),
+                              color: Colors.red.shade300),
+                          ButtonState.success: IconedButton(
+                              text: "Added",
+                              icon: Icon(
+                                Icons.check_circle,
+                                color: Colors.white,
+                              ),
+                              color: Colors.green.shade400)
+                        },
+                        onPressed: onPressedIconWithText,
+                        state: stateTextWithIcon,
+                      ),
+                    ),
+
+                    //OLD ADD Button
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     Padding(
+                    //       padding: const EdgeInsets.all(2.0),
+                    //       child: Container(
+                    //         width: 134,
+                    //         height: 38,
+                    //         padding: EdgeInsets.all(4),
+                    //         decoration: BoxDecoration(
+                    //             color: Color(0xff0B3666).withOpacity(0.9),
+                    //             borderRadius: BorderRadius.circular(50)),
+                    //         child: Row(
+                    //           mainAxisAlignment: MainAxisAlignment.center,
+                    //           children: [
+                    //             Text(
+                    //               " ADD ",
+                    //               style: TextStyle(
+                    //                 color: Colors.white,
+                    //                 fontWeight: FontWeight.w400,
+                    //               ),
+                    //             ),
+                    //             Icon(
+                    //               Icons.add_shopping_cart_rounded,
+                    //               size: 18,
+                    //               color: Colors.white,
+                    //             )
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     )
+                    //   ],
+                    // )
                   ],
                 ),
               ),
@@ -298,12 +345,30 @@ class _ProductCardState extends State<ProductCard> {
     }
   }
 
-  // String translate(String text) {
-  //   final translator = GoogleTranslator();
-  //   translator.translate(text, to: 'ml').then((result) {
-  //     print('result');
-  //     print(result);
-  //     return result.text;
-  //   });
-  // }
+  void onPressedIconWithText() {
+    switch (stateTextWithIcon) {
+      case ButtonState.idle:
+        stateTextWithIcon = ButtonState.loading;
+        Future.delayed(Duration(seconds: 1), () {
+          setState(() {
+            stateTextWithIcon = Random.secure().nextBool()
+                ? ButtonState.success
+                : ButtonState.fail;
+          });
+        });
+
+        break;
+      case ButtonState.loading:
+        break;
+      case ButtonState.success:
+        stateTextWithIcon = ButtonState.idle;
+        break;
+      case ButtonState.fail:
+        stateTextWithIcon = ButtonState.idle;
+        break;
+    }
+    setState(() {
+      stateTextWithIcon = stateTextWithIcon;
+    });
+  }
 }

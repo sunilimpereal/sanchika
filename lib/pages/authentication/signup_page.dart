@@ -275,24 +275,101 @@ class _SignupPageState extends State<SignupPage> {
                                           apiService
                                               .register(requestModel)
                                               .then((value) {
-                                            print(value.toJson());
-                                            apiService
-                                                .getotp(requestModel.mobile)
-                                                .then((value) {
-                                              setState(() {
-                                                isApiCallProcess = true;
+                                            if (value != null) {
+                                              print(value.toJson());
+                                              apiService
+                                                  .getotp(requestModel.mobile)
+                                                  .then((value) {
+                                                if (value != null) {
+                                                  setState(() {
+                                                    isApiCallProcess = true;
+                                                  });
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            Otp(
+                                                              otp: value,
+                                                              mobileNumber:
+                                                                  requestModel
+                                                                      .mobile,
+                                                            )),
+                                                  );
+                                                } else {
+                                                  showDialog<void>(
+                                                    context: context,
+                                                    barrierDismissible:
+                                                        false, // user must tap button!
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title:
+                                                            Text('Try Later'),
+                                                        content:
+                                                            SingleChildScrollView(
+                                                          child: ListBody(
+                                                            children: <Widget>[
+                                                              Text(
+                                                                  'Unable to send OTP'),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            child: Text('OK'),
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                  setState(() {
+                                                    isApiCallProcess = false;
+                                                  });
+                                                }
                                               });
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => Otp(
-                                                          otp: value,
-                                                          mobileNumber:
-                                                              requestModel
-                                                                  .mobile,
-                                                        )),
+                                            } else {
+                                              setState(() {
+                                                isApiCallProcess = false;
+                                              });
+                                              showDialog<void>(
+                                                context: context,
+                                                barrierDismissible:
+                                                    false, // user must tap button!
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title:
+                                                        Text('Sign Up failed'),
+                                                    content:
+                                                        SingleChildScrollView(
+                                                      child: ListBody(
+                                                        children: <Widget>[
+                                                          Text(
+                                                              'Unable to Sign Up'),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        child: Text('OK'),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
                                               );
-                                            });
+                                              setState(() {
+                                                isApiCallProcess = false;
+                                              });
+                                            }
                                           });
                                         }
                                       },

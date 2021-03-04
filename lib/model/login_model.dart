@@ -65,7 +65,7 @@ class Login {
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {
       "email": email,
-      "password": name,
+      "name": name,
     };
     return map;
   }

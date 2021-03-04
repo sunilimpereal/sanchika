@@ -235,38 +235,73 @@ class _LoginPageState extends State<LoginPage> {
                                     onTap: () {
                                       //Login Button
                                       if (validateAndSave()) {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  MenuDashboard()),
-                                        );
-                                        // setState(() {
-                                        //   isApiCallProcess = true;
-                                        // });
-                                        // APIService apiService = APIService();
-                                        // print(requestModel.toJson());
-                                        // apiService
-                                        //     .login(requestModel)
-                                        //     .then((value) async {
-                                        //   SharedPreferences preferences =
-                                        //       await SharedPreferences
-                                        //           .getInstance();
-                                        //   preferences.setString(
-                                        //       'login', 'logged');
-                                        //   preferences.setString(
-                                        //       'email', requestModel.email);
-                                        //   print(value.toJson());
-                                        //   setState(() {
-                                        //     isApiCallProcess = false;
-                                        //   });
-                                        //   Navigator.pushReplacement(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) =>
-                                        //             MenuDashboard()),
-                                        //   );
-                                        // });
+                                        setState(() {
+                                          isApiCallProcess = true;
+                                        });
+                                        APIService apiService = APIService();
+                                        print(requestModel.toJson());
+                                        apiService
+                                            .login(requestModel)
+                                            .then((value) async {
+                                          if (value != null) {
+                                            SharedPreferences preferences =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            preferences.setString(
+                                                'login', 'logged');
+                                            preferences.setString(
+                                                'email', requestModel.email);
+                                            preferences.setString(
+                                                'name', value.data.login.name);
+                                            print(value.toJson());
+                                            setState(() {
+                                              isApiCallProcess = false;
+                                            });
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MenuDashboard()),
+                                            );
+                                          } else {
+                                            setState(() {
+                                              isApiCallProcess = false;
+                                            });
+                                            showDialog<void>(
+                                              context: context,
+                                              barrierDismissible:
+                                                  false, // user must tap button!
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title:
+                                                      Text('Icorrect Details'),
+                                                  content:
+                                                      SingleChildScrollView(
+                                                    child: ListBody(
+                                                      children: <Widget>[
+                                                        Text(
+                                                            'Email Or Password is wrong'),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: Text('OK'),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                            setState(() {
+                                              isApiCallProcess = false;
+                                            });
+                                          }
+                                        });
+
                                         print('Skipped');
                                       }
                                     },

@@ -243,12 +243,12 @@ class _SearchResultState extends State<SearchResult> {
         widget.productList;
       });
     }
-    if (type == 'Sort High to Low') {
+    if (type == 'Price High to Low') {
       setState(() {
         productList.sort((b, a) => a.price.compareTo(b.price));
       });
     }
-    if (type == 'Sort Low to High') {
+    if (type == 'Price Low to High') {
       setState(() {
         productList.sort((a, b) => a.price.compareTo(b.price));
       });
@@ -262,8 +262,8 @@ class _SearchResultState extends State<SearchResult> {
   List<String> filter = [
     'Relavance',
     'Discount',
-    'Sort High to Low',
-    'Sort Low to High',
+    'Price High to Low',
+    'Price Low to High',
   ];
   String type = 'Relavance';
   void _changeSortBy(String type) {
@@ -314,9 +314,11 @@ class _SearchResultState extends State<SearchResult> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
                                   color: Colors.white,
-                                  height: 280,
+                                  height: 300,
                                   width: MediaQuery.of(context).size.width,
                                   child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.only(
@@ -334,65 +336,60 @@ class _SearchResultState extends State<SearchResult> {
                                           ],
                                         ),
                                       ),
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 8.0, left: 8.0),
-                                            child: Container(
-                                              height: 5,
-                                              width: 40,
-                                              decoration: BoxDecoration(
-                                                  color: Color(0xff0B3666)
-                                                      .withOpacity(0.9),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                            ),
-                                          )
-                                        ],
+                                      SizedBox(
+                                        height: 15,
                                       ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 8.0),
-                                        child: Expanded(
-                                          child: SizedBox(
-                                            height: 300,
-                                            child: ListView.builder(
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              itemCount: filter.length,
-                                              itemBuilder: (context, index) {
-                                                return ListTile(
-                                                  onTap: () {
-                                                    type = filter[index];
-                                                    filterProducts(
-                                                        productList:
-                                                            widget.productList,
-                                                        type: filter[index]);
-                                                    _changeSortBy(
-                                                        filter[index]);
-                                                    print(type);
-                                                    Navigator.pop(context);
-                                                  },
-                                                  title: Text(filter[index]),
-                                                  trailing: filter[index] ==
-                                                          type
-                                                      ? Icon(
-                                                          Icons.select_all,
-                                                          color: Colors.blue,
-                                                        )
-                                                      : Container(
-                                                          height: 5,
-                                                          width: 5,
-                                                        ),
-                                                );
-                                              },
-                                            ),
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 0.0, left: 8.0),
+                                              child: Container(
+                                                height: 5,
+                                                width: 40,
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xff0B3666)
+                                                        .withOpacity(0.9),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: SizedBox(
+                                          child: ListView.builder(
+                                            itemCount: filter.length,
+                                            itemBuilder: (context, index) {
+                                              return ListTile(
+                                                onTap: () {
+                                                  type = filter[index];
+                                                  filterProducts(
+                                                      productList:
+                                                          widget.productList,
+                                                      type: filter[index]);
+                                                  _changeSortBy(filter[index]);
+                                                  print(type);
+                                                  Navigator.pop(context);
+                                                },
+                                                title: Text(filter[index]),
+                                                trailing: filter[index] == type
+                                                    ? Icon(
+                                                        Icons.select_all,
+                                                        color: Colors.blue,
+                                                      )
+                                                    : Container(
+                                                        height: 5,
+                                                        width: 5,
+                                                      ),
+                                              );
+                                            },
                                           ),
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
