@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "769031628594",
+    "project_id": "sanchika-37a63",
+    "storage_bucket": "sanchika-37a63.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769031628594:android:6305b3df9f8888e690d92b",
+        "android_client_info": {
+          "package_name": "com.WondersMind.sanchika"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "769031628594-8b75e89ov1crsfcrq5g3j8if0s227a62.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgN9kVrmMtn3yIQs7aW6Ao62y0aSWNQhI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "769031628594-8b75e89ov1crsfcrq5g3j8if0s227a62.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
