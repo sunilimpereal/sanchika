@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sanchika/menu_dashboard/menu_dashboard.dart';
 import 'package:sanchika/pages/ui/widget/admin_wait.dart';
 
 class CheckAddress extends StatefulWidget {

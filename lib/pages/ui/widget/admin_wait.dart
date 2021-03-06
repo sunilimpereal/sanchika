@@ -43,7 +43,9 @@ class _AdminWaitState extends State<AdminWait> {
             SizedBox(
               height: 20,
             ),
-            RaisedButton(
+
+            // ignore: deprecated_member_use
+            ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,

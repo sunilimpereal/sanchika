@@ -17,7 +17,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  String logged;
+  final String logged;
   MyApp({this.logged});
   //Change Language
   static void setLocale(BuildContext context, Locale locale) {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sanchika/model/signUp_model.dart';
-import 'package:sanchika/model/user.dart';
 import 'package:sanchika/pages/ui/widget/otp.dart';
 import 'package:sanchika/pages/ui/widget/termsConditions.dart';
 import 'package:sanchika/services/api_service.dart';
@@ -38,9 +37,7 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  @override
   Widget _uiSetup(BuildContext context) {
-    User user = new User();
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
     ScreenUtil.instance =
         ScreenUtil(width: 750, height: 1334, allowFontScaling: true);

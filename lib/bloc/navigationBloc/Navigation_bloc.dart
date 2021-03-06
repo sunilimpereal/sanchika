@@ -27,10 +27,14 @@ class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
   final Function onMenuTap;
   final Function onMenuItemClicked;
 
-  NavigationBloc({this.onMenuItemClicked, this.onMenuTap});
-  @override
+  NavigationBloc({this.onMenuTap, this.onMenuItemClicked})
+      : super(Home(
+          onMenuItemClicked: onMenuItemClicked,
+          onMenuTap: onMenuTap,
+        ));
+
   NavigationStates get initialState => Home(onMenuTap: onMenuTap);
-  @override
+
   Stream<NavigationStates> mapEventToState(NavigationEvents event) async* {
     switch (event) {
       case NavigationEvents.DashboardClickedEvent:
@@ -80,6 +84,11 @@ class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
           onMenuTap: onMenuTap,
         );
         break;
+      default:
+        yield Home(
+          onMenuTap: onMenuTap,
+          onMenuItemClicked: onMenuItemClicked,
+        );
     }
   }
 }

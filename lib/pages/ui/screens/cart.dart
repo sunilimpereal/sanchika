@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/localization/localization_methods.dart';
-import 'package:sanchika/model/product.dart';
-import 'package:sanchika/pages/ui/widget/cart_card.dart';
 import 'package:sanchika/pages/ui/widget/checkout.dart';
 
 class Cart extends StatefulWidget with NavigationStates {

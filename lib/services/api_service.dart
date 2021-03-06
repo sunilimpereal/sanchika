@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:sanchika/model/login_model.dart';
 import 'package:sanchika/model/product.dart';
 import 'package:sanchika/model/signUp_model.dart';
+import 'package:sanchika/model/wishlist.dart';
 import 'package:sanchika/pages/ui/widget/product_card.dart';
 
 class APIService {
@@ -38,6 +39,7 @@ class APIService {
     FlutterError.onError = (FlutterErrorDetails details) {
       return null;
     };
+    print(response.statusCode);
     if (response.statusCode == 200) {
       print('signed up');
       return registerResponseModelFromJson(response.body);
@@ -153,5 +155,21 @@ class APIService {
       );
 
   // get wishlist for the user
-
+  Future<List<WishListItem>> getWishList() async {
+    String url = "http://sanchika.in//sanchikaapi/sanchika/user/wishList/getWishList";
+    final response = await http.get(url);
+    FlutterError.onError = (FlutterErrorDetails details) {
+      return null;
+    };
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print(getWishlistFromJson(response.body));
+      GetWishlist getWishlistBody = getWishlistFromJson(response.body);
+      List<WishListItem> wishlistItems = getWishlistBody.data.wishListMaster;
+      print(wishlistItems);
+      return wishlistItems;
+    } else {
+      return null;
+    }
+  }
 }

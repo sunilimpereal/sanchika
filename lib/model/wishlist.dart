@@ -42,11 +42,11 @@ class Data {
     this.wishListMaster,
   });
 
-  List<WishListMaster> wishListMaster;
+  List<WishListItem> wishListMaster;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        wishListMaster: List<WishListMaster>.from(
-            json["WishListMaster"].map((x) => WishListMaster.fromJson(x))),
+        wishListMaster: List<WishListItem>.from(
+            json["WishListMaster"].map((x) => WishListItem.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -55,8 +55,8 @@ class Data {
       };
 }
 
-class WishListMaster {
-  WishListMaster({
+class WishListItem {
+  WishListItem({
     this.wishListId,
     this.productId,
     this.userId,
@@ -74,7 +74,7 @@ class WishListMaster {
   dynamic status;
   int gid;
 
-  factory WishListMaster.fromJson(Map<String, dynamic> json) => WishListMaster(
+  factory WishListItem.fromJson(Map<String, dynamic> json) => WishListItem(
         wishListId: json["wishListId"],
         productId: json["productId"],
         userId: json["userId"],

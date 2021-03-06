@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sanchika/menu_dashboard/menu_dashboard.dart';
 import 'package:sanchika/model/login_model.dart';
-import 'package:sanchika/model/user.dart';
 import 'package:sanchika/pages/authentication/signup_page.dart';
-import 'package:sanchika/pages/ui/widget/admin_wait.dart';
 import 'package:sanchika/pages/ui/widget/forgotPassword.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:sanchika/utils/constants.dart';
@@ -39,9 +37,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  @override
   Widget _uiSetup(BuildContext context) {
-    User user = new User();
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
     ScreenUtil.instance =
         ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
@@ -370,7 +366,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     controller.dispose();
     super.dispose();
   }

@@ -182,7 +182,7 @@ class _CartCardState extends State<CartCard> {
   Text price1(int price1) {
     if (price1 != null) {
       return Text(
-        '₹${price1}',
+        '₹$price1',
         style: TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.normal,
@@ -209,7 +209,7 @@ class _CartCardState extends State<CartCard> {
             color: Colors.green[300],
           ),
           child: Text(
-            '${discount}% Off',
+            '$discount% Off',
             style: TextStyle(
               color: Colors.white,
               fontSize: 13,

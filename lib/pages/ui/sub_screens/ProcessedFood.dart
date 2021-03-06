@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sanchika/model/product.dart';
 import 'package:sanchika/pages/ui/screens/cart.dart';
 import 'package:sanchika/pages/ui/widget/product_card.dart';
-import 'package:sanchika/pages/ui/widget/product_view.dart';
 
 class ProcessedFood extends StatefulWidget {
   @override
