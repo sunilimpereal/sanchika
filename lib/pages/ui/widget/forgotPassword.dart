@@ -81,6 +81,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   ),
                   width: double.maxFinite,
                   height: 50,
+                  // ignore: deprecated_member_use
                   child: RaisedButton(
                     color: Color(0xff032E6B),
                     shape: RoundedRectangleBorder(
@@ -346,6 +347,7 @@ class _NewPasswordState extends State<NewPassword> {
                 ),
                 width: double.maxFinite,
                 height: 50,
+                // ignore: deprecated_member_use
                 child: RaisedButton(
                   color: Color(0xff032E6B),
                   shape: RoundedRectangleBorder(
