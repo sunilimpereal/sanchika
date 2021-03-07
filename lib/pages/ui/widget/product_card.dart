@@ -65,6 +65,7 @@ class _ProductCardState extends State<ProductCard>
 
   @override
   Widget build(BuildContext context) {
+    
     return FutureBuilder(
       future: translate(widget.product),
       builder: (context, snapshot) {
@@ -83,8 +84,11 @@ class _ProductCardState extends State<ProductCard>
       onTap: () {
         Navigator.push(
           context,
+          
           MaterialPageRoute(
+            
               builder: (context) => ProductView(
+                
                     product: product,
                     onMenuItemClicked: widget.onMenuItemClicked,
                   )),
