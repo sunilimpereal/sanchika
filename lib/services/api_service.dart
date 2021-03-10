@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -6,6 +7,8 @@ import 'package:sanchika/model/login_model.dart';
 import 'package:sanchika/model/product.dart';
 import 'package:sanchika/model/signUp_model.dart';
 import 'package:sanchika/model/wishlist.dart';
+import 'package:sanchika/pages/ui/screens/404_page.dart';
+import 'package:sanchika/pages/ui/widget/forgotPassword.dart';
 import 'package:sanchika/pages/ui/widget/product_card.dart';
 
 class APIService {
@@ -15,7 +18,8 @@ class APIService {
     "Accept-Encoding": "gzip, deflate, br",
     "Connection": "keep-alive"
   };
-  Future<LoginResponseModel> login(LoginRequestModel login) async {
+  Future<LoginResponseModel> login(
+      LoginRequestModel login, BuildContext context) async {
     String url =
         'http://sanchika.in//sanchikaapi/sanchika/user/login/getEmailAndPassword';
     final response = await http.get(
@@ -24,11 +28,40 @@ class APIService {
     FlutterError.onError = (FlutterErrorDetails details) {
       return null;
     };
+    print(response.statusCode);
     if (response.statusCode == 200) {
       print('login');
       return loginResponseModelFromJson(response.body);
+    } else if (response.statusCode == 500) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ErrorPage()),
+      );
     } else {
-      return null;
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Icorrect Details'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Email Or Password is wrong'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -156,7 +189,8 @@ class APIService {
 
   // get wishlist for the user
   Future<List<WishListItem>> getWishList() async {
-    String url = "http://sanchika.in//sanchikaapi/sanchika/user/wishList/getWishList";
+    String url =
+        "http://sanchika.in//sanchikaapi/sanchika/user/wishList/getWishList";
     final response = await http.get(url);
     FlutterError.onError = (FlutterErrorDetails details) {
       return null;

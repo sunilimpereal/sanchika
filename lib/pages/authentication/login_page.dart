@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rive/rive.dart';
 import 'package:sanchika/menu_dashboard/menu_dashboard.dart';
 import 'package:sanchika/model/login_model.dart';
 import 'package:sanchika/pages/authentication/signup_page.dart';
@@ -9,6 +10,7 @@ import 'package:sanchika/utils/constants.dart';
 import 'package:sanchika/utils/progressHUD.dart';
 import 'package:sanchika/widgets/header_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -22,10 +24,23 @@ class _LoginPageState extends State<LoginPage> {
   double offset = 0;
   LoginRequestModel requestModel;
   bool isApiCallProcess = false;
+  Artboard _riveArtboard;
+  RiveAnimationController _controller;
   @override
   void initState() {
     super.initState();
     requestModel = new LoginRequestModel();
+     rootBundle.load('assets/rive/login.riv').then((value) async{
+      final file =RiveFile();
+      if(file.import(value)){
+        final artboard = file.mainArtboard;
+        artboard.addController(_controller = SimpleAnimation('loop'));
+        setState(() {
+          _riveArtboard = artboard;
+          _controller.isActive = true ;
+        });
+      }
+    });
   }
 
   @override
@@ -47,8 +62,12 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+
             MyHeader(
-              image: "assets/icons/barbecue.svg",
+             child: Container(
+               width: MediaQuery.of(context).size.width*0.8,
+               height: 300,
+                child: _riveArtboard == null? const SizedBox():Rive(artboard: _riveArtboard,fit: BoxFit.contain,)),
               textTop: "Order and",
               textBottom: "Get to door steps",
               offset: offset,
@@ -237,7 +256,7 @@ class _LoginPageState extends State<LoginPage> {
                                         APIService apiService = APIService();
                                         print(requestModel.toJson());
                                         apiService
-                                            .login(requestModel)
+                                            .login(requestModel,context)
                                             .then((value) async {
                                           if (value != null) {
                                             SharedPreferences preferences =
@@ -260,41 +279,9 @@ class _LoginPageState extends State<LoginPage> {
                                                       MenuDashboard()),
                                             );
                                           } else {
-                                            setState(() {
-                                              isApiCallProcess = false;
-                                            });
-                                            showDialog<void>(
-                                              context: context,
-                                              barrierDismissible:
-                                                  false, // user must tap button!
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title:
-                                                      Text('Icorrect Details'),
-                                                  content:
-                                                      SingleChildScrollView(
-                                                    child: ListBody(
-                                                      children: <Widget>[
-                                                        Text(
-                                                            'Email Or Password is wrong'),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      child: Text('OK'),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                            setState(() {
-                                              isApiCallProcess = false;
-                                            });
+                                             setState(() {
+                                          isApiCallProcess = false;
+                                        });
                                           }
                                         });
 

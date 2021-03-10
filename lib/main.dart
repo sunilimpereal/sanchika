@@ -7,7 +7,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sanchika/localization/localization.dart';
 import 'package:sanchika/menu_dashboard/menu_dashboard.dart';
 import 'package:sanchika/pages/authentication/login_page.dart';
+import 'package:sanchika/widgets/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:rive_splash_screen/rive_splash_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
+import 'package:flutter/services.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
@@ -97,12 +102,59 @@ class _MyAppState extends State<MyApp> {
         for (var locale in supportedLocales) {
           if (locale.languageCode == deviceLocale.languageCode &&
               locale.countryCode == deviceLocale.countryCode) {
-            return deviceLocale;
+            return deviceLocale; 
           }
         }
         return supportedLocales.first;
       },
-      home: widget.logged == null ? LoginPage() : MenuDashboard(),
+      home: Splashscreen(logged: widget.logged,)
+      //  SplashScreen.navigate( name: 'assets/rive/splash_screen.riv',
+      // until: ()=>Future.delayed(Duration(seconds:2)),
+      // startAnimation: 'logo fill',
+      //   next:(context)=> widget.logged == null ? LoginPage() : MenuDashboard(),),
+    );
+  }
+}
+
+class Splashscreen extends StatefulWidget {
+  String logged;
+  Splashscreen({this.logged});
+  @override
+  _SplashscreenState createState() => _SplashscreenState();
+}
+
+class _SplashscreenState extends State<Splashscreen> {
+   Artboard _riveArtboard;
+  RiveAnimationController _controller;
+  @override
+  void initState() {
+    super.initState();
+
+     rootBundle.load('assets/rive/splash_screen.riv').then((value) async{
+      final file =RiveFile();
+      if(file.import(value)){
+        final artboard = file.mainArtboard;
+        artboard.addController(_controller = SimpleAnimation('logo fill'));
+        setState(() {
+          _riveArtboard = artboard;
+          _controller.isActive = true ;
+        });
+      }
+    });
+      Future.delayed(Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => widget.logged == null ? LoginPage() : MenuDashboard(),
+          ));
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(child: Container(color:Colors.white,child: _riveArtboard == null? const SizedBox():Rive(artboard: _riveArtboard,fit: BoxFit.contain,),)),
+      
     );
   }
 }

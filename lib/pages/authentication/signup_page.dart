@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rive/rive.dart';
 import 'package:sanchika/model/signUp_model.dart';
 import 'package:sanchika/pages/ui/widget/otp.dart';
 import 'package:sanchika/pages/ui/widget/termsConditions.dart';
@@ -7,6 +8,7 @@ import 'package:sanchika/services/api_service.dart';
 import 'package:sanchika/utils/constants.dart';
 import 'package:sanchika/utils/progressHUD.dart';
 import 'package:sanchika/widgets/header_login.dart';
+import 'package:flutter/services.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -21,11 +23,24 @@ class _SignupPageState extends State<SignupPage> {
   RegisterRequestModel requestModel;
   APIService apiService;
   bool isApiCallProcess = false;
+    Artboard _riveArtboard;
+  RiveAnimationController _controller;
   @override
   void initState() {
     super.initState();
     requestModel = new RegisterRequestModel();
     apiService = new APIService();
+       rootBundle.load('assets/rive/login.riv').then((value) async{
+      final file =RiveFile();
+      if(file.import(value)){
+        final artboard = file.mainArtboard;
+        artboard.addController(_controller = SimpleAnimation('loop'));
+        setState(() {
+          _riveArtboard = artboard;
+          _controller.isActive = true ;
+        });
+      }
+    });
   }
 
   @override
@@ -48,7 +63,11 @@ class _SignupPageState extends State<SignupPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               MyHeader(
-                image: "assets/icons/barbecue.svg",
+                child: Container(
+               width: MediaQuery.of(context).size.width*0.8,
+               height: 300,
+                child: _riveArtboard == null? const SizedBox():Rive(artboard: _riveArtboard,fit: BoxFit.contain,)),
+              
                 textTop: "Order and",
                 textBottom: "Get to door steps",
                 offset: offset,

@@ -3,12 +3,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sanchika/utils/constants.dart';
 
 class MyHeader extends StatefulWidget {
-  final String image;
+  final Widget child;
   final String textTop;
   final String textBottom;
   final double offset;
   const MyHeader(
-      {Key key, this.image, this.textTop, this.textBottom, this.offset})
+      {Key key, this.child, this.textTop, this.textBottom, this.offset})
       : super(key: key);
 
   @override
@@ -21,7 +21,7 @@ class _MyHeaderState extends State<MyHeader> {
     return ClipPath(
       clipper: MyClipper(),
       child: Container(
-        padding: EdgeInsets.only(left: 40, top: 50, right: 20, bottom: 0),
+        padding: EdgeInsets.only(left: 20, top: 50, right: 20, bottom: 0),
         height: 300,
         width: double.infinity,
         decoration: BoxDecoration(
@@ -50,22 +50,18 @@ class _MyHeaderState extends State<MyHeader> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            SizedBox(height: 30),
+            SizedBox(height: 00),
             Expanded(
               child: Stack(
                 children: <Widget>[
                   Positioned(
-                    top: (widget.offset < 0) ? 0 : widget.offset,
-                    child: SvgPicture.asset(
-                      widget.image,
-                      width: 270,
-                      fit: BoxFit.fitWidth,
-                      alignment: Alignment.bottomLeft,
-                    ),
+                    top: -40,
+                    left: -20,
+                    child:widget.child,
                   ),
                   Positioned(
                     top: 20 - widget.offset / 2,
-                    left: 140,
+                    left: 200,
                     child: Text(
                       "${widget.textTop} \n${widget.textBottom}",
                       style: kHeadingTextStyle.copyWith(
