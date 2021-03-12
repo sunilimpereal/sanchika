@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
+import 'package:sanchika/pages/ui/screens/categories/category_view.dart';
 import 'package:sanchika/pages/ui/sub_screens/ProcessedFood.dart';
 
 class Categories extends StatefulWidget with NavigationStates {
@@ -97,7 +98,7 @@ class _CategoriesState extends State<Categories> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProcessedFood()),
+                              builder: (context) => CategoryView()),
                         );
                       },
                       child: CategoryCard(

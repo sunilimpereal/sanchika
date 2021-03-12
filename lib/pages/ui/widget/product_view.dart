@@ -20,83 +20,13 @@ class ProductView extends StatefulWidget {
 }
 
 class _ProductViewState extends State<ProductView> {
-  Product product0 = Product(
-      name: 'Lays Classic',
-      type: '200g',
-      typeList: ['100g', '200g', '300g'],
-      description:
-          'Lay\'s is a brand of potato chip varieties, as well as the name of the company that founded the chip brand in the United States. It has also been called Frito-Lay with Fritos. Lay\'s has been owned by PepsiCo through Frito-Lay since 1965.',
-      price: 120,
-      price1: 125,
-      discount: 5,
-      ingredients:
-          'Paneer or cottage cheese is prepared by curing and draining blanched milk. It is an excellent source of nutrients like protein and calcium. The Premium Fresh paneer from the stable of Milky Mist is free of preservatives and packed with freshness. It is prepared in hygienic industrial set ups where high standards of production are followed.',
-      images: [
-        'assets/images/lays.png',
-        'assets/images/lays2.jpg',
-      ],
-      relatedproducts: []);
-  Product product1 = Product(
-      name: 'Milky Mist Paneer',
-      typeList: ['100g', '200g', '300g'],
-      description:
-          'Milky Mist is a brand that is known for its various dairy products. The pure and protein rich products are renowned for their high quality goodness. Paneer is a product which is also known as cottage cheese. This is a healthy dairy product that is produced and marketed by Milky Mist.',
-      price: 599,
-      ingredients:
-          'Paneer or cottage cheese is prepared by curing and draining blanched milk. It is an excellent source of nutrients like protein and calcium. The Premium Fresh paneer from the stable of Milky Mist is free of preservatives and packed with freshness. It is prepared in hygienic industrial set ups where high standards of production are followed.',
-      images: ['assets/images/milkymist1.png', 'assets/images/milkymist2.png']);
-  Product product2 = Product(
-      name: 'Philips Electronic Induction Stove',
-      description:
-          'Milky Mist is a brand that is known for its various dairy products. The pure and protein rich products are renowned for their high quality goodness. Paneer is a product which is also known as cottage cheese. This is a healthy dairy product that is produced and marketed by Milky Mist.',
-      price: 1200,
-      price1: 1500,
-      discount: 30,
-      ingredients: 'Paneer or cottage cheese is prepared by curing and draining blanched milk. It is an excellent source of nutrients like protein and calcium. The Premium Fresh paneer from the stable of Milky Mist is free of preservatives and packed with freshness. It is prepared in hygienic industrial set ups where high standards of production are followed.',
-      images: ['assets/images/pan1.png', 'assets/images/pan2.jpeg']);
-  Product product3 = Product(
-      name: 'Country Sweets',
-      description:
-          'Made from all natural ingredients, it\'s the perfect mix of sweet and tangy with just the right kick to bring any food to life. Not a traditional barbecue sauce, Country Sweet is the all-purpose flavor enhancer that has no boundaries. Add a delicious zest to chicken, pork, beef, seafood and even pizza.',
-      price: 50,
-      ingredients: 'First developed in a home kitchen in Rochester, New York, this sauce is unlike anything you’ve ever tried. Made from all natural ingredients, it’s the perfect mix of sweet and tangy with just the right kick to bring any food to life.',
-      images: [
-        'assets/images/countrysweet.png',
-        'assets/images/countrysweet.png'
-      ]);
-  Product product4 = Product(
-      name: 'RICE',
-      type: '1Kg',
-      typeList: ['1Kg', '3Kg', '5Kg'],
-      description:
-          'Naturally aged for 12 months \nAffordable Authentic Basmati Rice Basmati for regular use \nGluten freeIdeal for dishes like Pulao, Jeera Rice, khichdi & steam rice\nCountry of Origin: India',
-      price: 30,
-      price1: 38,
-      discount: 15,
-      ingredients:
-          'First developed in a home kitchen in Rochester, New York, this sauce is unlike anything you’ve ever tried. Made from all natural ingredients, it’s the perfect mix of sweet and tangy with just the right kick to bring any food to life.',
-      images: ['assets/images/rice.png', 'assets/images/countrysweet.png']);
-  Product product5 = Product(
-      name: 'Gold Winner',
-      type: '1 L',
-      typeList: ['1L', '2L', '3L'],
-      description:
-          'BLRs \nLight and healthy that is easy to digest \nRich in vitamins, which keeps skin healthy\nGood for the heart\nCountry of Origin: India\nGood for the heart',
-      price: 30,
-      price1: 38,
-      discount: 15,
-      ingredients:
-          'First developed in a home kitchen in Rochester, New York, this sauce is unlike anything you’ve ever tried. Made from all natural ingredients, it’s the perfect mix of sweet and tangy with just the right kick to bring any food to life.',
-      images: [
-        'assets/images/goldwinner.png',
-        'assets/images/countrysweet.png'
-      ]);
+  
 
   String _selectedValue;
   void initState() {
     setState(() {
-      _selectedValue =
-          widget.product.typeList == null ? '' : widget.product.typeList[0];
+      // _selectedValue =
+      //     widget.product.typeList == null ? '' : widget.product.typeList[0];
     });
 
     super.initState();
@@ -120,7 +50,7 @@ class _ProductViewState extends State<ProductView> {
           },
         ),
         title: Text(
-          widget.product.name,
+          widget.product.productName,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w400,
@@ -185,9 +115,9 @@ class _ProductViewState extends State<ProductView> {
                         color: Colors.white,
                       ),
                       child: Hero(
-                        tag: 'image' + widget.product.name,
+                        tag: 'image' + widget.product.productName,
                         child: Crousal(
-                          photos: widget.product.images,
+                          photos: [widget.product.productImage],
                         ),
                       ),
                     ),
@@ -226,7 +156,7 @@ class _ProductViewState extends State<ProductView> {
                                     width:
                                         MediaQuery.of(context).size.width * 0.7,
                                     child: Text(
-                                      widget.product.name,
+                                      widget.product.productName,
                                       maxLines: 3,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -256,7 +186,7 @@ class _ProductViewState extends State<ProductView> {
                                     child: Row(
                                       children: [
                                         Text(
-                                          ' ${widget.product.discount}% Off ',
+                                          ' ${widget.product.slPrice}% Off ',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14,
@@ -281,7 +211,7 @@ class _ProductViewState extends State<ProductView> {
                                   child: Row(
                                     children: [
                                       Text(
-                                        '₹ ${widget.product.price}',
+                                        '₹ ${widget.product.slPrice}',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 26,
@@ -293,7 +223,7 @@ class _ProductViewState extends State<ProductView> {
                                 SizedBox(
                                   width: 5,
                                 ),
-                                price1(widget.product.price1),
+                                price1(int.parse(widget.product.mrpPrice)),
                               ],
                             ),
                             Container(
@@ -310,7 +240,7 @@ class _ProductViewState extends State<ProductView> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       SizedBox(width: 10),
-                                      dropdown(),
+                                      // dropdown(),
                                     ],
                                   ),
                                   Container(
@@ -347,7 +277,7 @@ class _ProductViewState extends State<ProductView> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 10.0),
                                     child: ReadMoreText(
-                                      widget.product.description,
+                                      widget.product.productDescription,
                                       trimLines: 3,
                                       trimMode: TrimMode.Line,
                                       trimCollapsedText: 'more',
@@ -382,7 +312,7 @@ class _ProductViewState extends State<ProductView> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 10.0),
                                     child: ReadMoreText(
-                                      widget.product.ingredients,
+                                      widget.product.productDescription,
                                       trimLines: 3,
                                       trimMode: TrimMode.Line,
                                       trimCollapsedText: 'more',
@@ -511,69 +441,9 @@ class _ProductViewState extends State<ProductView> {
                               height: 20,
                             ),
 
-                            Container(
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    (() {
-                                      if (widget.product.name !=
-                                          product0.name) {
-                                        return ProductCard(
-                                          product: product0,
-                                        );
-                                      } else {
-                                        return Container();
-                                      }
-                                    }()),
-                                    (() {
-                                      if (widget.product.name !=
-                                          product1.name) {
-                                        return ProductCard(
-                                          product: product1,
-                                        );
-                                      } else {
-                                        return Container();
-                                      }
-                                    }()),
-                                    (() {
-                                      if (widget.product.name !=
-                                          product2.name) {
-                                        return ProductCard(
-                                          product: product2,
-                                        );
-                                      } else {
-                                        return Container();
-                                      }
-                                    }()),
-                                    (() {
-                                      if (widget.product.name !=
-                                          product3.name) {
-                                        return ProductCard(
-                                          product: product3,
-                                        );
-                                      } else {
-                                        return Container();
-                                      }
-                                    }()),
-                                    (() {
-                                      if (widget.product.name !=
-                                          product4.name) {
-                                        return ProductCard(
-                                          product: product4,
-                                        );
-                                      } else {
-                                        return Container();
-                                      }
-                                    }()),
-                                  ],
-                                ),
-                              ),
-                            ),
+                           
 
-                            SizedBox(
-                              height: 60,
-                            ),
+                           
                           ],
                         ),
                       ),
@@ -599,41 +469,41 @@ class _ProductViewState extends State<ProductView> {
       ),
     );
   }
-
+//TODO: dropdown 
 //select type(dropdown)
-  Container dropdown() {
-    if (widget.product.type == null || widget.product.typeList == null) {
-      return Container();
-    } else {
-      return Container(
-        child: Center(
-          child: DropdownButton<String>(
-            value: _selectedValue,
-            items: widget.product.typeList.map((String value) {
-              return new DropdownMenuItem(
-                value: value,
-                child: new Text(value),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                _selectedValue = newValue;
-              });
-            },
-            dropdownColor: Colors.grey[200],
-            style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
-          ),
-        ),
-      );
-    }
-  }
+  // Container dropdown() {
+  //   if (widget.product.type == null || widget.product.typeList == null) {
+  //     return Container();
+  //   } else {
+  //     return Container(
+  //       child: Center(
+  //         child: DropdownButton<String>(
+  //           value: _selectedValue,
+  //           items: widget.product.typeList.map((String value) {
+  //             return new DropdownMenuItem(
+  //               value: value,
+  //               child: new Text(value),
+  //             );
+  //           }).toList(),
+  //           onChanged: (newValue) {
+  //             setState(() {
+  //               _selectedValue = newValue;
+  //             });
+  //           },
+  //           dropdownColor: Colors.grey[200],
+  //           style: TextStyle(
+  //               fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+  //         ),
+  //       ),
+  //     );
+  //   }
+  // }
 
   //scrached price
   Text price1(int price1) {
     if (price1 != null) {
       return Text(
-        '₹${widget.product.price1}',
+        '₹${price1}',
         style: TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.normal,

@@ -7,7 +7,7 @@ import 'package:sanchika/pages/ui/screens/cart.dart';
 import 'package:sanchika/pages/ui/screens/categories/categories.dart';
 import 'package:sanchika/pages/ui/screens/help_support.dart';
 import 'package:sanchika/pages/ui/screens/home/home.dart';
-import 'package:sanchika/pages/ui/screens/myOrders.dart';
+import 'package:sanchika/pages/ui/screens/orders/myOrders.dart';
 import 'package:sanchika/pages/ui/screens/offers.dart';
 import 'package:sanchika/pages/ui/screens/profile.dart';
 import 'package:sanchika/pages/ui/screens/wishlist.dart';

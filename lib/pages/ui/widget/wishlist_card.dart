@@ -48,12 +48,12 @@ class _WishlistCardState extends State<WishlistCard> {
                           color: Colors.transparent,
                           borderRadius: BorderRadius.circular(10),
                           image: DecorationImage(
-                              image: AssetImage(widget.product.images[0]),
+                              image: AssetImage(widget.product.productImage),
                               fit: BoxFit.contain),
                         ),
                       ),
                     ),
-                    discount(widget.product.discount),
+                    discount(int.parse(widget.product.slPrice)),
                   ],
                 ),
               ],
@@ -95,7 +95,7 @@ class _WishlistCardState extends State<WishlistCard> {
                                                   0.72 *
                                                   0.75,
                                               child: Text(
-                                                widget.product.name,
+                                                widget.product.productName,
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 2,
                                                 style: TextStyle(
@@ -117,7 +117,7 @@ class _WishlistCardState extends State<WishlistCard> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              productType(widget.product.type),
+                              // productType(widget.product.type),
                             ],
                           ),
                         ],
@@ -134,7 +134,7 @@ class _WishlistCardState extends State<WishlistCard> {
                         Row(
                           children: [
                             Text(
-                              "₹${widget.product.price}",
+                              "₹${widget.product.slPrice}",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
@@ -143,7 +143,7 @@ class _WishlistCardState extends State<WishlistCard> {
                             SizedBox(
                               width: 10,
                             ),
-                            price1(widget.product.price1),
+                            price1(int.parse(widget.product.mrpPrice)),
                           ],
                         ),
                         Container(
@@ -278,39 +278,39 @@ class _WishlistCardState extends State<WishlistCard> {
     }
   }
 
-  Container productType(String s) {
-    String _selectedValue =
-        widget.product.typeList == null ? '' : widget.product.typeList[0];
-    if (widget.product.type != null || widget.product.typeList != null) {
-      return Container(
-        color: Colors.white,
-        child: Center(
-          child: DropdownButton<String>(
-            value: s == null ? '' : s,
-            items: widget.product.typeList.map((String value) {
-              return new DropdownMenuItem(
-                value: value,
-                child: new Text(value),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                _selectedValue = s;
-              });
-            },
-            dropdownColor: Colors.grey[200],
-            style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
-          ),
-        ),
-      );
-    } else {
-      return Container();
-    }
-  }
+  // Container productType(String s) {
+  //   String _selectedValue =
+  //       widget.product.typeList == null ? '' : widget.product.typeList[0];
+  //   if (widget.product.type != null || widget.product.typeList != null) {
+  //     return Container(
+  //       color: Colors.white,
+  //       child: Center(
+  //         child: DropdownButton<String>(
+  //           value: s == null ? '' : s,
+  //           items: widget.product.typeList.map((String value) {
+  //             return new DropdownMenuItem(
+  //               value: value,
+  //               child: new Text(value),
+  //             );
+  //           }).toList(),
+  //           onChanged: (newValue) {
+  //             setState(() {
+  //               _selectedValue = s;
+  //             });
+  //           },
+  //           dropdownColor: Colors.grey[200],
+  //           style: TextStyle(
+  //               fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+  //         ),
+  //       ),
+  //     );
+  //   } else {
+  //     return Container();
+  //   }
+  // }
 
   discount(int discount) {
-    if (widget.product.discount != null) {
+    if (discount != null) {
       return Positioned(
         top: 1,
         left: 0,

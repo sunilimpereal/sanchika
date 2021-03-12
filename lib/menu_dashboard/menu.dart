@@ -45,143 +45,145 @@ class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xff005fb8),
-      child: SlideTransition(
-        position: widget.slideAnimation,
-        child: ScaleTransition(
-          scale: widget.menuAnimation,
           child: Container(
-            child: Column(
-              children: [
-                Align(
-                  child: SizedBox(
-                    height: 80,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    padding: const EdgeInsets.only(left: 18.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          getTranslated(context, 'Hello'),
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          name,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
+        color: Color(0xff005fb8),
+        child: SlideTransition(
+          position: widget.slideAnimation,
+          child: ScaleTransition(
+            scale: widget.menuAnimation,
+            child: Container(
+              child: Column(
+                children: [
+                  Align(
+                    child: SizedBox(
+                      height: 80,
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 60,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 22.0),
-                  child: Align(
+                  Align(
                     alignment: Alignment.centerLeft,
-                    child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 18.0),
+                      child: Column(
                         children: [
-                          menuItem(
-                            context: context,
-                            navigationEvents:
-                                NavigationEvents.DashboardClickedEvent,
-                            title: getTranslated(context, 'Home'),
-                            icon: Icons.home,
-                            selectednumber: 0,
+                          Text(
+                            getTranslated(context, 'Hello'),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(
-                            height: 20,
+                          Text(
+                            name??'',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
                           ),
-                          menuItem(
-                            context: context,
-                            navigationEvents:
-                                NavigationEvents.CategoriesClickedEvent,
-                            title: getTranslated(context, 'Categories'),
-                            icon: Icons.category,
-                            selectednumber: 1,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          menuItem(
-                            context: context,
-                            navigationEvents:
-                                NavigationEvents.Offersclickedevent,
-                            title: getTranslated(context, 'Offers'),
-                            icon: Icons.local_offer,
-                            selectednumber: 2,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          menuItem(
-                            context: context,
-                            navigationEvents:
-                                NavigationEvents.WishlistClickedEvent,
-                            title: getTranslated(context, 'Wishlist'),
-                            icon: Icons.favorite_rounded,
-                            selectednumber: 3,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          menuItem(
-                            context: context,
-                            navigationEvents: NavigationEvents.CartClickedEvent,
-                            title: getTranslated(context, 'My_Cart'),
-                            icon: Icons.shopping_cart_rounded,
-                            selectednumber: 4,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          menuItem(
-                            context: context,
-                            navigationEvents:
-                                NavigationEvents.MyOrdersclickedEvent,
-                            title: getTranslated(context, 'Orders'),
-                            icon: Icons.shopping_bag,
-                            selectednumber: 5,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          menuItem(
-                            context: context,
-                            navigationEvents:
-                                NavigationEvents.ProfileClickedevent,
-                            title: getTranslated(context, 'Profile'),
-                            icon: Icons.person,
-                            selectednumber: 6,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          menuItem(
-                            context: context,
-                            navigationEvents:
-                                NavigationEvents.HelpSupportClicked,
-                            title: getTranslated(context, 'Help_Support'),
-                            icon: Icons.help_center,
-                            selectednumber: 7,
-                          ),
-                        ]),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: 60,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 22.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            menuItem(
+                              context: context,
+                              navigationEvents:
+                                  NavigationEvents.DashboardClickedEvent,
+                              title: getTranslated(context, 'Home'),
+                              icon: Icons.home,
+                              selectednumber: 0,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            menuItem(
+                              context: context,
+                              navigationEvents:
+                                  NavigationEvents.CategoriesClickedEvent,
+                              title: getTranslated(context, 'Categories'),
+                              icon: Icons.category,
+                              selectednumber: 1,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            menuItem(
+                              context: context,
+                              navigationEvents:
+                                  NavigationEvents.Offersclickedevent,
+                              title: getTranslated(context, 'Offers'),
+                              icon: Icons.local_offer,
+                              selectednumber: 2,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            menuItem(
+                              context: context,
+                              navigationEvents:
+                                  NavigationEvents.WishlistClickedEvent,
+                              title: getTranslated(context, 'Wishlist'),
+                              icon: Icons.favorite_rounded,
+                              selectednumber: 3,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            menuItem(
+                              context: context,
+                              navigationEvents: NavigationEvents.CartClickedEvent,
+                              title: getTranslated(context, 'My_Cart'),
+                              icon: Icons.shopping_cart_rounded,
+                              selectednumber: 4,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            menuItem(
+                              context: context,
+                              navigationEvents:
+                                  NavigationEvents.MyOrdersclickedEvent,
+                              title: getTranslated(context, 'Orders'),
+                              icon: Icons.shopping_bag,
+                              selectednumber: 5,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            menuItem(
+                              context: context,
+                              navigationEvents:
+                                  NavigationEvents.ProfileClickedevent,
+                              title: getTranslated(context, 'Profile'),
+                              icon: Icons.person,
+                              selectednumber: 6,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            menuItem(
+                              context: context,
+                              navigationEvents:
+                                  NavigationEvents.HelpSupportClicked,
+                              title: getTranslated(context, 'Help_Support'),
+                              icon: Icons.help_center,
+                              selectednumber: 7,
+                            ),
+                          ]),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

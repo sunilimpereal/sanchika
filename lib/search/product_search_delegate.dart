@@ -28,8 +28,8 @@ class ProductSearch extends SearchDelegate<Product> {
 
   APIService apiService = new APIService();
   Future getProductListHo() async {
-    List<Product> productList =
-        await apiService.getProductList(apiService.getProducts());
+    List<Product> productList = null;
+        // await apiService.getProductList(apiService.getProducts());
     print('i am home');
     print(productList);
     return productList;
@@ -43,11 +43,11 @@ class ProductSearch extends SearchDelegate<Product> {
       return productList;
     }
     if (type == 'Sort High to Low') {
-      productList.sort((a, b) => a.price.compareTo(b.price));
+      productList.sort((a, b) => a.slPrice.compareTo(b.slPrice));
       return productList;
     }
     if (type == 'Sort Low to High') {
-      productList.sort((a, b) => a.price.compareTo(b.price));
+      productList.sort((a, b) => a.slPrice.compareTo(b.slPrice));
       return productList;
     }
     return productList;
@@ -87,7 +87,7 @@ class ProductSearch extends SearchDelegate<Product> {
           addRecentSearch(query);
           List<Product> productList = snapshot.data;
           List<Product> result = productList
-              .where((a) => a.name.toLowerCase().contains(query.toLowerCase()))
+              .where((a) => a.productName.toLowerCase().contains(query.toLowerCase()))
               .toList();
           return SearchResult(
             productList: result,
@@ -115,7 +115,7 @@ class ProductSearch extends SearchDelegate<Product> {
         var results;
         if (query != '') {
           results = productList
-              .where((a) => a.name.toLowerCase().contains(query))
+              .where((a) => a.productName.toLowerCase().contains(query))
               .toList();
           return ListView.builder(
             itemCount: results.length,
@@ -217,8 +217,8 @@ class SearchResult extends StatefulWidget {
 class _SearchResultState extends State<SearchResult> {
   APIService apiService = new APIService();
   Future getProductListHo() async {
-    List<Product> productList =
-        await apiService.getProductList(apiService.getProducts());
+    List<Product> productList = null;
+        // await apiService.getProductList(apiService.getProducts());
     print('i am home');
     print(productList);
     return productList;
@@ -245,12 +245,12 @@ class _SearchResultState extends State<SearchResult> {
     }
     if (type == 'Price High to Low') {
       setState(() {
-        productList.sort((b, a) => a.price.compareTo(b.price));
+        productList.sort((b, a) => a.slPrice.compareTo(b.slPrice));
       });
     }
     if (type == 'Price Low to High') {
       setState(() {
-        productList.sort((a, b) => a.price.compareTo(b.price));
+        productList.sort((a, b) => a.slPrice.compareTo(b.slPrice));
       });
     }
   }

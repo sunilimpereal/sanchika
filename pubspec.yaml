@@ -30,7 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   dio: ^3.0.10
   flutter_screenutil: ^0.4.2
-  flutter_svg: ^0.18.0
+  flutter_svg: ^0.19.3
   kf_drawer: ^1.1.2
   flutter_bloc: ^6.1.3
   font_awesome_flutter:
@@ -50,7 +50,7 @@ dependencies:
   provider:  ^4.3.3
   progress_state_button: ^1.0.2
   firebase_messaging: ^9.0.0
-  firebase_core: ^1.0.0
+  firebase_core: ^1.0.1
   rive: ^0.6.8
   rive_splash_screen: ^0.0.1
 dev_dependencies:

@@ -46,13 +46,13 @@ class _CartCardState extends State<CartCard> {
                               decoration: BoxDecoration(
                                   image: DecorationImage(
                                 image: AssetImage(
-                                  widget.product.images[0],
+                                  widget.product.productImage[0],
                                 ),
                                 fit: BoxFit.contain,
                               )),
                             ),
                           ),
-                          discount(widget.product.discount),
+                          discount(int.parse(widget.product.slPrice)),
                         ],
                       ),
                     ),
@@ -77,7 +77,7 @@ class _CartCardState extends State<CartCard> {
                                       width: MediaQuery.of(context).size.width *
                                           0.3,
                                       child: Text(
-                                        widget.product.name,
+                                        widget.product.productName,
                                         maxLines: 2,
                                         style: TextStyle(
                                           fontFamily: 'Poppins',
@@ -125,7 +125,7 @@ class _CartCardState extends State<CartCard> {
                                   Row(
                                     children: [
                                       Text(
-                                        "₹${widget.product.price}",
+                                        "₹${widget.product.slPrice}",
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600,
@@ -134,7 +134,7 @@ class _CartCardState extends State<CartCard> {
                                       SizedBox(
                                         width: 5,
                                       ),
-                                      price1(widget.product.price1),
+                                      price1(int.parse(widget.product.mrpPrice)),
                                     ],
                                   ),
                                   Padding(
@@ -195,7 +195,7 @@ class _CartCardState extends State<CartCard> {
   }
 
   discount(int discount) {
-    if (widget.product.discount != null) {
+    if (widget.product.slPrice != null) {
       return Positioned(
         top: 1,
         left: 1,

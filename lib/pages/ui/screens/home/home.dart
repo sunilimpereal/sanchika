@@ -59,28 +59,22 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Future<List<Product>> killeroffers;
+
   @override
   void initState() {
     super.initState();
-    // translate();
-    getProductListHo();
+    killeroffers = getKilleroffer();
+    
   }
 
-  Future getProductListHo() async {
-    List<Product> productList =
-        await apiService.getProductList(apiService.getProducts());
-    print('i am home');
-    print(productList);
-    // setState(() {
-    //   products = productList;
-    // });
+  Future<List<Product>> getKilleroffer() async {
+    List<Product> productList = await apiService.getKillerOffeers();
     return productList;
   }
 
   @override
   Widget build(BuildContext context) {
-    print('product');
-    print(products);
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(0)),
       child: CustomScrollView(
@@ -223,7 +217,6 @@ class _HomeState extends State<Home> {
                               // categories list
                               GestureDetector(
                                 onTap: () {
-                                  print(apiService.getProducts());
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -271,57 +264,38 @@ class _HomeState extends State<Home> {
                           ),
                         ],
                       ),
-
                       FutureBuilder(
-                        future: getProductListHo(),
+                        future: killeroffers,
                         builder: (BuildContext context, snapshot) {
                           print(snapshot);
-                          if (snapshot.hasData) {
-                            return Row(
-                              children: [
-                                Expanded(
-                                  child: SizedBox(
-                                    height: 300,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: snapshot.data.length,
-                                      itemBuilder: (context, index) {
-                                        Product product = snapshot.data[index];
-                                        return ProductCard(
-                                          product: product,
-                                        );
-                                      },
+                       
+                              if (snapshot.hasData) {
+                                return Row(
+                                  children: [
+                                    Expanded(
+                                      child: SizedBox(
+                                        height: 300,
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: snapshot.data.length,
+                                          itemBuilder: (context, index) {
+                                            Product product =
+                                                snapshot.data[index];
+                                            return ProductCard(
+                                              product: product,
+                                            );
+                                          },
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          } else {
-                            return CircularProgressIndicator();
+                                  ],
+                                );
+                              } else {
+                                return Text('No data');
+                              }
                           }
-                        },
+                   
                       ),
-
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     Productcard(product: products[0]),
-                      //     Productcard(product: products[1]),
-                      //     Productcard(product: products[2]),
-                      //     Padding(
-                      //       padding: const EdgeInsets.only(
-                      //           top: 8.0, left: 16.0, bottom: 8.0, right: 15),
-                      //       child: Text(
-                      //         "See more >>",
-                      //         style: TextStyle(
-                      //             color: Color(0xff032e6b),
-                      //             fontSize: 14,
-                      //             fontWeight: FontWeight.w600),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

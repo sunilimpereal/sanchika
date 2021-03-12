@@ -1,56 +1,54 @@
 import 'dart:math';
-
+import 'dart:convert';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:sanchika/model/product.dart';
+import 'package:sanchika/model/product_model.dart';
 import 'package:sanchika/pages/ui/widget/product_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 
-class ProductCard extends StatefulWidget {
-  Product product;
+class ProductCatCard extends StatefulWidget {
+  CtgyProductDetailsList product;
   final translator = GoogleTranslator();
   Function onMenuItemClicked;
-  ProductCard({this.product, this.onMenuItemClicked});
+  ProductCatCard({this.product, this.onMenuItemClicked});
 
   @override
-  _ProductCardState createState() => _ProductCardState();
+  _ProductCatCardState createState() => _ProductCatCardState();
 }
 
-class _ProductCardState extends State<ProductCard>
+class _ProductCatCardState extends State<ProductCatCard>
     with SingleTickerProviderStateMixin {
   String _selectedValue;
-  Future<Product> getProd()async{
-    return widget.product;
-  }
   //tratlate function to malylam and retun the product item
-  // Future<Product> translate(Product product) async {
-  //   SharedPreferences preferences = await SharedPreferences.getInstance();
+  Future<CtgyProductDetailsList> translate(CtgyProductDetailsList product) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
 
-  //   if (preferences.getString('language') == 'malayalam') {
-  //     Product productmal = widget.product;
-  //     final translator = GoogleTranslator();
-  //     translator.translate(widget.product.name, to: 'ml').then((result) {
-  //       productmal.name = result.text;
-  //       translator
-  //           .translate(widget.product.description, to: 'ml')
-  //           .then((result) {
-  //         productmal.description = result.text;
-  //         translator
-  //             .translate(widget.product.ingredients, to: 'ml')
-  //             .then((result) {
-  //           productmal.ingredients = result.text;
-  //         });
-  //       });
-  //     });
+    if (preferences.getString('language') == 'malayalam') {
+      CtgyProductDetailsList productmal = widget.product;
+      final translator = GoogleTranslator();
+      translator.translate(widget.product.productName, to: 'ml').then((result) {
+        productmal.productName = result.text;
+        translator
+            .translate(widget.product.productDescription, to: 'ml')
+            .then((result) {
+          productmal.productDescription = result.text;
+          // translator
+          //     .translate(widget.product., to: 'ml')
+          //     .then((result) {
+          //   productmal.ingredients = result.text;
+          // });
+        });
+      });
 
-  //     return productmal;
-  //   }
-  //   return product;
-  // }
-  // //A
+      return productmal;
+    }
+    return product;
+  }
+
   //Animation for button
 
   @override
@@ -70,7 +68,7 @@ class _ProductCardState extends State<ProductCard>
   Widget build(BuildContext context) {
     
     return FutureBuilder(
-      future: getProd(),
+      future: translate(widget.product),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return _cardUi(context: context, product: snapshot.data);
@@ -82,20 +80,20 @@ class _ProductCardState extends State<ProductCard>
   }
 
   @override
-  Widget _cardUi({BuildContext context, Product product}) {
+  Widget _cardUi({BuildContext context, CtgyProductDetailsList product}) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
+        // Navigator.push(
+        //   context,
           
-          MaterialPageRoute(
+        //   MaterialPageRoute(
             
-              builder: (context) => ProductView(
+        //       builder: (context) => ProductView(
                 
-                    product: product,
-                    onMenuItemClicked: widget.onMenuItemClicked,
-                  )),
-        );
+        //             product: product,
+        //             onMenuItemClicked: widget.onMenuItemClicked,
+        //           )),
+        // );
       },
       child: Container(
         child: Stack(
@@ -114,7 +112,7 @@ class _ProductCardState extends State<ProductCard>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Hero(
-                      tag: 'image' + product.productName,
+                      tag: 'image' + widget.product.productName,
                       child: Container(
                         height: MediaQuery.of(context).size.height * .28 * 0.5,
                         width: MediaQuery.of(context).size.width * 0.45 - 5,
@@ -126,7 +124,8 @@ class _ProductCardState extends State<ProductCard>
                               decoration: BoxDecoration(
                                 color: Colors.transparent,
                                 image: DecorationImage(
-                                    image: AssetImage(product.productImage),
+                                    image:NetworkImage(widget.product.productImage??''),
+                                    //  AssetImage(widget.product.images[0],),
                                     fit: BoxFit.contain),
                               ),
                             ),
@@ -171,7 +170,7 @@ class _ProductCardState extends State<ProductCard>
                         Row(
                           children: [
                             Text(
-                              '₹${product.slPrice}',
+                              '₹${widget.product.slPrice}',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
@@ -180,10 +179,9 @@ class _ProductCardState extends State<ProductCard>
                             SizedBox(
                               width: 5,
                             ),
-                            price1(int.parse(product.mrpPrice)),
+                            price1(widget.product.mrpPrice),
                           ],
                         ),
-                        //TODO:
                         // dropdown(),
                       ],
                     ),
@@ -263,7 +261,7 @@ class _ProductCardState extends State<ProductCard>
                 ),
               ),
             ),
-            discount(int.parse(product.slPrice)),
+            discount(widget.product.slPrice,widget.product.mrpPrice),
             Positioned(
               right: 0,
               child: Padding(
@@ -310,10 +308,10 @@ class _ProductCardState extends State<ProductCard>
   //   }
   // }
 
-  Text price1(int price1) {
+  Text price1(String price1) {
     if (price1 != null) {
       return Text(
-        '₹${price1}',
+        '₹${widget.product.mrpPrice}',
         style: TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.normal,
@@ -325,8 +323,10 @@ class _ProductCardState extends State<ProductCard>
     }
   }
 
-  discount(int discount) {
-    if (discount != null) {
+  discount(String slPrice,String mrpPrice) {
+    // int discount = (((int.parse(mrpPrice)-int.parse(slPrice))/int.parse(mrpPrice))*100).round();
+    int discount =10;
+    if (discount != 0) {
       return Positioned(
         top: 10,
         left: 10,
