@@ -4,15 +4,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:sanchika/model/AllProducts.dart';
+import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/model/killerOffer.dart';
 import 'dart:convert';
 
 import 'package:sanchika/model/login_model.dart';
 import 'package:sanchika/model/product.dart';
-import 'package:sanchika/model/product_model.dart';
+import 'package:sanchika/model/cat_product_model.dart';
 import 'package:sanchika/model/signUp_model.dart';
-import 'package:sanchika/model/wishlist.dart';
+import 'package:sanchika/model/wishlist_model.dart';
 import 'package:sanchika/pages/ui/screens/404_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class APIService {
   // config details
@@ -22,7 +25,11 @@ class APIService {
     "Accept": "*/*",
     "Accept-Encoding": "gzip, deflate, br",
     "Connection": "keep-alive",
-    "Transfer-Encoding": "chunked"
+    "Transfer-Encoding": "chunked",
+    "Keep-Alive": "timeout=0",
+    "Vary":"Origin",
+    "Vary":"Access-Control-Request-Method",
+    "Vary":"Access-Control-Request-Headers",
      
   };
 
@@ -42,12 +49,7 @@ class APIService {
       print('login');
       return loginResponseModelFromJson(response.body);
     } else if (response.statusCode == 500) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ErrorPage()),
-      );
-    } else {
-      showDialog<void>(
+       showDialog<void>(
         context: context,
         barrierDismissible: false, // user must tap button!
         builder: (BuildContext context) {
@@ -71,11 +73,17 @@ class APIService {
           );
         },
       );
+     
+    } else { Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ErrorPage()),
+      );
+     
     }
   }
 
   Future<RegisterResponseModel> register(RegisterRequestModel register) async {
-    String url = "http://sanchika.in//sanchikaapi/sanchika/user/register";
+    String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/register";
     final response = await http.post(url,
         body: jsonEncode(register.toJson()), headers: headerList);
     FlutterError.onError = (FlutterErrorDetails details) {
@@ -111,19 +119,19 @@ class APIService {
 
  
   // get wishlist for the user
-  Future<List<WishListItem>> getWishList() async {
+  Future<List<WishlistItem>> getWishList({String userId}) async {
     String url =
-        "http://sanchika.in//sanchikaapi/sanchika/user/wishList/getWishList?ctgyId=1285";
+        "http://sanchika.in:8081/sanchikaapi/sanchika/user/wishList/getWishList?uid=$userId";
     final response = await http.get(url,);
     FlutterError.onError = (FlutterErrorDetails details) {
-      print('error');
+      // print('error');
       return null;
     };
     print(response.statusCode);
     if (response.statusCode == 200) {
       print(getWishlistFromJson(response.body));
       GetWishlist getWishlistBody = getWishlistFromJson(response.body);
-      List<WishListItem> wishlistItems = getWishlistBody.data.wishListMaster;
+      List<WishlistItem> wishlistItems = getWishlistBody.data.wishListMaster;
       print(wishlistItems);
       return wishlistItems;
     } else {
@@ -149,6 +157,21 @@ class APIService {
     }
 
   }
+  //Get all Products details
+  Future<List<Product>> getAllProducts() async{
+    String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/getAllProductDetails";
+    final response = await http.get(url,headers: headerList);
+    print('Get all Products API ${response.statusCode}');
+    if(response.statusCode == 200){
+      GetAllProducts allProducts = getAllProductsFromJson(response.body);
+      List<Product> productList = allProducts.data.productDetailsList;
+      return productList;
+
+    }else{
+      print(response.statusCode);
+      return null;
+    }
+  }
 
   //get prdocut from each category
   Future<List<CtgyProductDetailsList>> getCtegoryProducts() async {
@@ -158,7 +181,7 @@ class APIService {
     print(response.body);
      print(response.statusCode);
     FlutterError.onError = (FlutterErrorDetails details) {
-      print('error');
+      // print('error');
       return null;
     };
     print(response.statusCode);
@@ -170,5 +193,25 @@ class APIService {
     }else{
       return null;
     }
+  }
+  //Get Cart Items 
+  Future<List<CartItem>> getCartItems (String userId) async {
+    String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/cart/getCart?uid=$userId";
+    print(userId);
+    final response = await http.get(url);
+    //  FlutterError.onError = (FlutterErrorDetails details) {
+    //   print('error');
+    //   return null;
+    // };
+    print(response.statusCode);
+    if(response.statusCode == 200){
+      GetCart getCart = getCartFromJson(response.body);
+      List<CartItem> cartItemlist = getCart.data.getCartList;
+      print(cartItemlist);
+      return cartItemlist;
+     }else{
+       print(response.statusCode);
+       return null;
+     }
   }
 }

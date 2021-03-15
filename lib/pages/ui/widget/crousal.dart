@@ -40,7 +40,7 @@ class _CrousalState extends State<Crousal> {
                   height: 300,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage(widget.photos[photoIndex]),
+                        image: NetworkImage(widget.photos[photoIndex]),
                         fit: BoxFit.contain),
                   ),
                 ),

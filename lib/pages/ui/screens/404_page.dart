@@ -11,7 +11,7 @@ class _ErrorPageState extends State<ErrorPage> {
   RiveAnimationController _controller;
   void initState(){
     super.initState();
-    rootBundle.load('assets/rive/login.riv').then((value) async{
+    rootBundle.load('assets/rive/tv_color.riv').then((value) async{
       final file =RiveFile();
       if(file.import(value)){
         final artboard = file.mainArtboard;

@@ -110,11 +110,43 @@ class _SignupPageState extends State<SignupPage> {
                                     ),
                                   ),
                                   onChanged: (val) {
-                                    setState(() {});
+                                    setState(() {
+                                      requestModel.firstName = val;
+                                    });
                                   },
                                   validator: (val) {
                                     if (val.length == 0) {
                                       return 'First name be empty';
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  keyboardType: TextInputType.emailAddress,
+                                  style: new TextStyle(
+                                    fontFamily: 'Poppins',
+                                  ),
+                                ),
+                              ),
+                               SizedBox(height: 15),
+                              Container(
+                                height: 50,
+                                child: TextFormField(
+                                  decoration: InputDecoration(
+                                    labelText: 'Last Name',
+                                    fillColor: Colors.white,
+                                    border: new OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                      borderSide: new BorderSide(),
+                                    ),
+                                  ),
+                                  onChanged: (val) {
+                                    setState(() {
+                                      requestModel.lastname= val;
+                                    });
+                                  },
+                                  validator: (val) {
+                                    if (val.length == 0) {
+                                      return 'Last name is empty';
                                     } else {
                                       return null;
                                     }

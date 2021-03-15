@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
@@ -60,17 +61,22 @@ class _HomeState extends State<Home> {
   }
 
   Future<List<Product>> killeroffers;
+  Future<List<Product>> allProducts;
+  Future<List<Product>> getKilleroffer() async {
+    List<Product> productList = await apiService.getKillerOffeers();
+    return productList;
+  }
+  Future<List<Product>> getallProduct()async{
+    List<Product> productList = await apiService.getAllProducts();
+    return productList;
+  }
 
   @override
   void initState() {
     super.initState();
     killeroffers = getKilleroffer();
-    
-  }
-
-  Future<List<Product>> getKilleroffer() async {
-    List<Product> productList = await apiService.getKillerOffeers();
-    return productList;
+    allProducts = getKilleroffer();
+    print(allProducts);
   }
 
   @override
@@ -93,7 +99,7 @@ class _HomeState extends State<Home> {
                       child: CupertinoTextField(
                         onTap: () {
                           showSearch(
-                              context: context, delegate: ProductSearch());
+                              context: context, delegate: ProductSearch(productsList: killeroffers));
                         },
                         readOnly: true,
                         keyboardType: TextInputType.text,
@@ -153,19 +159,20 @@ class _HomeState extends State<Home> {
               ),
               Stack(
                 children: [
-                  IconButton(
-                    padding: EdgeInsets.only(top: 8),
-                    icon: Icon(
-                      Icons.shopping_cart,
-                      color: Colors.grey[800],
-                      size: 24,
-                    ),
-                    onPressed: () {
-                      BlocProvider.of<NavigationBloc>(context)
-                          .add(NavigationEvents.CartClickedEvent);
-                      widget.onMenuItemClicked();
-                    },
-                  ),
+                  
+                  // IconButton(
+                  //   padding: EdgeInsets.only(top: 8),
+                  //   icon: Icon(
+                  //     Icons.shopping_cart,
+                  //     color: Colors.grey[800],
+                  //     size: 24,
+                  //   ),
+                  //   onPressed: () {
+                  //     BlocProvider.of<NavigationBloc>(context)
+                  //         .add(NavigationEvents.CartClickedEvent);
+                  //     widget.onMenuItemClicked();
+                  //   },
+                  // ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, left: 25),
                     child: Container(
@@ -265,37 +272,17 @@ class _HomeState extends State<Home> {
                         ],
                       ),
                       FutureBuilder(
-                        future: killeroffers,
-                        builder: (BuildContext context, snapshot) {
-                          print(snapshot);
-                       
-                              if (snapshot.hasData) {
-                                return Row(
-                                  children: [
-                                    Expanded(
-                                      child: SizedBox(
-                                        height: 300,
-                                        child: ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: snapshot.data.length,
-                                          itemBuilder: (context, index) {
-                                            Product product =
-                                                snapshot.data[index];
-                                            return ProductCard(
-                                              product: product,
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              } else {
-                                return Text('No data');
-                              }
-                          }
-                   
-                      ),
+                          future: killeroffers,
+                          builder: (BuildContext context, snapshot) {
+                            print(snapshot);
+
+                            if (snapshot.hasData) {
+                              List<Product> productList = snapshot.data;
+                              return HorizontalRow(productList: productList ,);
+                            } else {
+                              return CircularProgressIndicator();
+                            }
+                          }),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -610,6 +597,44 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class HorizontalRow extends StatelessWidget {
+ final List<Product> productList;
+  const HorizontalRow({
+    Key key,
+    this.productList,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: SizedBox(
+            height: 300,
+            child: ListView.builder(
+              cacheExtent: 10000.0,
+              dragStartBehavior: DragStartBehavior.start,
+               addAutomaticKeepAlives: true,
+               controller: ScrollController(),
+              scrollDirection: Axis.horizontal,
+              itemCount: productList.length,
+              itemBuilder: (context, index) {
+                Product product =
+                  productList[index];
+                return Container(
+                  child: ProductCard(
+                    product: product,
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

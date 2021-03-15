@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sanchika/model/product_model.dart';
+import 'package:sanchika/model/cat_product_model.dart';
 import 'package:sanchika/pages/ui/widget/productcatCard.dart';
 import 'package:sanchika/services/api_service.dart';
 

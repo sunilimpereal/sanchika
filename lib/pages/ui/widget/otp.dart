@@ -15,7 +15,7 @@ class _OtpState extends State<Otp> {
     await Future.delayed(Duration(milliseconds: 2000));
     if (otp == widget.otp) {
       return null;
-    } else {
+    } else { 
       print(widget.otp);
       return "The entered Otp is wrong";
     }

@@ -269,6 +269,9 @@ class _LoginPageState extends State<LoginPage> {
                                                 'email', requestModel.email);
                                             preferences.setString(
                                                 'name', value.data.login.name);
+                                                  preferences.setString(
+                                                'userId', value.data.login.userId);
+                                                print(value.data.login.userId);
                                             print(value.toJson());
                                             setState(() {
                                               isApiCallProcess = false;

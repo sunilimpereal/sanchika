@@ -65,19 +65,27 @@ class _MenuState extends State<Menu> {
                       padding: const EdgeInsets.only(left: 18.0),
                       child: Column(
                         children: [
-                          Text(
-                            getTranslated(context, 'Hello'),
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold),
+                          Row(
+                            children: [
+                              Text(
+                                getTranslated(context, 'Hello'),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
-                          Text(
-                            name??'',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold),
+                          Row(
+                            children: [
+                              Text(
+                                name??'',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
                         ],
                       ),

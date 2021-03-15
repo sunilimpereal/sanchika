@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:sanchika/model/product.dart';
-import 'package:sanchika/model/product_model.dart';
+import 'package:sanchika/model/cat_product_model.dart';
 import 'package:sanchika/pages/ui/widget/product_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/localization/localization_methods.dart';
-import 'package:sanchika/model/wishlist.dart';
+import 'package:sanchika/model/wishlist_model.dart';
 import 'package:sanchika/services/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:rive/rive.dart';
+import 'package:flutter/services.dart';
 
 class Wishlist extends StatefulWidget with NavigationStates {
   const Wishlist({Key key, this.onMenuTap, this.onMenuItemClicked})
@@ -17,11 +20,41 @@ class Wishlist extends StatefulWidget with NavigationStates {
 }
 
 class _WishlistState extends State<Wishlist> {
+  String userId;
+  Future<String> getUserId() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String uid = preferences.getString('userId');
+    setState(() {
+      userId = uid;
+    });
+  }
+    Artboard _riveArtboard;
+  RiveAnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserId();
+    print(userId);
+      rootBundle.load('assets/rive/wishlist.riv').then((value) async{
+      final file =RiveFile();
+      if(file.import(value)){
+        final artboard = file.mainArtboard;
+        artboard.addController(_controller = SimpleAnimation('Animation 1'));
+        setState(() {
+          _riveArtboard = artboard;
+          _controller.isActive = true ;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    Future<List<WishListItem>> getWishlist() async {
+    Future<List<WishlistItem>> getWishlist(String userId) async {
       APIService apiService = new APIService();
-      List<WishListItem> allWishlistItems = await apiService.getWishList();
+      List<WishlistItem> allWishlistItems =
+          await apiService.getWishList(userId: userId);
       print(allWishlistItems);
       return allWishlistItems;
     }
@@ -79,22 +112,52 @@ class _WishlistState extends State<Wishlist> {
       ),
       body: Container(
           child: FutureBuilder(
-        future: getWishlist(),
+        future: getWishlist(userId),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, index) {
-                WishListItem item = snapshot.data[index];
-                return Column(
-                  children: [
-                    Text(item.productId),
-                    Text("${item.userId}"),
-                    Text(item.status ?? ''),
-                  ],
-                );
-              },
-            );
+            if (snapshot.data.length != 0) {
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  WishlistItem item = snapshot.data[index];
+                  return Column(
+                    children: [
+                      Text(item.productId),
+                      Text("${item.userId}"),
+                      Text(''),
+                    ],
+                  );
+                },
+              );
+            } else {
+              return Center(
+                child: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                        Padding(
+              padding: const EdgeInsets.only(bottom: 0.0),
+              child: Container(
+                height: 250,
+                child: _riveArtboard == null? const SizedBox():Rive(artboard: _riveArtboard,fit: BoxFit.contain,)),
+            ),
+                      Text('No Items In Wishlist',
+                      style: TextStyle(
+                        color: Colors.blue.shade400,
+                        fontSize: 27,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      ),
+                      SizedBox(height:10),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: Text('Explore More'),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }
           } else {
             return Center(
               child: CircularProgressIndicator(),
@@ -102,21 +165,6 @@ class _WishlistState extends State<Wishlist> {
           }
         },
       )
-
-          //PLACE HOLDER
-          // child: Column(
-          //   children: [
-          //     WishlistCard(
-          //       product: product0,
-          //     ),
-          //     SizedBox(
-          //       height: 1,
-          //     ),
-          //     WishlistCard(
-          //       product: product1,
-          //     ),
-          //   ],
-          // ),
           ),
     );
   }

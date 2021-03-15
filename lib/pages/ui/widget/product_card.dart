@@ -25,31 +25,34 @@ class _ProductCardState extends State<ProductCard>
   Future<Product> getProd()async{
     return widget.product;
   }
-  //tratlate function to malylam and retun the product item
-  // Future<Product> translate(Product product) async {
-  //   SharedPreferences preferences = await SharedPreferences.getInstance();
+  // tratlate function to malylam and retun the product item
+  Future<Product> translate(Product product) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
 
-  //   if (preferences.getString('language') == 'malayalam') {
-  //     Product productmal = widget.product;
-  //     final translator = GoogleTranslator();
-  //     translator.translate(widget.product.name, to: 'ml').then((result) {
-  //       productmal.name = result.text;
-  //       translator
-  //           .translate(widget.product.description, to: 'ml')
-  //           .then((result) {
-  //         productmal.description = result.text;
-  //         translator
-  //             .translate(widget.product.ingredients, to: 'ml')
-  //             .then((result) {
-  //           productmal.ingredients = result.text;
-  //         });
-  //       });
-  //     });
+    if (preferences.getString('language') == 'malayalam') {
+      Product productmal = widget.product;
+      final translator = GoogleTranslator();
+      translator.translate(widget.product.productName, to: 'ml').then((result) {
+        productmal.productName = result.text;
+        translator
+            .translate(widget.product.productDescription, to: 'ml')
+            .then((result) {
+          productmal.productDescription = result.text;
+          translator
+              .translate(widget.product.productDescription, to: 'ml')
+              .then((result) {
+            productmal.productDescription = result.text;
+            setState(() {
+              
+            });
+          });
+        });
+      });
 
-  //     return productmal;
-  //   }
-  //   return product;
-  // }
+      return productmal;
+    }
+    return product;
+  }
   // //A
   //Animation for button
 
@@ -70,7 +73,7 @@ class _ProductCardState extends State<ProductCard>
   Widget build(BuildContext context) {
     
     return FutureBuilder(
-      future: getProd(),
+      future: translate(widget.product),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return _cardUi(context: context, product: snapshot.data);
@@ -116,17 +119,17 @@ class _ProductCardState extends State<ProductCard>
                     Hero(
                       tag: 'image' + product.productName,
                       child: Container(
-                        height: MediaQuery.of(context).size.height * .28 * 0.5,
+                        height: MediaQuery.of(context).size.height * .28 * 0.6,
                         width: MediaQuery.of(context).size.width * 0.45 - 5,
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              left: 10.0, right: 10.0, bottom: 0.0),
+                              left: 0.0, right: 0.0, bottom: 0.0),
                           child: Stack(children: [
                             Container(
                               decoration: BoxDecoration(
                                 color: Colors.transparent,
                                 image: DecorationImage(
-                                    image: AssetImage(product.productImage),
+                                    image: NetworkImage(widget.product.productImage),
                                     fit: BoxFit.contain),
                               ),
                             ),

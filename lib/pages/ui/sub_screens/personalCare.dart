@@ -12,75 +12,77 @@ class _PersonalCareState extends State<PersonalCare> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
-      child: Scaffold(
-        appBar: AppBar(
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.filter_list),
-            ),
-          ],
-          centerTitle: true,
-          iconTheme: IconThemeData(
-            color: Colors.black,
-          ),
-          elevation: 0.5,
-          backgroundColor: Colors.white,
-          title: Text(
-            'Personal Care',
-            style: TextStyle(
+      child: SafeArea(
+              child: Scaffold(
+          appBar: AppBar(
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.filter_list),
+              ),
+            ],
+            centerTitle: true,
+            iconTheme: IconThemeData(
               color: Colors.black,
             ),
-          ),
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(30.0),
-            child: TabBar(
-              isScrollable: true,
-              unselectedLabelColor: Colors.black.withOpacity(0.3),
-              tabs: [
-                Tab(
-                  child: Text(
-                    'oral care',
-                    style: TextStyle(
-                      color: Color(0xff0B3666),
+            elevation: 0.5,
+            backgroundColor: Colors.white,
+            title: Text(
+              'Personal Care',
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(30.0),
+              child: TabBar(
+                isScrollable: true,
+                unselectedLabelColor: Colors.black.withOpacity(0.3),
+                tabs: [
+                  Tab(
+                    child: Text(
+                      'Oral care',
+                      style: TextStyle(
+                        color: Color(0xff0B3666),
+                      ),
                     ),
                   ),
-                ),
-                Tab(
-                  child: Text(
-                    'Personal Wash',
-                    style: TextStyle(
-                      color: Color(0xff0B3666),
+                  Tab(
+                    child: Text(
+                      'Personal Wash',
+                      style: TextStyle(
+                        color: Color(0xff0B3666),
+                      ),
                     ),
                   ),
-                ),
-                Tab(
-                  child: Text(
-                    'Skin Care',
-                    style: TextStyle(
-                      color: Color(0xff0B3666),
+                  Tab(
+                    child: Text(
+                      'Skin Care',
+                      style: TextStyle(
+                        color: Color(0xff0B3666),
+                      ),
                     ),
                   ),
-                ),
-                Tab(
-                  child: Text(
-                    'Baby Carw',
-                    style: TextStyle(
-                      color: Color(0xff0B3666),
+                  Tab(
+                    child: Text(
+                      'Baby Care',
+                      style: TextStyle(
+                        color: Color(0xff0B3666),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        body: TabBarView(
-          children: [
-            Breakfast(),
-            Breakfast(),
-            Breakfast(),
-            Breakfast(),
-          ],
+          body: TabBarView(
+            children: [
+              Breakfast(),
+              Breakfast(),
+              Breakfast(),
+              Breakfast(),
+            ],
+          ),
         ),
       ),
     );

@@ -53,19 +53,27 @@ class Data {
 class Login {
   String email;
   String name;
+  String userId;
+  String userCtGrp;
   Login({
     this.email,
     this.name,
+    this.userId,
+    this.userCtGrp,
   });
   factory Login.fromJson(Map<String, dynamic> json) => Login(
         email: json["email"],
         name: json["name"],
+        userId: json["userId"],
+        userCtGrp: json["userCtGrp"]
       );
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {
       "email": email,
       "name": name,
+      "userId":userId,
+      "userCtGrp":userCtGrp,
     };
     return map;
   }

@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
 class ProductSearch extends SearchDelegate<Product> {
+  Future<List<Product>> productsList;
+  ProductSearch({this.productsList});
   Future<List<String>> getRecentSearch() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     List<String> recent = preferences.getStringList('recentSearch');
@@ -25,34 +27,35 @@ class ProductSearch extends SearchDelegate<Product> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setStringList('recentSearch', []);
   }
+  
+  //API TO call products
 
   APIService apiService = new APIService();
-  Future getProductListHo() async {
-    List<Product> productList = null;
-        // await apiService.getProductList(apiService.getProducts());
-    print('i am home');
+  Future<List<Product>> getProductListHo() async {
+     print('i am home');
+    List<Product> productList = await apiService.getAllProducts();
     print(productList);
     return productList;
   }
 
-  List<Product> filterProducts({List<Product> productList, String type}) {
-    if (type == 'Relevance') {
-      return productList;
-    }
-    if (type == 'Discount') {
-      return productList;
-    }
-    if (type == 'Sort High to Low') {
-      productList.sort((a, b) => a.slPrice.compareTo(b.slPrice));
-      return productList;
-    }
-    if (type == 'Sort Low to High') {
-      productList.sort((a, b) => a.slPrice.compareTo(b.slPrice));
-      return productList;
-    }
-    return productList;
-  }
-
+//   List<Product> filterProducts({List<Product> productList, String type}) {
+//     if (type == 'Relevance') {
+//       return productList;
+//     }
+//     if (type == 'Discount') {
+//       return productList;
+//     }
+//     if (type == 'Sort High to Low') {
+//       productList.sort((a, b) => a.slPrice.compareTo(b.slPrice));
+//       return productList;
+//     }
+//     if (type == 'Sort Low to High') {
+//       productList.sort((a, b) => a.slPrice.compareTo(b.slPrice));
+//       return productList;
+//     }
+//     return productList;
+//   }
+// //a
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -81,7 +84,7 @@ class ProductSearch extends SearchDelegate<Product> {
   @override
   Widget buildResults(BuildContext context) {
     return FutureBuilder(
-      future: getProductListHo(),
+      future: productsList,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           addRecentSearch(query);
@@ -104,8 +107,9 @@ class ProductSearch extends SearchDelegate<Product> {
   @override
   Widget buildSuggestions(BuildContext context) {
     return FutureBuilder(
-      future: getProductListHo(),
+      future: productsList,
       builder: (BuildContext context, snapshot) {
+        print(snapshot);
         if (!snapshot.hasData) {
           return Center(
             child: CircularProgressIndicator(),
@@ -122,10 +126,10 @@ class ProductSearch extends SearchDelegate<Product> {
             itemBuilder: (context, index) {
               return ListTile(
                 onTap: () {
-                  query = results[index].name;
+                  query = results[index].productName;
                   showResults(context);
                 },
-                title: Text(results[index].name),
+                title: Text(results[index].productName),
               );
             },
           );
@@ -191,17 +195,7 @@ class ProductSearch extends SearchDelegate<Product> {
   }
 }
 
-class RecentSearch extends StatefulWidget {
-  @override
-  _RecentSearchState createState() => _RecentSearchState();
-}
 
-class _RecentSearchState extends State<RecentSearch> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
 
 class SearchResult extends StatefulWidget {
   final List<Product> productList;
@@ -218,7 +212,7 @@ class _SearchResultState extends State<SearchResult> {
   APIService apiService = new APIService();
   Future getProductListHo() async {
     List<Product> productList = null;
-        // await apiService.getProductList(apiService.getProducts());
+    await apiService.getAllProducts();
     print('i am home');
     print(productList);
     return productList;

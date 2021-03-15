@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rive/rive.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/localization/localization_methods.dart';
+import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/pages/ui/widget/checkout.dart';
+import 'package:sanchika/services/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Cart extends StatefulWidget with NavigationStates {
   final Function onMenuTap;
@@ -15,6 +20,36 @@ class Cart extends StatefulWidget with NavigationStates {
 }
 
 class _CartState extends State<Cart> {
+  Future<List<CartItem>> cartItems;
+
+  Future<List<CartItem>> getCart() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String userId = sharedPreferences.getString('userId');
+    APIService apiService = new APIService();
+    List<CartItem> cartitems = await apiService.getCartItems(userId);
+   
+    return cartitems;
+  }
+
+  Artboard _riveArtboard;
+  RiveAnimationController _controller;
+  @override
+  void initState() {
+    super.initState();
+    cartItems = getCart();
+    rootBundle.load('assets/rive/wishlist.riv').then((value) async {
+      final file = RiveFile();
+      if (file.import(value)) {
+        final artboard = file.mainArtboard;
+        artboard.addController(_controller = SimpleAnimation('Animation 1'));
+        setState(() {
+          _riveArtboard = artboard;
+          _controller.isActive = true;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,23 +59,36 @@ class _CartState extends State<Cart> {
         elevation: 0,
         title: Column(
           children: [
-            Text(
-              getTranslated(context, "My_Cart"),
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Poppins'),
+            Row(
+              children: [
+                Text(
+                  getTranslated(context, "My_Cart"),
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Poppins'),
+                ),
+              ],
             ),
             SizedBox(height: 4),
-            Text(
-              "4 items",
-              style: TextStyle(
-                color: Colors.grey,
-                fontWeight: FontWeight.w300,
-                fontSize: 12,
-              ),
-            )
+            Row(
+              children: [
+                FutureBuilder(future: getCart(),
+                builder: (context,snapshot){
+                  if(snapshot.hasData){
+                    String number = snapshot.data.length.toString();
+                    return Text("$number items",style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w300,
+                    fontSize: 12,
+                  ),);
+                  }else{
+                    return Container();
+                  }
+                },),
+              ],
+            ),
           ],
         ),
         actions: [
@@ -59,18 +107,21 @@ class _CartState extends State<Cart> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // CartCard(
-          //   product: product0,
-          // ),
-          // CartCard(
-          //   product: product1,
-          // ),
-          // CartCard(
-          //   product: product2,
-          // ),
-        ],
+      body:FutureBuilder(
+        future: getCart(),
+        builder: (context,snapshot){
+          if(snapshot.hasData){
+           return  ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (context,index){
+                CartItem cartItem = snapshot.data[index];
+                return Text(cartItem.productName);
+              }
+               );
+          }else{
+            return Center(child: CircularProgressIndicator());
+          }
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
