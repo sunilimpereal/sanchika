@@ -4,6 +4,7 @@ import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:sanchika/model/product.dart';
 import 'package:sanchika/pages/ui/widget/product_view.dart';
+import 'package:sanchika/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
 import 'package:progress_state_button/iconed_button.dart';
@@ -22,9 +23,7 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard>
     with SingleTickerProviderStateMixin {
   String _selectedValue;
-  Future<Product> getProd()async{
-    return widget.product;
-  }
+ 
   // tratlate function to malylam and retun the product item
   Future<Product> translate(Product product) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -55,10 +54,18 @@ class _ProductCardState extends State<ProductCard>
   }
   // //A
   //Animation for button
-
+  String userId;
+  Future<String> getUserId() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String uid = preferences.getString('userId');
+    setState(() {
+      userId = uid;
+    });
+  }
   @override
   void initState() {
     super.initState();
+    getUserId();
   }
 
   //dispose for animation
@@ -223,7 +230,9 @@ class _ProductCardState extends State<ProductCard>
                               ),
                               color: Colors.green.shade400)
                         },
-                        onPressed: onPressedIconWithText,
+                        onPressed: (){
+                          addToCart(productId: product.productId,userId:userId );
+                        },
                         state: stateTextWithIcon,
                       ),
                     ),
@@ -356,23 +365,42 @@ class _ProductCardState extends State<ProductCard>
     }
   }
 
-  void onPressedIconWithText() {
+  void addToCart({String productId,String userId})  async {
     switch (stateTextWithIcon) {
       case ButtonState.idle:
-        stateTextWithIcon = ButtonState.loading;
-        Future.delayed(Duration(seconds: 1), () {
-          setState(() {
-            stateTextWithIcon = Random.secure().nextBool()
-                ? ButtonState.success
-                : ButtonState.fail;
-          });
+      setState(() {
+          stateTextWithIcon = ButtonState.loading;
+      });
+      
+        bool added;
+        APIService apiService = APIService();
+        added = await apiService.addItemToCart(productId: productId,userId: userId).then((value) {
+          if(value== true){
+            setState(() {
+              stateTextWithIcon = ButtonState.success;
+            });
+          }
         });
+        if(added){
+          setState(() {
+             stateTextWithIcon = ButtonState.success;
+             print('added $added');
+          });
+        }
+
+        // Future.delayed(Duration(seconds: 1), () {
+        //   setState(() {
+        //     stateTextWithIcon = Random.secure().nextBool()
+        //         ? ButtonState.success
+        //         : ButtonState.fail;
+        //   });
+        // });
 
         break;
       case ButtonState.loading:
         break;
       case ButtonState.success:
-        stateTextWithIcon = ButtonState.idle;
+       
         break;
       case ButtonState.fail:
         stateTextWithIcon = ButtonState.idle;

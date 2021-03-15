@@ -14,6 +14,7 @@ import 'package:sanchika/model/product.dart';
 import 'package:sanchika/model/cat_product_model.dart';
 import 'package:sanchika/model/signUp_model.dart';
 import 'package:sanchika/model/wishlist_model.dart';
+import 'package:sanchika/model/getBanner_model.dart';
 import 'package:sanchika/pages/ui/screens/404_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -198,7 +199,7 @@ class APIService {
   Future<List<CartItem>> getCartItems (String userId) async {
     String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/cart/getCart?uid=$userId";
     print(userId);
-    final response = await http.get(url);
+    final response = await http.get(url,headers: headerList);
     //  FlutterError.onError = (FlutterErrorDetails details) {
     //   print('error');
     //   return null;
@@ -213,5 +214,34 @@ class APIService {
        print(response.statusCode);
        return null;
      }
+  }
+  // Add to cart
+  Future<bool> addItemToCart({String productId,String userId})async {
+    print(userId);
+    print(productId);
+    String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/cart/saveToCart?pdtid=$productId&uid=$userId";
+    final response = await http.post(url,headers: headerList);
+    print(response.statusCode);
+    if(response.statusCode==200){
+      return true;
+    }
+    else{
+      print(response.statusCode);
+      return false;
+    }
+
+
+  }
+  //getbanners
+  Future<List<BannerMaster>> getBanners()async{
+    String url="http://sanchika.in:8081/sanchikaapi/sanchika/user/banner/getBanner";
+    final response = await http.get(url,headers: headerList);
+    print('Banner response ${response.statusCode}');
+    if(response.statusCode==200){
+      Getbanner getbanner = getbannerFromJson(response.body);
+      List<BannerMaster> bannerList = getbanner.data.bannerMaster;
+      print(bannerList);
+      return bannerList;
+    }else{return null;}
   }
 }

@@ -248,7 +248,12 @@ class _LoginPageState extends State<LoginPage> {
                                   color: Colors.transparent,
                                   child: InkWell(
                                     onTap: () {
-                                     
+                                      Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MenuDashboard()),
+                                            );
                                       //Login Button
                                       if (validateAndSave()) {
                                         setState(() {

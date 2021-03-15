@@ -1,69 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:sanchika/model/getBanner_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeCrousal extends StatelessWidget {
+  List<BannerMaster> banners;
+  HomeCrousal({this.banners});
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Colors.white,
-        padding: EdgeInsets.all(8),
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height * 0.26,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    image: DecorationImage(
-                        image: AssetImage(
-                          "assets/images/2b.jpg",
-                        ),
-                        fit: BoxFit.fill),
-                  ),
-                ),
-              ),
-              Container(),
-              Padding(
-                padding:
-                    const EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    image: DecorationImage(
-                        image: AssetImage(
-                          "assets/images/christmas.jpg",
-                        ),
-                        fit: BoxFit.fill),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(top: 8.0, bottom: 8.0, right: 4.0),
-                child: Container(
-                  padding: EdgeInsets.all(8),
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    image: DecorationImage(
-                        image: AssetImage(
-                          "assets/images/diwali.jpg",
-                        ),
-                        fit: BoxFit.fitHeight),
-                  ),
-                ),
-              ),
-            ],
+     Map<String, String> headerList = {
+    "Content-Type": "application/json",
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive",
+    "Transfer-Encoding": "chunked",
+    "Keep-Alive": "timeout=0",
+    "Vary":"Origin",
+    "Vary":"Access-Control-Request-Method",
+    "Vary":"Access-Control-Request-Headers",
+     
+  };
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.4,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                cacheExtent: 10000000,
+                  addAutomaticKeepAlives: true,
+              controller: ScrollController(),
+                itemCount: banners.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: NetworkImage(banners[index].webImageUrl,headers: headerList),
+                              fit: BoxFit.cover,
+                              onError: (context, error) {
+                                return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.4,
+                                    child: Center(
+                                        child: CircularProgressIndicator()));
+                              })),
+                    ),
+                  );
+                }),
           ),
-        ));
+        )
+      ],
+    );
   }
 }
