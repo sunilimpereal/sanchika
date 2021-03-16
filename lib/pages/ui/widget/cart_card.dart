@@ -1,17 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:sanchika/model/product.dart';
+import 'package:sanchika/services/api_service.dart';
 import 'package:sanchika/utils/numericStepButton.dart';
 
 class CartCard extends StatefulWidget {
-  final Product product;
-  CartCard({this.product});
+  final String productId;
+  CartCard({this.productId});
   @override
   _CartCardState createState() => _CartCardState();
 }
 
 class _CartCardState extends State<CartCard> {
+   Future<Product> getProductDetail()async {
+    APIService apiService = APIService();
+    List<Product> product = await apiService.getProductDetail(productId: widget.productId);
+    return product[0];
+
+  }
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: getProductDetail(),
+      builder: (context,snapshot){
+        if(snapshot.hasData){
+            return _cartCardUi(context, snapshot.data);
+        }else{
+          return Center(child: CircularProgressIndicator());
+        }
+
+      },
+    );
+  }
+
+  @override
+  Widget _cartCardUi(BuildContext context,Product product) {
     return Container(
       decoration: BoxDecoration(
           border: Border(
@@ -45,14 +67,14 @@ class _CartCardState extends State<CartCard> {
                             child: Container(
                               decoration: BoxDecoration(
                                   image: DecorationImage(
-                                image: AssetImage(
-                                  widget.product.productImage[0],
+                                image: NetworkImage(
+                                  product.productImage,
                                 ),
                                 fit: BoxFit.contain,
                               )),
                             ),
                           ),
-                          discount(int.parse(widget.product.slPrice)),
+                          discount(int.parse(product.slPrice)),
                         ],
                       ),
                     ),
@@ -77,7 +99,7 @@ class _CartCardState extends State<CartCard> {
                                       width: MediaQuery.of(context).size.width *
                                           0.3,
                                       child: Text(
-                                        widget.product.productName,
+                                        product.productName,
                                         maxLines: 2,
                                         style: TextStyle(
                                           fontFamily: 'Poppins',
@@ -125,7 +147,7 @@ class _CartCardState extends State<CartCard> {
                                   Row(
                                     children: [
                                       Text(
-                                        "₹${widget.product.slPrice}",
+                                        "₹${product.slPrice}",
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600,
@@ -134,7 +156,7 @@ class _CartCardState extends State<CartCard> {
                                       SizedBox(
                                         width: 5,
                                       ),
-                                      price1(int.parse(widget.product.mrpPrice)),
+                                      price1(int.parse(product.mrpPrice)),
                                     ],
                                   ),
                                   Padding(
@@ -195,7 +217,7 @@ class _CartCardState extends State<CartCard> {
   }
 
   discount(int discount) {
-    if (widget.product.slPrice != null) {
+    if (true) {
       return Positioned(
         top: 1,
         left: 1,

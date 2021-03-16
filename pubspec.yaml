@@ -54,6 +54,7 @@ dependencies:
   rive: ^0.6.8
   rive_splash_screen: ^0.0.1
   cached_network_image: ^2.5.1
+  flutter_spinkit: ^5.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

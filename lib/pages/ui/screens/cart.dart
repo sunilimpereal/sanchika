@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rive/rive.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/localization/localization_methods.dart';
 import 'package:sanchika/model/cart_model.dart';
+import 'package:sanchika/pages/ui/widget/cart_card.dart';
 import 'package:sanchika/pages/ui/widget/checkout.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -115,11 +117,15 @@ class _CartState extends State<Cart> {
               itemCount: snapshot.data.length,
               itemBuilder: (context,index){
                 CartItem cartItem = snapshot.data[index];
-                return Text(cartItem.productName);
+                return CartCard(productId:cartItem.productId);
               }
                );
           }else{
-            return Center(child: CircularProgressIndicator());
+           const spinkit = SpinKitDoubleBounce(
+              color:  Color(0xff032e6b),
+              size: 50.0,
+            );
+            return Center(child:spinkit);
           }
         },
       ),
@@ -152,7 +158,7 @@ class _CartState extends State<Cart> {
                 ),
                 child: Center(
                   child: Text(
-                    "₹390",
+                    "₹0",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w600,

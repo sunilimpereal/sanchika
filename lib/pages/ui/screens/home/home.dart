@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/model/getBanner_model.dart';
 import 'package:sanchika/model/product.dart';
+import 'package:sanchika/model/wishlist_model.dart';
+import 'package:sanchika/pages/ui/screens/wishlist.dart';
 import 'package:sanchika/pages/ui/sub_screens/personalCare.dart';
 import 'package:sanchika/pages/ui/widget/categories_home_card.dart';
 import 'package:sanchika/pages/ui/widget/home_crousal.dart';
@@ -27,6 +30,14 @@ class Home extends StatefulWidget with NavigationStates {
 class _HomeState extends State<Home> {
   APIService apiService = APIService();
   final translator = GoogleTranslator();
+  String userId;
+  Future<String> getUserId() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String uid = preferences.getString('userId');
+    setState(() {
+      userId = uid;
+    });
+  }
 
   List<Product> products;
 
@@ -64,6 +75,19 @@ class _HomeState extends State<Home> {
   //product list
   Future<List<Product>> killeroffers;
   Future<List<Product>> allProducts;
+  List<WishlistItem> wishlist;
+  Future<List<WishlistItem>> getWishlist(String userId) async {
+    APIService apiService = new APIService();
+    List<WishlistItem> allWishlistItems =
+        await apiService.getWishList(userId: userId);
+    print('wishlist');
+    print(allWishlistItems);
+    setState(() {
+      wishlist = allWishlistItems;
+    });
+    return allWishlistItems;
+  }
+
   Future<List<Product>> getKilleroffer() async {
     List<Product> productList = await apiService.getKillerOffeers();
     return productList;
@@ -84,9 +108,15 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    getUserId().then((value) {
+      print(userId);
+      getWishlist(userId);
+    });
     killeroffers = getKilleroffer();
     allProducts = getKilleroffer();
     bannerList = getBanners();
+    print(userId);
+
     print('banner list');
     print(bannerList);
     print(allProducts);
@@ -228,8 +258,8 @@ class _HomeState extends State<Home> {
                   child: Column(
                     children: [
                       Container(
-                          // width: double.infinity,
-        height: MediaQuery.of(context).size.height * 0.26,
+                        // width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.26,
                         child: FutureBuilder(
                             future: bannerList,
                             builder: (context, snapshot) {
@@ -237,7 +267,11 @@ class _HomeState extends State<Home> {
                                 print(snapshot.data);
                                 return HomeCrousal(banners: snapshot.data);
                               } else {
-                                return CircularProgressIndicator();
+                                const spinkit = SpinKitDoubleBounce(
+                                  color:  Color(0xff032e6b),
+                                  size: 50.0,
+                                );
+                                return Center(child: spinkit);
                               }
                             }),
                       ),
@@ -307,6 +341,7 @@ class _HomeState extends State<Home> {
                               List<Product> productList = snapshot.data;
                               return HorizontalRow(
                                 productList: productList,
+                                wishlist: wishlist,
                               );
                             } else {
                               return CircularProgressIndicator();
@@ -631,10 +666,12 @@ class _HomeState extends State<Home> {
 }
 
 class HorizontalRow extends StatelessWidget {
+  final List<WishlistItem> wishlist;
   final List<Product> productList;
   const HorizontalRow({
     Key key,
     this.productList,
+    this.wishlist,
   }) : super(key: key);
 
   @override
@@ -652,10 +689,13 @@ class HorizontalRow extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: productList.length,
               itemBuilder: (context, index) {
+                print('wishlist in builder');
+                print(wishlist);
                 Product product = productList[index];
                 return Container(
                   child: ProductCard(
                     product: product,
+                    wishlist: wishlist,
                   ),
                 );
               },

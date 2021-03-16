@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:sanchika/model/product.dart';
+import 'package:sanchika/model/wishlist_model.dart';
 import 'package:sanchika/pages/ui/widget/product_view.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,10 +12,11 @@ import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class ProductCard extends StatefulWidget {
+  List<WishlistItem> wishlist;
   Product product;
   final translator = GoogleTranslator();
   Function onMenuItemClicked;
-  ProductCard({this.product, this.onMenuItemClicked});
+  ProductCard({this.product,this.wishlist, this.onMenuItemClicked});
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -78,12 +80,19 @@ class _ProductCardState extends State<ProductCard>
 
   @override
   Widget build(BuildContext context) {
-    
+    bool isInWishlist=false;
     return FutureBuilder(
       future: translate(widget.product),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return _cardUi(context: context, product: snapshot.data);
+          for(WishlistItem item in widget.wishlist??[]){
+            print('checking');
+            if(item.productId==snapshot.data.productId){
+              print('present');
+               return _cardUi(context: context, product: snapshot.data,inwishlist: true);
+            }
+          }
+          return _cardUi(context: context, product: snapshot.data,inwishlist: isInWishlist);
         } else {
           return Container();
         }
@@ -92,7 +101,7 @@ class _ProductCardState extends State<ProductCard>
   }
 
   @override
-  Widget _cardUi({BuildContext context, Product product}) {
+  Widget _cardUi({BuildContext context, Product product, bool inwishlist}) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -101,7 +110,7 @@ class _ProductCardState extends State<ProductCard>
           MaterialPageRoute(
             
               builder: (context) => ProductView(
-                
+                    inWishlist: inwishlist,
                     product: product,
                     onMenuItemClicked: widget.onMenuItemClicked,
                   )),
@@ -281,6 +290,7 @@ class _ProductCardState extends State<ProductCard>
               child: Padding(
                 padding: const EdgeInsets.all(14.0),
                 child: FavoriteButton(
+                  isFavorite: inwishlist,
                   iconSize: 28,
                   valueChanged: (_) {},
                 ),
@@ -378,6 +388,11 @@ class _ProductCardState extends State<ProductCard>
           if(value== true){
             setState(() {
               stateTextWithIcon = ButtonState.success;
+            });
+          }
+             if(value== false){
+            setState(() {
+              stateTextWithIcon = ButtonState.fail;
             });
           }
         });

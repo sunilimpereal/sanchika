@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/localization/localization_methods.dart';
 import 'package:sanchika/model/wishlist_model.dart';
+import 'package:sanchika/pages/ui/widget/wishlist_card.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rive/rive.dart';
@@ -120,13 +122,14 @@ class _WishlistState extends State<Wishlist> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   WishlistItem item = snapshot.data[index];
-                  return Column(
-                    children: [
-                      Text(item.productId),
-                      Text("${item.userId}"),
-                      Text(''),
-                    ],
-                  );
+                  return WishlistCard(productId: item.productId,);
+                  //  Column(
+                  //   children: [
+                  //     Text(item.productId),
+                  //     Text("${item.userId}"),
+                  //     Text(''),
+                  //   ],
+                  // );
                 },
               );
             } else {
@@ -159,9 +162,12 @@ class _WishlistState extends State<Wishlist> {
               );
             }
           } else {
-            return Center(
-              child: CircularProgressIndicator(),
+             const spinkit = SpinKitDoubleBounce(
+              color: Colors.grey,
+              size: 50.0,
             );
+            return Center(child:spinkit);
+           
           }
         },
       )

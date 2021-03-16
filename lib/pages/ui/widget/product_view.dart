@@ -13,8 +13,9 @@ import 'package:readmore/readmore.dart';
 
 class ProductView extends StatefulWidget {
   Product product;
+  bool inWishlist;
   Function onMenuItemClicked;
-  ProductView({this.product, this.onMenuItemClicked});
+  ProductView({this.product,this.inWishlist, this.onMenuItemClicked});
   @override
   _ProductViewState createState() => _ProductViewState();
 }
@@ -167,6 +168,7 @@ class _ProductViewState extends State<ProductView> {
                                   ),
                                   Container(
                                     child: FavoriteButton(
+                                      isFavorite: widget.inWishlist,
                                       iconSize: 38,
                                       valueChanged: (_) {},
                                     ),

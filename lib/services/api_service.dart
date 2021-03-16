@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:sanchika/model/AllProducts.dart';
 import 'package:sanchika/model/cart_model.dart';
+import 'package:sanchika/model/getProductDetail_model.dart';
 import 'package:sanchika/model/killerOffer.dart';
 import 'dart:convert';
 
@@ -38,7 +39,7 @@ class APIService {
   Future<LoginResponseModel> login(
       LoginRequestModel login, BuildContext context) async {
     String url =
-        'http://sanchika.in:8081/sanchikaa/sanchika/user/login/getEmailAndPassword';
+        'http://sanchika.in:8081/sanchikaapi/sanchika/user/login/getEmailAndPassword';
     final response = await http.get(
       url + '?email=${login.email}&password=${login.password}',
     );
@@ -128,7 +129,8 @@ class APIService {
       // print('error');
       return null;
     };
-    print(response.statusCode);
+
+    print('wishist response ${response.statusCode}');
     if (response.statusCode == 200) {
       print(getWishlistFromJson(response.body));
       GetWishlist getWishlistBody = getWishlistFromJson(response.body);
@@ -231,6 +233,20 @@ class APIService {
     }
 
 
+  }
+
+  //get each product detail
+  Future<List<Product>> getProductDetail({String productId})async{
+    String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/getByProductIdOrName?nameOrId=$productId";
+    final response = await http.get(url,headers: headerList);
+    print('ProductDetail response: ${response.statusCode}');
+    if(response.statusCode==200){
+      GetProductDetail getProductDetail = getProductDetailFromJson(response.body);
+      List<Product> productDetailList = getProductDetail.data.productDetailsList;
+      return productDetailList;
+    }else{
+      return null;
+    }
   }
   //getbanners
   Future<List<BannerMaster>> getBanners()async{

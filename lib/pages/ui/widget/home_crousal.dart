@@ -43,12 +43,7 @@ class HomeCrousal extends StatelessWidget {
                               image: NetworkImage(banners[index].webImageUrl,headers: headerList),
                               fit: BoxFit.cover,
                               onError: (context, error) {
-                                return Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.4,
-                                    child: Center(
-                                        child: CircularProgressIndicator()));
+                                return Icon(Icons.error);
                               })),
                     ),
                   );

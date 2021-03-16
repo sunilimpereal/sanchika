@@ -1,17 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:sanchika/model/getProductDetail_model.dart';
 import 'package:sanchika/model/product.dart';
+import 'package:sanchika/services/api_service.dart';
 import 'package:sanchika/utils/numericStepButton.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class WishlistCard extends StatefulWidget {
-  Product product;
-  WishlistCard({this.product});
+  String productId;
+  WishlistCard({this.productId});
   @override
   _WishlistCardState createState() => _WishlistCardState();
 }
 
 class _WishlistCardState extends State<WishlistCard> {
+  Future<Product> getProductDetail() async {
+    APIService apiService = APIService();
+    List<Product> product =
+        await apiService.getProductDetail(productId: widget.productId);
+    return product[0];
+  }
+
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: getProductDetail(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return _wishlistcardUi(context, snapshot.data);
+          } else {
+            const spinkit = SpinKitDoubleBounce(
+              color: Colors.white,
+              size: 50.0,
+            );
+            return spinkit;
+          }
+        });
+  }
+
+  @override
+  Widget _wishlistcardUi(BuildContext context, Product product) {
     return Container(
       padding: EdgeInsets.all(8),
       height: MediaQuery.of(context).size.height * 0.20,
@@ -48,12 +75,12 @@ class _WishlistCardState extends State<WishlistCard> {
                           color: Colors.transparent,
                           borderRadius: BorderRadius.circular(10),
                           image: DecorationImage(
-                              image: AssetImage(widget.product.productImage),
-                              fit: BoxFit.contain),
+                              fit: BoxFit.contain,
+                              image: NetworkImage(product.productImage)),
                         ),
                       ),
                     ),
-                    discount(int.parse(widget.product.slPrice)),
+                    discount(int.parse(product.slPrice)),
                   ],
                 ),
               ],
@@ -95,7 +122,7 @@ class _WishlistCardState extends State<WishlistCard> {
                                                   0.72 *
                                                   0.75,
                                               child: Text(
-                                                widget.product.productName,
+                                                product.productName,
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 2,
                                                 style: TextStyle(
@@ -134,7 +161,7 @@ class _WishlistCardState extends State<WishlistCard> {
                         Row(
                           children: [
                             Text(
-                              "₹${widget.product.slPrice}",
+                              "₹${product.slPrice}",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
@@ -143,7 +170,7 @@ class _WishlistCardState extends State<WishlistCard> {
                             SizedBox(
                               width: 10,
                             ),
-                            price1(int.parse(widget.product.mrpPrice)),
+                            price1(int.parse(product.mrpPrice)),
                           ],
                         ),
                         Container(
