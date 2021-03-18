@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/pages/ui/screens/categories/category_view.dart';
-import 'package:sanchika/pages/ui/sub_screens/ProcessedFood.dart';
+import 'package:sanchika/pages/ui/sub_screens/subMenuPage.dart';
 
 class Categories extends StatefulWidget with NavigationStates {
   final Function onMenuTap;

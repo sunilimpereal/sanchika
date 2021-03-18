@@ -40,7 +40,7 @@ class HomeCrousal extends StatelessWidget {
                       height: MediaQuery.of(context).size.height * 0.4,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: NetworkImage(banners[index].webImageUrl,headers: headerList),
+                              image: NetworkImage(banners[index].mobileImageUrl??'http://accountingweekly.com/wp-content/uploads/2015/02/iStock_000017253118_Small.jpg',headers: headerList),
                               fit: BoxFit.cover,
                               onError: (context, error) {
                                 return Icon(Icons.error);

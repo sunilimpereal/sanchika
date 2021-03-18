@@ -1,20 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:sanchika/model/product.dart';
+import 'package:sanchika/model/subMenu_model.dart';
+import 'package:sanchika/model/topMenu_model.dart';
 import 'package:sanchika/pages/ui/screens/cart.dart';
 import 'package:sanchika/pages/ui/widget/product_card.dart';
+import 'package:sanchika/services/api_service.dart';
 
-class ProcessedFood extends StatefulWidget {
+class SubMenuPage extends StatefulWidget {
+  final TopMenu topMenu;
+  SubMenuPage({this.topMenu});
   @override
-  ProcessedFoodState createState() => ProcessedFoodState();
+  SubMenuPageState createState() => SubMenuPageState();
 }
 
-class ProcessedFoodState extends State<ProcessedFood> {
+class SubMenuPageState extends State<SubMenuPage> {
+  List<SubMenu> subMenuList;
+
+  Future<List<SubMenu>> getSubMenu() async {
+    APIService apiService = APIService();
+    await apiService
+        .getSubMenu(widget.topMenu.menuId, widget.topMenu.menuTitle)
+        .then((value) {
+      setState(() {
+        subMenuList = value;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getSubMenu();
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(subMenuList);
+    if(subMenuList!=null){
     return DefaultTabController(
-      length: 6,
+      length: subMenuList.length,
       child: Scaffold(
         appBar: AppBar(
+        
           actions: [
             Padding(
               padding: const EdgeInsets.all(10.0),
@@ -64,7 +91,7 @@ class ProcessedFoodState extends State<ProcessedFood> {
           elevation: 0.5,
           backgroundColor: Colors.white,
           title: Text(
-            'Prodcessed Food',
+            widget.topMenu.menuTitle,
             style: TextStyle(
               color: Colors.black,
             ),
@@ -72,73 +99,30 @@ class ProcessedFoodState extends State<ProcessedFood> {
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(30.0),
             child: TabBar(
-              isScrollable: true,
-              unselectedLabelColor: Colors.black.withOpacity(0.3),
-              tabs: [
-                Tab(
-                  child: Text(
-                    'Breakfast',
-                    style: TextStyle(
-                      color: Color(0xff0B3666),
-                    ),
-                  ),
-                ),
-                Tab(
-                  child: Text(
-                    'Bevrages',
-                    style: TextStyle(
-                      color: Color(0xff0B3666),
-                    ),
-                  ),
-                ),
-                Tab(
-                  child: Text(
-                    'Homecare',
-                    style: TextStyle(
-                      color: Color(0xff0B3666),
-                    ),
-                  ),
-                ),
-                Tab(
-                  child: Text(
-                    'Avacados',
-                    style: TextStyle(
-                      color: Color(0xff0B3666),
-                    ),
-                  ),
-                ),
-                Tab(
-                  child: Text(
-                    'Plums & Apricots',
-                    style: TextStyle(
-                      color: Color(0xff0B3666),
-                    ),
-                  ),
-                ),
-                Tab(
-                  child: Text(
-                    'Tab 6',
-                    style: TextStyle(
-                      color: Color(0xff0B3666),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                isScrollable: true,
+                unselectedLabelColor: Colors.black.withOpacity(0.3),
+                tabs: subMenuList
+                    .map((item) => Tab(
+                            child: Text(
+                          item.menuTitle,
+                          style: TextStyle(
+                            color: Color(0xff0B3666),
+                          ),
+                        )))
+                    .toList(),),
           ),
         ),
         body: TabBarView(
-          children: [
-            Breakfast(),
-            Breakfast(),
-            Breakfast(),
-            Breakfast(),
-            Breakfast(),
-            Breakfast(),
-          ],
+          children: subMenuList.map((e) => Breakfast()).toList(),
         ),
       ),
     );
+  }else{
+    return Scaffold(
+      body:  Center(child: CircularProgressIndicator()),
+    );
+   
+  }
   }
 }
 
@@ -150,21 +134,18 @@ class Breakfast extends StatefulWidget {
 class _BreakfastState extends State<Breakfast> {
   @override
   Widget build(BuildContext context) {
-  
     return Container(
       child: SingleChildScrollView(
         child: Column(
           children: [
-          
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               mainAxisSize: MainAxisSize.min,
               children: [
                 // ProductCard(product: product1),
-                // ProductCard(product: product2),
+                // ProductCard(product: product2),w
               ],
             ),
-        
           ],
         ),
       ),

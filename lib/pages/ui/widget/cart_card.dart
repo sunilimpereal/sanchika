@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sanchika/model/product.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:sanchika/utils/numericStepButton.dart';
@@ -25,7 +26,11 @@ class _CartCardState extends State<CartCard> {
         if(snapshot.hasData){
             return _cartCardUi(context, snapshot.data);
         }else{
-          return Center(child: CircularProgressIndicator());
+        const spinkit = SpinKitDoubleBounce(
+              color:  Color(0xff032e6b),
+              size: 50.0,
+            );
+            return Center(child:spinkit);
         }
 
       },

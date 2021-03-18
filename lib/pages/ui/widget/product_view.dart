@@ -3,19 +3,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:progress_state_button/iconed_button.dart';
+import 'package:progress_state_button/progress_button.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/model/product.dart';
 import 'package:sanchika/pages/ui/screens/cart.dart';
 import 'package:sanchika/pages/ui/widget/crousal.dart';
 import 'package:sanchika/pages/ui/widget/product_card.dart';
+import 'package:sanchika/services/api_service.dart';
 import 'package:sanchika/utils/numericStepButton.dart';
 import 'package:readmore/readmore.dart';
 
 class ProductView extends StatefulWidget {
   Product product;
   bool inWishlist;
+  String userId;
   Function onMenuItemClicked;
-  ProductView({this.product,this.inWishlist, this.onMenuItemClicked});
+  ProductView({this.product,this.inWishlist, this.userId,this.onMenuItemClicked});
   @override
   _ProductViewState createState() => _ProductViewState();
 }
@@ -34,6 +38,7 @@ class _ProductViewState extends State<ProductView> {
   }
 
   int count;
+   ButtonState stateTextWithIcon = ButtonState.idle;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -458,17 +463,53 @@ class _ProductViewState extends State<ProductView> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: null,
-        backgroundColor: Color(0xff0B3666),
-        onPressed: () {},
-        label: Padding(
-          padding: EdgeInsets.all(80),
-          child: Text("Add to cart"),
-        ),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0))),
-      ),
+      floatingActionButton: Container(
+        height: 50,
+        width: 250,
+        child:  ProgressButton.icon(
+                        progressIndicatorSize: 28.0,
+                        iconedButtons: {
+                          ButtonState.idle: IconedButton(
+                            text: "Add to Cart",
+                            icon: Icon(Icons.shopping_cart_outlined,
+                                size: 23, color: Colors.white),
+                            color: Color(0xff032e6b),
+                          ),
+                          ButtonState.loading: IconedButton(
+                            text: "Loading",
+                            icon: Icon(Icons.blur_circular),
+                            color: Color(0xff032e6b),
+                          ),
+                          ButtonState.fail: IconedButton(
+                              text: "Failed",
+                              icon: Icon(Icons.cancel, color: Colors.white),
+                              color: Colors.red.shade300),
+                          ButtonState.success: IconedButton(
+                              text: "Added",
+                              icon: Icon(
+                                Icons.check_circle,
+                                color: Colors.white,
+                              ),
+                              color: Colors.green.shade400)
+                        },
+                        onPressed: (){
+                          addToCart(productId: widget.product.productId,userId:widget.userId );
+                        },
+                        state: stateTextWithIcon,
+                      ),
+      )
+      // FloatingActionButton.extended(
+        
+      //   heroTag: null,
+      //   backgroundColor: Color(0xff0B3666),
+      //   onPressed: () {},
+      //   label: Padding(
+      //     padding: EdgeInsets.all(80),
+      //     child: Text("Add to cart"),
+      //   ),
+      //   shape: RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.all(Radius.circular(16.0))),
+      // ),
     );
   }
 //TODO: dropdown 
@@ -727,5 +768,55 @@ class _ProductViewState extends State<ProductView> {
         ],
       ),
     );
+  }
+  void addToCart({String productId,String userId})  async {
+    switch (stateTextWithIcon) {
+      case ButtonState.idle:
+      setState(() {
+          stateTextWithIcon = ButtonState.loading;
+      });
+      
+        bool added;
+        APIService apiService = APIService();
+        added = await apiService.addItemToCart(productId: productId,userId: userId).then((value) {
+          if(value== true){
+            setState(() {
+              stateTextWithIcon = ButtonState.success;
+            });
+          }
+             if(value== false){
+            setState(() {
+              stateTextWithIcon = ButtonState.fail;
+            });
+          }
+        });
+        if(added){
+          setState(() {
+             stateTextWithIcon = ButtonState.success;
+             print('added $added');
+          });
+        }
+
+        // Future.delayed(Duration(seconds: 1), () {
+        //   setState(() {
+        //     stateTextWithIcon = Random.secure().nextBool()
+        //         ? ButtonState.success
+        //         : ButtonState.fail;
+        //   });
+        // });
+
+        break;
+      case ButtonState.loading:
+        break;
+      case ButtonState.success:
+       
+        break;
+      case ButtonState.fail:
+        stateTextWithIcon = ButtonState.idle;
+        break;
+    }
+    setState(() {
+      stateTextWithIcon = stateTextWithIcon;
+    });
   }
 }

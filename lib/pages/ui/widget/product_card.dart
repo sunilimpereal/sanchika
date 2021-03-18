@@ -112,6 +112,7 @@ class _ProductCardState extends State<ProductCard>
               builder: (context) => ProductView(
                     inWishlist: inwishlist,
                     product: product,
+                    userId: userId,
                     onMenuItemClicked: widget.onMenuItemClicked,
                   )),
         );
@@ -123,7 +124,7 @@ class _ProductCardState extends State<ProductCard>
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 padding: EdgeInsets.all(8.0),
-                height: MediaQuery.of(context).size.height * .35,
+                height: MediaQuery.of(context).size.height * .35+7,
                 width: MediaQuery.of(context).size.width * 0.43,
                 decoration: BoxDecoration(
                   color: Colors.grey[100],

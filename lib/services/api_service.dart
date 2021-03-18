@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:sanchika/model/AllProducts.dart';
+import 'package:sanchika/model/activeProduct_model.dart';
 import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/model/getProductDetail_model.dart';
 import 'package:sanchika/model/killerOffer.dart';
@@ -14,6 +15,8 @@ import 'package:sanchika/model/login_model.dart';
 import 'package:sanchika/model/product.dart';
 import 'package:sanchika/model/cat_product_model.dart';
 import 'package:sanchika/model/signUp_model.dart';
+import 'package:sanchika/model/subMenu_model.dart';
+import 'package:sanchika/model/topMenu_model.dart';
 import 'package:sanchika/model/wishlist_model.dart';
 import 'package:sanchika/model/getBanner_model.dart';
 import 'package:sanchika/pages/ui/screens/404_page.dart';
@@ -175,6 +178,20 @@ class APIService {
       return null;
     }
   }
+  //Get active products
+  Future<List<Product>> getActiveProduct()async{
+    String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/getActiveProductDetails";
+    final response = await http.get(url);
+    print('response of active products ${response.statusCode}');
+    if(response.statusCode==200){
+      GetActiveProduct allActiveProduct = getActiveProductFromJson(response.body);
+      List<Product> productList = allActiveProduct.data.activeProductDetailsList;
+      return productList;
+    }else{
+      return [];
+    }
+
+  }
 
   //get prdocut from each category
   Future<List<CtgyProductDetailsList>> getCtegoryProducts() async {
@@ -259,5 +276,33 @@ class APIService {
       print(bannerList);
       return bannerList;
     }else{return null;}
+  }
+  //get Top Menu
+   Future<List<TopMenu>> getTopMenu()async{
+     String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/menu/topmenu";
+     final response = await http.get(url,headers: headerList);
+     print('Top Menu response ${response.statusCode}');
+     if(response.statusCode == 200){
+       GetTopMenu topMenuItems = getTopMenuFromJson(response.body);
+       List<TopMenu> topMenuList = topMenuItems.data.topMenu;
+       print(topMenuList);
+       return topMenuList;
+     }else{
+       return [];
+     }
+  }
+  //get Sub menu
+  Future<List<SubMenu>> getSubMenu(int menuId,String title) async {
+    String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/menu/submenu?menuid=$menuId&title=$title";
+    final response = await http.get(url,headers: headerList);
+    print('SubMenu response ${response.statusCode}');
+    if(response.statusCode==200){
+      GetSubMenu subMenu = getSubMenuFromJson(response.body);
+      List<SubMenu> subMenuList = subMenu.data.subMenu;
+      print(subMenuList);
+      return subMenuList;
+    }else{
+      return [];
+    }
   }
 }

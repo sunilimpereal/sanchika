@@ -6,6 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/model/getBanner_model.dart';
 import 'package:sanchika/model/product.dart';
+import 'package:sanchika/model/topMenu_model.dart';
 import 'package:sanchika/model/wishlist_model.dart';
 import 'package:sanchika/pages/ui/screens/wishlist.dart';
 import 'package:sanchika/pages/ui/sub_screens/personalCare.dart';
@@ -74,7 +75,7 @@ class _HomeState extends State<Home> {
 
   //product list
   Future<List<Product>> killeroffers;
-  Future<List<Product>> allProducts;
+  Future<List<Product>> activeProducts;
   List<WishlistItem> wishlist;
   Future<List<WishlistItem>> getWishlist(String userId) async {
     APIService apiService = new APIService();
@@ -93,8 +94,8 @@ class _HomeState extends State<Home> {
     return productList;
   }
 
-  Future<List<Product>> getallProduct() async {
-    List<Product> productList = await apiService.getAllProducts();
+  Future<List<Product>> getActiveProduct() async {
+    List<Product> productList = await apiService.getActiveProduct();
     return productList;
   }
 
@@ -103,6 +104,12 @@ class _HomeState extends State<Home> {
   Future<List<BannerMaster>> getBanners() async {
     List<BannerMaster> bannerList = await apiService.getBanners();
     return bannerList;
+  }
+  //get Top Menu
+  Future<List<TopMenu>> topMenuItems;
+  Future<List<TopMenu>> getTopMenu() async{
+    List<TopMenu> topMenulist = await apiService.getTopMenu();
+    return topMenulist;
   }
 
   @override
@@ -113,13 +120,14 @@ class _HomeState extends State<Home> {
       getWishlist(userId);
     });
     killeroffers = getKilleroffer();
-    allProducts = getKilleroffer();
+    activeProducts = getActiveProduct();
     bannerList = getBanners();
+    topMenuItems = getTopMenu();
     print(userId);
 
     print('banner list');
     print(bannerList);
-    print(allProducts);
+    print(activeProducts);
   }
 
   @override
@@ -144,7 +152,7 @@ class _HomeState extends State<Home> {
                           showSearch(
                               context: context,
                               delegate:
-                                  ProductSearch(productsList: killeroffers));
+                                  ProductSearch(productsList: activeProducts));
                         },
                         readOnly: true,
                         keyboardType: TextInputType.text,
@@ -267,6 +275,7 @@ class _HomeState extends State<Home> {
                                 print(snapshot.data);
                                 return HomeCrousal(banners: snapshot.data);
                               } else {
+                               
                                 const spinkit = SpinKitDoubleBounce(
                                   color:  Color(0xff032e6b),
                                   size: 50.0,
@@ -275,47 +284,18 @@ class _HomeState extends State<Home> {
                               }
                             }),
                       ),
-                      Container(
-                        color: Color(0xffEDE2DC),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              // categories list
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => PersonalCare()),
-                                  );
-                                },
-                                child: CategoryHomeCard(
-                                  name: personalcare,
-                                  image: 'assets/images/skincare.png',
-                                ),
-                              ),
-                              CategoryHomeCard(
-                                name: processedFood,
-                                image: 'assets/images/processedfood.png',
-                              ),
-                              CategoryHomeCard(
-                                name: 'Stationary',
-                                image: 'assets/images/stationary.png',
-                              ),
-                              CategoryHomeCard(
-                                name: 'CEREALS',
-                                image: 'assets/images/cereal.png',
-                              ),
-                              CategoryHomeCard(
-                                name: 'Household',
-                                image: 'assets/images/household.png',
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                   //top Menu
+                   FutureBuilder(
+                     future: topMenuItems,
+                     builder: (context,snapshot){
+                       if(snapshot.hasData){
+                         return HomeMenuRow(topMenuList:snapshot.data);
+                       }else{
+                       
+                         return CircularProgressIndicator();
+                       }
+                     }),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -344,6 +324,7 @@ class _HomeState extends State<Home> {
                                 wishlist: wishlist,
                               );
                             } else {
+                             
                               return CircularProgressIndicator();
                             }
                           }),
@@ -661,6 +642,35 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class HomeMenuRow extends StatelessWidget {
+  final List<TopMenu> topMenuList;
+  HomeMenuRow({this.topMenuList});
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(child: SizedBox(
+          height:70,
+          child:ListView.builder(
+              addAutomaticKeepAlives: true,
+              controller: ScrollController(),
+              scrollDirection: Axis.horizontal,
+            cacheExtent: 10000,
+            itemCount: topMenuList.length,
+            itemBuilder:(context,index){
+              TopMenu menuItem = topMenuList[index];
+              return CategoryHomeCard(
+                topMenu:menuItem
+              );
+
+            } )
+        ))
+      ],
+      
     );
   }
 }

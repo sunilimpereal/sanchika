@@ -163,7 +163,7 @@ class _WishlistState extends State<Wishlist> {
             }
           } else {
              const spinkit = SpinKitDoubleBounce(
-              color: Colors.grey,
+              color:  Color(0xff032e6b),
               size: 50.0,
             );
             return Center(child:spinkit);

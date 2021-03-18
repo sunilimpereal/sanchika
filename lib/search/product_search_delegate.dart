@@ -452,6 +452,7 @@ class _SearchResultState extends State<SearchResult> {
         ),
         Expanded(
           child: GridView.builder(
+            cacheExtent: 100000,
             shrinkWrap: false,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
