@@ -83,3 +83,39 @@ class WishlistItem {
         "gid": gid,
     };
 }
+// To parse this JSON data, do
+//
+//     final addWishlistRequest = addWishlistRequestFromJson(jsonString);
+
+
+AddWishlistRequest addWishlistRequestFromJson(String str) => AddWishlistRequest.fromJson(json.decode(str));
+
+String addWishlistRequestToJson(AddWishlistRequest data) => json.encode(data.toJson());
+
+class AddWishlistRequest {
+    AddWishlistRequest({
+        this.productId,
+        this.quantity,
+        this.gid,
+        this.userId,
+    });
+
+    String productId;
+    int quantity;
+    int gid;
+    int userId;
+
+    factory AddWishlistRequest.fromJson(Map<String, dynamic> json) => AddWishlistRequest(
+        productId: json["productId"],
+        quantity: json["quantity"],
+        gid: json["gid"],
+        userId: json["userId"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "productId": productId,
+        "quantity": quantity,
+        "gid": gid,
+        "userId": userId,
+    };
+}

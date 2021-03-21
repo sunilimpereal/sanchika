@@ -267,6 +267,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 'login', 'logged');
                                             preferences.setString(
                                                 'email', requestModel.email);
+                                              
                                             preferences.setString(
                                                 'name', value.data.login.name);
                                                   preferences.setString(

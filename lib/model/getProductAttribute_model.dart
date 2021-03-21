@@ -1,17 +1,17 @@
 // To parse this JSON data, do
 //
-//     final getActiveProduct = getActiveProductFromJson(jsonString);
+//     final getProductAttribute = getProductAttributeFromJson(jsonString);
 
 import 'dart:convert';
 
 import 'package:sanchika/model/product.dart';
 
-GetActiveProduct getActiveProductFromJson(String str) => GetActiveProduct.fromJson(json.decode(str));
+GetProductAttribute getProductAttributeFromJson(String str) => GetProductAttribute.fromJson(json.decode(str));
 
-String getActiveProductToJson(GetActiveProduct data) => json.encode(data.toJson());
+String getProductAttributeToJson(GetProductAttribute data) => json.encode(data.toJson());
 
-class GetActiveProduct {
-    GetActiveProduct({
+class GetProductAttribute {
+    GetProductAttribute({
         this.status,
         this.statusMsg,
         this.errorCode,
@@ -23,7 +23,7 @@ class GetActiveProduct {
     dynamic errorCode;
     Data data;
 
-    factory GetActiveProduct.fromJson(Map<String, dynamic> json) => GetActiveProduct(
+    factory GetProductAttribute.fromJson(Map<String, dynamic> json) => GetProductAttribute(
         status: json["status"],
         statusMsg: json["statusMsg"],
         errorCode: json["errorCode"],
@@ -40,17 +40,19 @@ class GetActiveProduct {
 
 class Data {
     Data({
-        this.activeProductDetailsList,
+        this.productDetailsList,
     });
 
-    List<Product> activeProductDetailsList;
+    List<Product> productDetailsList;
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
-        activeProductDetailsList: List<Product>.from(json["Product Details List"].map((x) => Product.fromJson(x))),
+        productDetailsList: List<Product>.from(json["Product Details List"].map((x) => Product.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
-        " Active Product Details List": List<dynamic>.from(activeProductDetailsList.map((x) => x.toJson())),
+        "Product Details List": List<dynamic>.from(productDetailsList.map((x) => x.toJson())),
     };
 }
+
+
 

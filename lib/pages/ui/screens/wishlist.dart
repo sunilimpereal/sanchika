@@ -16,7 +16,7 @@ class Wishlist extends StatefulWidget with NavigationStates {
 
   final Function onMenuItemClicked;
   final Function onMenuTap;
-
+  
   @override
   _WishlistState createState() => _WishlistState();
 }
@@ -50,6 +50,18 @@ class _WishlistState extends State<Wishlist> {
       }
     });
   }
+  @override
+  void dispose() {
+  
+    super.dispose();
+   
+  }
+  reload(){
+  
+    setState(() {
+      userId=userId;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +77,16 @@ class _WishlistState extends State<Wishlist> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        title: Text(
-          getTranslated(context, "Wishlist"),
-          style: TextStyle(color: Colors.black),
+        title: GestureDetector(
+          onTap: (){
+            setState(() {
+              
+            });
+          },
+                  child: Text(
+            getTranslated(context, "Wishlist"),
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         leading: InkWell(
           child: Icon(Icons.menu, color: Colors.black),
@@ -122,7 +141,7 @@ class _WishlistState extends State<Wishlist> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   WishlistItem item = snapshot.data[index];
-                  return WishlistCard(productId: item.productId,);
+                  return WishlistCard(productId: item.productId,notifyParent: reload,);
                   //  Column(
                   //   children: [
                   //     Text(item.productId),

@@ -6,7 +6,8 @@ import 'package:sanchika/utils/numericStepButton.dart';
 
 class CartCard extends StatefulWidget {
   final String productId;
-  CartCard({this.productId});
+  final int qty;
+  CartCard({this.productId,this.qty});
   @override
   _CartCardState createState() => _CartCardState();
 }
@@ -23,8 +24,9 @@ class _CartCardState extends State<CartCard> {
     return FutureBuilder(
       future: getProductDetail(),
       builder: (context,snapshot){
+        print(widget.productId);
         if(snapshot.hasData){
-            return _cartCardUi(context, snapshot.data);
+            return cartCardUi(context, snapshot.data);
         }else{
         const spinkit = SpinKitDoubleBounce(
               color:  Color(0xff032e6b),
@@ -38,13 +40,13 @@ class _CartCardState extends State<CartCard> {
   }
 
   @override
-  Widget _cartCardUi(BuildContext context,Product product) {
+  Widget cartCardUi(BuildContext context,Product product) {
     return Container(
       decoration: BoxDecoration(
           border: Border(
               bottom: BorderSide(
         width: 1,
-        color: Colors.grey[100],
+        color: Colors.white,
       ))),
       child: Column(
         children: [
@@ -66,20 +68,20 @@ class _CartCardState extends State<CartCard> {
                             height: MediaQuery.of(context).size.height * 0.15,
                             width: MediaQuery.of(context).size.width * 0.26,
                             decoration: BoxDecoration(
-                              color: Colors.grey[200],
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Container(
                               decoration: BoxDecoration(
                                   image: DecorationImage(
                                 image: NetworkImage(
-                                  product.productImage,
+                                  product?.productImage ?? '',
                                 ),
-                                fit: BoxFit.contain,
+                                fit: BoxFit.fill,
                               )),
                             ),
                           ),
-                          discount(int.parse(product.slPrice)),
+                          discount(mrp:double.parse(product?.mrpPrice??'0'),slp: double.parse(product?.slPrice) ),
                         ],
                       ),
                     ),
@@ -104,16 +106,19 @@ class _CartCardState extends State<CartCard> {
                                       width: MediaQuery.of(context).size.width *
                                           0.3,
                                       child: Text(
-                                        product.productName,
+                                     
+                                        product?.productName,
                                         maxLines: 2,
                                         style: TextStyle(
                                           fontFamily: 'Poppins',
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ),
                                     Container(
+                                      height: 40,
+                                      width: 108,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(15),
@@ -127,6 +132,7 @@ class _CartCardState extends State<CartCard> {
                                         ],
                                       ),
                                       child: NumericStepButton(
+                                        initialValue: widget.qty ,
                                         minValue: 1,
                                         maxValue: 20,
                                         onChanged: (value) {
@@ -152,7 +158,8 @@ class _CartCardState extends State<CartCard> {
                                   Row(
                                     children: [
                                       Text(
-                                        "₹${product.slPrice}",
+                                      
+                                        "₹${product?.slPrice}",
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600,
@@ -184,7 +191,10 @@ class _CartCardState extends State<CartCard> {
                                           Icons.delete,
                                           color: Colors.red[400],
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          
+              
+                                        },
                                       ),
                                     ),
                                   )
@@ -221,11 +231,17 @@ class _CartCardState extends State<CartCard> {
     }
   }
 
-  discount(int discount) {
-    if (true) {
+ discount({double mrp,double slp}) {
+   int discount =0;
+   if(mrp!=slp){
+    int discount = (((mrp - slp)/mrp)*100).round();
+   }else{
+     
+   }
+    if (discount>0) {
       return Positioned(
-        top: 1,
-        left: 1,
+        top: 5,
+        left: 7,
         child: Container(
           padding: EdgeInsets.all(4),
           decoration: BoxDecoration(
@@ -233,7 +249,7 @@ class _CartCardState extends State<CartCard> {
                 topRight: Radius.circular(5),
                 topLeft: Radius.circular(15),
                 bottomRight: Radius.circular(10)),
-            color: Colors.green[300],
+            color: Colors.red,
           ),
           child: Text(
             '$discount% Off',

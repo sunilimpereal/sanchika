@@ -239,12 +239,12 @@ class _SearchResultState extends State<SearchResult> {
     }
     if (type == 'Price High to Low') {
       setState(() {
-        productList.sort((b, a) => a.slPrice.compareTo(b.slPrice));
+        productList.sort((b, a) => double.parse( a.slPrice).compareTo( double.parse(b.slPrice)));
       });
     }
     if (type == 'Price Low to High') {
       setState(() {
-        productList.sort((a, b) => a.slPrice.compareTo(b.slPrice));
+        productList.sort((a, b) => double.parse(a.slPrice).compareTo(double.parse(b.slPrice)));
       });
     }
   }

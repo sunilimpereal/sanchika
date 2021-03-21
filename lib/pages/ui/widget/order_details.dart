@@ -1,13 +1,36 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:sanchika/model/product.dart';
+import 'package:sanchika/services/api_service.dart';
 
 class OrderCheckout extends StatefulWidget {
+  String name;
+  String userId;
+  String productName;
+  String productId;
+  String price;
+  String orderShippingAddress;
+  String orderCity;
+  String email;
+  String orderPaymentType;
+  int orderPhoneNumber;
+  String orderPrice;
+  OrderCheckout({this.name,this.email,this.productName,this.price,this.orderShippingAddress,this.orderPrice, this.orderPhoneNumber,this.orderPaymentType,this.orderCity,this.productId,this.userId});
+  
+
   @override
   _OrderCheckoutState createState() => _OrderCheckoutState();
 }
 
 class _OrderCheckoutState extends State<OrderCheckout> {
+     Future<Product> getProductDetail()async {
+    APIService apiService = APIService();
+    List<Product> product = await apiService.getProductDetail(productId: widget.productId);
+    return product[0];
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,19 +99,24 @@ class _OrderCheckoutState extends State<OrderCheckout> {
                       SizedBox(
                         height: 25,
                       ),
-                      Container(
+                      FutureBuilder(
+                        future: getProductDetail() ,
+                        builder: (context,snapshot){
+                          if(snapshot.hasData){
+                            Product product =snapshot.data;
+                            return Container(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Lays Classic (x1)\n200g",
+                              product.productName,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
                             Text(
-                              "₹ 120",
+                              "₹ ${product.slPrice}",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.normal,
@@ -96,64 +124,17 @@ class _OrderCheckoutState extends State<OrderCheckout> {
                             )
                           ],
                         ),
-                      ),
+                      );
+                          }else{
+                            return Container();
+                          }
+                        }),
+                      
+                     
                       SizedBox(
                         height: 10,
                       ),
                       Divider(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Milky Mist Paneer  (x1)\n400g",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.normal,
-                                )),
-                            Text(
-                              "₹ 599",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Divider(
-                        color: Colors.black,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Philips Electroic\nStove  (x1)",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                            Text(
-                              "₹ 1200",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Divider()
                     ],
                   ),
                 ),
@@ -191,7 +172,7 @@ class _OrderCheckoutState extends State<OrderCheckout> {
                               ],
                             ),
                             Text(
-                              "₹ 1919",
+                              "₹ 0",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -244,7 +225,7 @@ class _OrderCheckoutState extends State<OrderCheckout> {
                               ),
                             ),
                             Text(
-                              "₹ 1919",
+                              "₹ 0",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,

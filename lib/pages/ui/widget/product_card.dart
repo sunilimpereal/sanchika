@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
+import 'package:sanchika/model/addToCart_model.dart';
 import 'package:sanchika/model/product.dart';
 import 'package:sanchika/model/wishlist_model.dart';
 import 'package:sanchika/pages/ui/widget/product_view.dart';
@@ -16,7 +17,7 @@ class ProductCard extends StatefulWidget {
   Product product;
   final translator = GoogleTranslator();
   Function onMenuItemClicked;
-  ProductCard({this.product,this.wishlist, this.onMenuItemClicked});
+  ProductCard({this.product, this.wishlist, this.onMenuItemClicked});
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -25,7 +26,8 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard>
     with SingleTickerProviderStateMixin {
   String _selectedValue;
- 
+  AddtocartRequest addtocartRequest;
+
   // tratlate function to malylam and retun the product item
   Future<Product> translate(Product product) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -43,9 +45,7 @@ class _ProductCardState extends State<ProductCard>
               .translate(widget.product.productDescription, to: 'ml')
               .then((result) {
             productmal.productDescription = result.text;
-            setState(() {
-              
-            });
+            setState(() {});
           });
         });
       });
@@ -54,6 +54,7 @@ class _ProductCardState extends State<ProductCard>
     }
     return product;
   }
+
   // //A
   //Animation for button
   String userId;
@@ -64,10 +65,12 @@ class _ProductCardState extends State<ProductCard>
       userId = uid;
     });
   }
+
   @override
   void initState() {
     super.initState();
     getUserId();
+    print(widget.product.productId);
   }
 
   //dispose for animation
@@ -80,19 +83,23 @@ class _ProductCardState extends State<ProductCard>
 
   @override
   Widget build(BuildContext context) {
-    bool isInWishlist=false;
+    bool isInWishlist = false;
     return FutureBuilder(
       future: translate(widget.product),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          for(WishlistItem item in widget.wishlist??[]){
+          for (WishlistItem item in widget.wishlist ?? []) {
             print('checking');
-            if(item.productId==snapshot.data.productId){
+            if (item.productId == snapshot.data.productId) {
               print('present');
-               return _cardUi(context: context, product: snapshot.data,inwishlist: true);
+              return _cardUi(
+                  context: context, product: snapshot.data, inwishlist: true);
             }
           }
-          return _cardUi(context: context, product: snapshot.data,inwishlist: isInWishlist);
+          return _cardUi(
+              context: context,
+              product: snapshot.data,
+              inwishlist: isInWishlist);
         } else {
           return Container();
         }
@@ -106,9 +113,7 @@ class _ProductCardState extends State<ProductCard>
       onTap: () {
         Navigator.push(
           context,
-          
           MaterialPageRoute(
-            
               builder: (context) => ProductView(
                     inWishlist: inwishlist,
                     product: product,
@@ -124,7 +129,7 @@ class _ProductCardState extends State<ProductCard>
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 padding: EdgeInsets.all(8.0),
-                height: MediaQuery.of(context).size.height * .35+7,
+                height: MediaQuery.of(context).size.height * .35 + 7,
                 width: MediaQuery.of(context).size.width * 0.43,
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
@@ -146,7 +151,8 @@ class _ProductCardState extends State<ProductCard>
                               decoration: BoxDecoration(
                                 color: Colors.transparent,
                                 image: DecorationImage(
-                                    image: NetworkImage(widget.product.productImage),
+                                    image: NetworkImage(
+                                        widget.product.productImage),
                                     fit: BoxFit.contain),
                               ),
                             ),
@@ -164,8 +170,7 @@ class _ProductCardState extends State<ProductCard>
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'Poppins',
+                          fontSize: 14,
                           fontWeight: FontWeight.normal,
                         ),
                       ),
@@ -200,7 +205,7 @@ class _ProductCardState extends State<ProductCard>
                             SizedBox(
                               width: 5,
                             ),
-                            price1(int.parse(product.mrpPrice)),
+                            price1(double.parse(widget.product.mrpPrice)??0),
                           ],
                         ),
                         //TODO:
@@ -240,8 +245,15 @@ class _ProductCardState extends State<ProductCard>
                               ),
                               color: Colors.green.shade400)
                         },
-                        onPressed: (){
-                          addToCart(productId: product.productId,userId:userId );
+                        onPressed: () {
+                          print(product.productId);
+                          addToCart(
+                              productId: product.productId,
+                              userId: userId,
+                              slPrice: double.parse(product.slPrice),
+                              productName: product.productName,
+                              quantity: 1,
+                              grandTotal: double.parse(product.slPrice));
                         },
                         state: stateTextWithIcon,
                       ),
@@ -285,7 +297,8 @@ class _ProductCardState extends State<ProductCard>
                 ),
               ),
             ),
-            discount(int.parse(product.slPrice)),
+    
+            discount(mrp:double.parse(product?.mrpPrice??'0')??0,slp: double.parse(product?.slPrice)??0 ),
             Positioned(
               right: 0,
               child: Padding(
@@ -293,7 +306,24 @@ class _ProductCardState extends State<ProductCard>
                 child: FavoriteButton(
                   isFavorite: inwishlist,
                   iconSize: 28,
-                  valueChanged: (_) {},
+                  valueChanged: (value) {
+                    if (!inwishlist) {
+                      AddWishlistRequest addWishlistRequest =
+                          AddWishlistRequest();
+                      addWishlistRequest.userId = int.parse(userId);
+                      addWishlistRequest.productId = product.productId;
+                      APIService apiService = new APIService();
+                      apiService
+                          .addToWishlist(addWishlistRequest)
+                          .then((value) {
+                        if (value == true) {
+                          setState(() {
+                            inwishlist = true;
+                          });
+                        }
+                      });
+                    } else {}
+                  },
                 ),
               ),
             )
@@ -333,7 +363,7 @@ class _ProductCardState extends State<ProductCard>
   //   }
   // }
 
-  Text price1(int price1) {
+  Text price1(double price1) {
     if (price1 != null) {
       return Text(
         '₹${price1}',
@@ -348,11 +378,17 @@ class _ProductCardState extends State<ProductCard>
     }
   }
 
-  discount(int discount) {
-    if (discount != null) {
+ discount({double mrp,double slp}) {
+   int discount =0;
+   if(mrp!=slp){
+    int discount = (((mrp - slp)/mrp)*100).round();
+   }else{
+     
+   }
+    if (discount>0) {
       return Positioned(
-        top: 10,
-        left: 10,
+        top: 5,
+        left: 7,
         child: Container(
           padding: EdgeInsets.all(4),
           decoration: BoxDecoration(
@@ -360,13 +396,13 @@ class _ProductCardState extends State<ProductCard>
                 topRight: Radius.circular(5),
                 topLeft: Radius.circular(15),
                 bottomRight: Radius.circular(10)),
-            color: Colors.red[600],
+            color: Colors.red,
           ),
           child: Text(
-            '${discount}% Off',
+            '$discount% Off',
             style: TextStyle(
               color: Colors.white,
-              fontWeight: FontWeight.bold,
+              fontSize: 13,
             ),
           ),
         ),
@@ -376,31 +412,50 @@ class _ProductCardState extends State<ProductCard>
     }
   }
 
-  void addToCart({String productId,String userId})  async {
+  void addToCart(
+      {String productId,
+      String userId,
+      int quantity,
+      String productName,
+      double mrpPrice,
+      double slPrice,
+
+      double grandTotal}) async {
+    print('productId $productId');
     switch (stateTextWithIcon) {
       case ButtonState.idle:
-      setState(() {
+        setState(() {
           stateTextWithIcon = ButtonState.loading;
-      });
-      
+        });
+
         bool added;
         APIService apiService = APIService();
-        added = await apiService.addItemToCart(productId: productId,userId: userId).then((value) {
-          if(value== true){
+
+        await apiService
+            .addItemToCart(
+                productId: productId,
+                productName: productName,
+                price: mrpPrice,
+                slPrice: slPrice,
+                userId: userId,
+                grandTotal: grandTotal,
+                quantity: quantity)
+            .then((value) {
+          if (value == true) {
             setState(() {
               stateTextWithIcon = ButtonState.success;
             });
           }
-             if(value== false){
+          if (value == false) {
             setState(() {
               stateTextWithIcon = ButtonState.fail;
             });
           }
         });
-        if(added){
+        if (added) {
           setState(() {
-             stateTextWithIcon = ButtonState.success;
-             print('added $added');
+            stateTextWithIcon = ButtonState.success;
+            print('added $added');
           });
         }
 
@@ -416,7 +471,6 @@ class _ProductCardState extends State<ProductCard>
       case ButtonState.loading:
         break;
       case ButtonState.success:
-       
         break;
       case ButtonState.fail:
         stateTextWithIcon = ButtonState.idle;

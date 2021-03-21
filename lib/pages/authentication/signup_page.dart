@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rive/rive.dart';
 import 'package:sanchika/model/signUp_model.dart';
+import 'package:sanchika/pages/ui/widget/check_address.dart';
 import 'package:sanchika/pages/ui/widget/otp.dart';
 import 'package:sanchika/pages/ui/widget/termsConditions.dart';
 import 'package:sanchika/services/api_service.dart';
@@ -316,70 +317,72 @@ class _SignupPageState extends State<SignupPage> {
                                       onTap: () {
                                         if (validateAndSave()) {
                                           setState(() {
-                                            isApiCallProcess = true;
+                                            isApiCallProcess = false;
                                           });
                                           APIService apiService = APIService();
                                           print(requestModel.toJson());
-                                          apiService
-                                              .register(requestModel)
-                                              .then((value) {
-                                            if (value != null) {
-                                              print(value.toJson());
-                                              apiService
-                                                  .getotp(requestModel.mobile)
-                                                  .then((value) {
-                                                if (value != null) {
-                                                  setState(() {
-                                                    isApiCallProcess = true;
-                                                  });
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            Otp(
-                                                              otp: value,
-                                                              mobileNumber:
-                                                                  requestModel
-                                                                      .mobile,
-                                                            )),
-                                                  );
-                                                } else {
-                                                  showDialog<void>(
-                                                    context: context,
-                                                    barrierDismissible:
-                                                        false, // user must tap button!
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return AlertDialog(
-                                                        title:
-                                                            Text('Try Later'),
-                                                        content:
-                                                            SingleChildScrollView(
-                                                          child: ListBody(
-                                                            children: <Widget>[
-                                                              Text(
-                                                                  'Unable to send OTP'),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        actions: <Widget>[
-                                                          TextButton(
-                                                            child: Text('OK'),
-                                                            onPressed: () {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            },
-                                                          ),
-                                                        ],
-                                                      );
-                                                    },
-                                                  );
-                                                  setState(() {
-                                                    isApiCallProcess = false;
-                                                  });
-                                                }
-                                              });
+                                          // apiService
+                                          //     .register(requestModel)
+                                          //     .then((value) 
+                                              // {
+                                            if (true) {
+                                                Navigator.push(context, MaterialPageRoute(builder: (context)=>CheckAddress(registerRequestModel: requestModel,)));
+                                              // apiService
+                                              //     .getotp(requestModel.mobile)
+                                              //     .then((value) {
+                                              //   if (value != null) {
+                                              //     setState(() {
+                                              //       isApiCallProcess = true;
+                                              //     });
+                                                  
+                                              //     Navigator.push(
+                                              //       context,
+                                              //       MaterialPageRoute(
+                                              //           builder: (context) =>
+                                              //               Otp(
+                                              //                 otp: value,
+                                              //                 mobileNumber:
+                                              //                     requestModel
+                                              //                         .mobile,
+                                              //               )),
+                                              //     );
+                                              //   } else {
+                                              //     showDialog<void>(
+                                              //       context: context,
+                                              //       barrierDismissible:
+                                              //           false, // user must tap button!
+                                              //       builder:
+                                              //           (BuildContext context) {
+                                              //         return AlertDialog(
+                                              //           title:
+                                              //               Text('Try Later'),
+                                              //           content:
+                                              //               SingleChildScrollView(
+                                              //             child: ListBody(
+                                              //               children: <Widget>[
+                                              //                 Text(
+                                              //                     'Unable to send OTP'),
+                                              //               ],
+                                              //             ),
+                                              //           ),
+                                              //           actions: <Widget>[
+                                              //             TextButton(
+                                              //               child: Text('OK'),
+                                              //               onPressed: () {
+                                              //                 Navigator.of(
+                                              //                         context)
+                                              //                     .pop();
+                                              //               },
+                                              //             ),
+                                              //           ],
+                                              //         );
+                                              //       },
+                                              //     );
+                                              //     setState(() {
+                                              //       isApiCallProcess = false;
+                                              //     });
+                                              //   }
+                                              // });
                                             } else {
                                               setState(() {
                                                 isApiCallProcess = false;
@@ -418,7 +421,8 @@ class _SignupPageState extends State<SignupPage> {
                                                 isApiCallProcess = false;
                                               });
                                             }
-                                          });
+                                          // },
+                                         
                                         }
                                       },
                                       child: Center(

@@ -5,8 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:sanchika/model/AllProducts.dart';
+import 'package:sanchika/model/CtgAttribute.dart';
 import 'package:sanchika/model/activeProduct_model.dart';
+import 'package:sanchika/model/addToCart_model.dart';
 import 'package:sanchika/model/cart_model.dart';
+import 'package:sanchika/model/ctg_secondAttribute_model.dart';
+import 'package:sanchika/model/getAddresss_model.dart';
+import 'package:sanchika/model/getCatg_model.dart';
+import 'package:sanchika/model/getProductAttribute_model.dart';
 import 'package:sanchika/model/getProductDetail_model.dart';
 import 'package:sanchika/model/killerOffer.dart';
 import 'dart:convert';
@@ -30,11 +36,8 @@ class APIService {
     "Accept": "*/*",
     "Accept-Encoding": "gzip, deflate, br",
     "Connection": "keep-alive",
-    "Transfer-Encoding": "chunked",
     "Keep-Alive": "timeout=0",
-    "Vary":"Origin",
-    "Vary":"Access-Control-Request-Method",
-    "Vary":"Access-Control-Request-Headers",
+
      
   };
 
@@ -144,6 +147,32 @@ class APIService {
       return null;
     }
   }
+  //Add to wishlist
+  Future<bool> addToWishlist(AddWishlistRequest addWishlistRequest)async{
+    String url="http://sanchika.in:8081/sanchikaapi/sanchika/user/wishList/addToWishList";
+    final response= await http.post(url,body: addWishlistRequestToJson(addWishlistRequest), headers: headerList);
+    print('add to Wishlist response ${response.statusCode}');
+    if(response.statusCode==200){
+      return true;
+    }
+    else{
+      return false;
+    }
+
+  }
+  //Remove from Wishlist
+  Future<bool> removeWishlistitem({String uid,String pid})async{
+    String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/wishList/removeWishList?uid=$uid&pid=$pid";
+    final response = await http.delete(url);
+    print('remove wishlist Item response ${response.statusCode}');
+    if(response.statusCode==200){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
 
   //Get killer offer products
   Future<List<Product>> getKillerOffeers() async {
@@ -166,7 +195,7 @@ class APIService {
   //Get all Products details
   Future<List<Product>> getAllProducts() async{
     String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/getAllProductDetails";
-    final response = await http.get(url,headers: headerList);
+    final response = await http.get(url);
     print('Get all Products API ${response.statusCode}');
     if(response.statusCode == 200){
       GetAllProducts allProducts = getAllProductsFromJson(response.body);
@@ -180,7 +209,7 @@ class APIService {
   }
   //Get active products
   Future<List<Product>> getActiveProduct()async{
-    String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/getActiveProductDetails";
+    String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/getAllProductDetails";
     final response = await http.get(url);
     print('response of active products ${response.statusCode}');
     if(response.statusCode==200){
@@ -231,16 +260,28 @@ class APIService {
       return cartItemlist;
      }else{
        print(response.statusCode);
-       return null;
+       return [];
      }
   }
   // Add to cart
-  Future<bool> addItemToCart({String productId,String userId})async {
-    print(userId);
-    print(productId);
-    String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/cart/saveToCart?pdtid=$productId&uid=$userId";
-    final response = await http.post(url,headers: headerList);
-    print(response.statusCode);
+  Future<bool> addItemToCart({String productId,String userId,int quantity, String productName,double price,double slPrice, double grandTotal})async {
+    AddtocartRequest addtocartRequest = new AddtocartRequest();
+    addtocartRequest.productId=productId;
+    addtocartRequest.price=price;
+    addtocartRequest.productName=productName;
+    addtocartRequest.totalWeght="PCS";
+    addtocartRequest.userId=int.parse(userId);
+    addtocartRequest.grandTotal = grandTotal.toString();
+    addtocartRequest.productSellingPrice = slPrice;
+    addtocartRequest.quantity= quantity??1;
+    print(addtocartRequest.userId);
+    print(addtocartRequest.productId);
+    String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/cart/addToCart";
+     final response = await http.post(url,
+        body: jsonEncode(addtocartRequest.toJson()), headers: headerList);
+    
+   
+    print('Addto cart response : ${response.statusCode}');
     if(response.statusCode==200){
       return true;
     }
@@ -248,13 +289,28 @@ class APIService {
       print(response.statusCode);
       return false;
     }
-
+  }
+  //Get cart langth
+  Future<String> cartlength({String uid})async {
+     String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/cart/getCart?uid=$uid";
+    final response = await http.get(url,headers: headerList);
+    print(response.statusCode);
+    if(response.statusCode == 200){
+      GetCart getCart = getCartFromJson(response.body);
+      List<CartItem> cartItemlist = getCart.data.getCartList;
+      print(cartItemlist);
+      String length = cartItemlist.length.toString();
+      return length;
+     }else{
+       print(response.statusCode);
+       return null;
+     }
 
   }
 
   //get each product detail
   Future<List<Product>> getProductDetail({String productId})async{
-    String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/getByProductIdOrName?nameOrId=$productId";
+    String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/searchAPI?nameOrId=$productId";
     final response = await http.get(url,headers: headerList);
     print('ProductDetail response: ${response.statusCode}');
     if(response.statusCode==200){
@@ -262,7 +318,7 @@ class APIService {
       List<Product> productDetailList = getProductDetail.data.productDetailsList;
       return productDetailList;
     }else{
-      return null;
+      return [];
     }
   }
   //getbanners
@@ -305,4 +361,78 @@ class APIService {
       return [];
     }
   }
+  //get Address
+  Future<Address> getAddress()async{
+    String url="http://sanchika.in:8081/sanchikaapi/sanchika/user/addressInfo?userId=10004";
+    final response = await http.get(url);
+    print('get address response ${response.statusCode}');
+    if(response.statusCode==200){
+      GetAddress getAddress = getAddressFromJson(response.body);
+      Address address = getAddress.data.createOnAcount;
+      print(address.asd1);
+      return address;
+    }else{
+      Address address;
+      return address;
+    }
+  }
+  //get Ctg Name
+  Future<List<CtgyNameAndId>> getCatg()async{
+    String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/getCtgyList";
+    final response = await http.get(url);
+    print("Get Category names response ${response.statusCode}");
+    if(response.statusCode==200){
+      GetCtg getCtg = getCtgFromJson(response.body);
+      List<CtgyNameAndId> ctgList = getCtg.data.ctgyNameAndIdList;
+      return ctgList;
+    }else{
+      return [];
+    }
+  }
+  //Get Ctg Attribute
+  Future<List<CategoryAttribute>> getCategoryAttribute(String ctgId)async{
+    String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/getcategoryAttribute?catgyId=$ctgId";
+    final response = await  http.get(url);
+    print('Category attribute response : ${response.statusCode}');
+    if(response.statusCode==200){
+      GetCtgAttribute getCtgAttribute = getCtgAttributeFromJson(response.body);
+      List<CategoryAttribute> catgAttributeList = getCtgAttribute.data.getCategoryAttributeList;
+      return catgAttributeList;
+    }else{
+      return [];
+    }
+  }
+  //Get category attribute by second order
+  Future<List<CategoryAttribute>> getCategoryAttributeBySecondOrder(String ctgId)async{
+  String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/getcategoryAttributeBySecondOrder?catgyId=$ctgId";
+  final response = await http.get(url);
+  print('Category Second order ${response.statusCode}');
+  if(response.statusCode==200){
+    GetCtgAttributeSecondOrder getCtgAttributeSecondOrder = getCtgAttributeSecondOrderFromJson(response.body);
+    List<CategoryAttribute> ctgAtributeList = getCtgAttributeSecondOrder.data.getCategoryAttributeList;
+    return ctgAtributeList;
+  }else{
+    return [];
+  }
+  }
+
+
+
+
+
+
+  //get Product Attribute
+  Future<List<Product>> getProductAttribute({String capId})async{
+    String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/getProductAttribute?capId=$capId";
+    final response = await http.get(url);
+    print('getProduct Attribute :${response.statusCode}');
+    if(response.statusCode==200){
+    GetProductAttribute getProductAttribute = getProductAttributeFromJson(response.body);
+    List<Product> productList = getProductAttribute.data.productDetailsList;
+    return productList;
+    }else{
+      return [];
+    }
+  }
+
 }

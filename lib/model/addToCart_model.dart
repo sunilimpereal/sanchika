@@ -179,3 +179,55 @@ class AddToCartClass {
         "userId": userId,
     };
 }
+// To parse this JSON data, do
+//
+//     final addtocartRequest = addtocartRequestFromJson(jsonString);
+
+
+AddtocartRequest addtocartRequestFromJson(String str) => AddtocartRequest.fromJson(json.decode(str));
+
+String addtocartRequestToJson(AddtocartRequest data) => json.encode(data.toJson());
+
+class AddtocartRequest {
+    AddtocartRequest({
+        this.productId,
+        this.productName,
+        this.price,
+        this.productSellingPrice,
+        this.grandTotal,
+        this.quantity,
+        this.totalWeght,
+        this.userId,
+    });
+
+    String productId;
+    String productName;
+    double price;
+    double productSellingPrice;
+    String grandTotal;
+    int quantity;
+    String totalWeght;
+    int userId;
+
+    factory AddtocartRequest.fromJson(Map<String, dynamic> json) => AddtocartRequest(
+        productId: json["productId"],
+        productName: json["productName"],
+        price: json["price"],
+        productSellingPrice: json["productSellingPrice"],
+        grandTotal: json["grandTotal"],
+        quantity: json["quantity"],
+        totalWeght: json["totalWeght"],
+        userId: json["userId"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "productId": productId,
+        "productName": productName,
+        "price": price,
+        "productSellingPrice": productSellingPrice,
+        "grandTotal": grandTotal,
+        "quantity": quantity,
+        "totalWeght": totalWeght,
+        "userId": userId,
+    };
+}

@@ -40,7 +40,7 @@ class Product {
         brandId: json["brandId"],
         status: json["status"],
         productName: json["productName"],
-        productImage: json["productImage"],
+        productImage: json["productImage1"],
         productCategoryId: json["productCategoryId"],
         productCategoryNm: json["productCategoryNM"],
         productDescription: json["productDescription"],
