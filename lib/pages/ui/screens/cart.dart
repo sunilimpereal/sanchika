@@ -23,13 +23,22 @@ class Cart extends StatefulWidget with NavigationStates {
 
 class _CartState extends State<Cart> {
   Future<List<CartItem>> cartItems;
-  double cartTotal;
+  double cartTotal=0;
 
   Future<List<CartItem>> getCart() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String userId = sharedPreferences.getString('userId');
     APIService apiService = new APIService();
     List<CartItem> cartitems = await apiService.getCartItems(userId);
+    double total = 0;
+    for (CartItem c in cartitems){
+      double it = double.parse(c.totalAmount);
+      total = total+it;
+    }
+    setState(() {
+      cartTotal = total;
+
+    });
 
     return cartitems;
   }
@@ -111,11 +120,11 @@ class _CartState extends State<Cart> {
         actions: [
           IconButton(
             padding: EdgeInsets.only(top: 8),
-            icon: Icon(
-              Icons.favorite_rounded,
-              color: Colors.grey[500],
-              size: 24,
-            ),
+           icon: Icon(
+                  Icons.favorite_rounded,
+                  color: Color(0xff032e6b).withAlpha(180),
+                  size: 24,
+                ),
             onPressed: () {
               BlocProvider.of<NavigationBloc>(context)
                   .add(NavigationEvents.WishlistClickedEvent);
@@ -172,7 +181,7 @@ class _CartState extends State<Cart> {
                 ),
                 child: Center(
                   child: Text(
-                    "₹${cartTotal??0}",
+                    "₹${cartTotal}",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w600,
@@ -190,7 +199,7 @@ class _CartState extends State<Cart> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => CheckoutPage(
+                              builder: (context) => Checkoutpage(
                                     cartItem: snapshot.data[0],
                                   )),
                         );

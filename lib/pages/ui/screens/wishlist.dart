@@ -23,6 +23,7 @@ class Wishlist extends StatefulWidget with NavigationStates {
 
 class _WishlistState extends State<Wishlist> {
   String userId;
+  APIService apiService;
   Future<String> getUserId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String uid = preferences.getString('userId');
@@ -37,6 +38,7 @@ class _WishlistState extends State<Wishlist> {
   void initState() {
     super.initState();
     getUserId();
+    apiService =APIService();
     print(userId);
       rootBundle.load('assets/rive/wishlist.riv').then((value) async{
       final file =RiveFile();
@@ -94,39 +96,48 @@ class _WishlistState extends State<Wishlist> {
         ),
         actions: [
           Stack(
-            children: [
-              IconButton(
-                padding: EdgeInsets.only(top: 8),
-                icon: Icon(
-                  Icons.shopping_cart,
-                  color: Colors.grey[800],
-                  size: 24,
-                ),
-                onPressed: () {
-                  BlocProvider.of<NavigationBloc>(context)
-                      .add(NavigationEvents.CartClickedEvent);
-                  widget.onMenuItemClicked();
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0, left: 25),
-                child: Container(
-                  height: 18,
-                  width: 18,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.red,
+              children: [
+                IconButton(
+                  padding: EdgeInsets.only(top: 8),
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: Color(0xff032e6b).withAlpha(180),
+                    size: 24,
                   ),
-                  child: Center(
-                    child: Text(
-                      '3',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                  onPressed: () {
+                    BlocProvider.of<NavigationBloc>(context)
+                        .add(NavigationEvents.CartClickedEvent);
+                    widget.onMenuItemClicked();
+                  },
                 ),
-              ),
+                FutureBuilder(
+                    future: apiService.cartlength(uid: userId),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8.0, left: 25),
+                          child: Container(
+                            height: 18,
+                            width: 18,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color(0xff032e6b),
+                            ),
+                            child: Center(
+                              child: Text(
+                                snapshot.data,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    }),
+              
             ],
           ),
         ],

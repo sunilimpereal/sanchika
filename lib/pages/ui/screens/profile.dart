@@ -7,6 +7,7 @@ import 'package:sanchika/main.dart';
 import 'package:sanchika/model/language.dart';
 import 'package:sanchika/pages/authentication/login_page.dart';
 import 'package:sanchika/pages/ui/sub_screens/changePassword/password%20change.dart';
+import 'package:sanchika/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:toast/toast.dart';
@@ -22,6 +23,30 @@ class Profile extends StatefulWidget with NavigationStates {
 }
 
 class PprofileState extends State<Profile> {
+  APIService apiService;
+  String name;
+  String email;
+  String userId;
+  void getName() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      name = preferences.getString('name');
+    });
+    setState(() {
+      email = preferences.getString('email');
+    });
+    setState(() {
+      userId = preferences.getString('userId');
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getName();
+    apiService = APIService();
+  }
+
   bool english;
   bool malayalam;
   void getLanguageTick() async {
@@ -90,7 +115,7 @@ class PprofileState extends State<Profile> {
             padding: EdgeInsets.only(top: 0),
             icon: Icon(
               Icons.favorite_rounded,
-              color: Colors.grey[800],
+              color: Color(0xff032e6b).withAlpha(180),
               size: 24,
             ),
             onPressed: () {
@@ -105,7 +130,7 @@ class PprofileState extends State<Profile> {
                 padding: EdgeInsets.only(top: 8),
                 icon: Icon(
                   Icons.shopping_cart,
-                  color: Colors.grey[800],
+                  color: Color(0xff032e6b).withAlpha(180),
                   size: 24,
                 ),
                 onPressed: () {
@@ -114,25 +139,33 @@ class PprofileState extends State<Profile> {
                   widget.onMenuItemClicked();
                 },
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0, left: 25),
-                child: Container(
-                  height: 18,
-                  width: 18,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.red,
-                  ),
-                  child: Center(
-                    child: Text(
-                      '3',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              FutureBuilder(
+                  future: apiService.cartlength(uid: userId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 8.0, left: 25),
+                        child: Container(
+                          height: 18,
+                          width: 18,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color(0xff032e6b),
+                          ),
+                          child: Center(
+                            child: Text(
+                              snapshot.data,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return SizedBox();
+                    }
+                  }),
             ],
           ),
         ],
@@ -188,7 +221,7 @@ class PprofileState extends State<Profile> {
                                     child: Row(
                                       children: [
                                         Text(
-                                          'Name',
+                                          name,
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 24,
@@ -206,7 +239,7 @@ class PprofileState extends State<Profile> {
                                     child: Row(
                                       children: [
                                         Text(
-                                          'email@gmail.com',
+                                          email,
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w400,
@@ -221,10 +254,10 @@ class PprofileState extends State<Profile> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                height: 89,
-                                width: 89,
+                                height: 80,
+                                width: 80,
                                 decoration: BoxDecoration(
-                                  color: Colors.red,
+                                  color: Colors.transparent,
                                   borderRadius: BorderRadius.circular(350),
                                   image: DecorationImage(
                                     image: AssetImage('assets/images/user.png'),

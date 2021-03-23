@@ -3,9 +3,11 @@ import 'dart:math';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:sanchika/model/addToCart_model.dart';
+import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/model/product.dart';
 import 'package:sanchika/model/wishlist_model.dart';
 import 'package:sanchika/pages/ui/widget/product_view.dart';
+import 'package:sanchika/pages/ui/widget/stepper.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
@@ -14,10 +16,13 @@ import 'package:progress_state_button/progress_button.dart';
 
 class ProductCard extends StatefulWidget {
   List<WishlistItem> wishlist;
+  List<CartItem> cartItems;
   Product product;
+
   final translator = GoogleTranslator();
   Function onMenuItemClicked;
-  ProductCard({this.product, this.wishlist, this.onMenuItemClicked});
+  ProductCard(
+      {this.product, this.wishlist, this.cartItems, this.onMenuItemClicked});
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -57,6 +62,7 @@ class _ProductCardState extends State<ProductCard>
 
   // //A
   //Animation for button
+  bool incart = false;
   String userId;
   Future<String> getUserId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -66,11 +72,22 @@ class _ProductCardState extends State<ProductCard>
     });
   }
 
+  void checkCart() {
+    for (CartItem c in widget.cartItems??[]) {
+      if (c.productId == widget.product.productId) {
+        setState(() {
+          incart = true;
+        });
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     getUserId();
     print(widget.product.productId);
+    checkCart();
   }
 
   //dispose for animation
@@ -109,23 +126,23 @@ class _ProductCardState extends State<ProductCard>
 
   @override
   Widget _cardUi({BuildContext context, Product product, bool inwishlist}) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ProductView(
-                    inWishlist: inwishlist,
-                    product: product,
-                    userId: userId,
-                    onMenuItemClicked: widget.onMenuItemClicked,
-                  )),
-        );
-      },
-      child: Container(
-        child: Stack(
-          children: [
-            Padding(
+    return Container(
+      child: Stack(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProductView(
+                          inWishlist: inwishlist,
+                          product: product,
+                          userId: userId,
+                          onMenuItemClicked: widget.onMenuItemClicked,
+                        )),
+              );
+            },
+            child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 padding: EdgeInsets.all(8.0),
@@ -205,7 +222,7 @@ class _ProductCardState extends State<ProductCard>
                             SizedBox(
                               width: 5,
                             ),
-                            price1(double.parse(widget.product.mrpPrice)??0),
+                            price1(double.parse(widget.product.mrpPrice) ?? 0),
                           ],
                         ),
                         //TODO:
@@ -215,49 +232,10 @@ class _ProductCardState extends State<ProductCard>
                     SizedBox(
                       height: 10,
                     ),
-                    //button
                     Container(
-                      width: 130,
-                      height: 40,
-                      child: ProgressButton.icon(
-                        progressIndicatorSize: 28.0,
-                        iconedButtons: {
-                          ButtonState.idle: IconedButton(
-                            text: "Add to Cart",
-                            icon: Icon(Icons.shopping_cart_outlined,
-                                size: 23, color: Colors.white),
-                            color: Color(0xff032e6b),
-                          ),
-                          ButtonState.loading: IconedButton(
-                            text: "Loading",
-                            icon: Icon(Icons.blur_circular),
-                            color: Color(0xff032e6b),
-                          ),
-                          ButtonState.fail: IconedButton(
-                              text: "Failed",
-                              icon: Icon(Icons.cancel, color: Colors.white),
-                              color: Colors.red.shade300),
-                          ButtonState.success: IconedButton(
-                              text: "Added",
-                              icon: Icon(
-                                Icons.check_circle,
-                                color: Colors.white,
-                              ),
-                              color: Colors.green.shade400)
-                        },
-                        onPressed: () {
-                          print(product.productId);
-                          addToCart(
-                              productId: product.productId,
-                              userId: userId,
-                              slPrice: double.parse(product.slPrice),
-                              productName: product.productName,
-                              quantity: 1,
-                              grandTotal: double.parse(product.slPrice));
-                        },
-                        state: stateTextWithIcon,
-                      ),
-                    ),
+                      height: 50,
+                      width: 150,
+                    )
 
                     //OLD ADD Button
                     // Row(
@@ -297,38 +275,42 @@ class _ProductCardState extends State<ProductCard>
                 ),
               ),
             ),
-    
-            discount(mrp:double.parse(product?.mrpPrice??'0')??0,slp: double.parse(product?.slPrice)??0 ),
-            Positioned(
-              right: 0,
-              child: Padding(
-                padding: const EdgeInsets.all(14.0),
-                child: FavoriteButton(
-                  isFavorite: inwishlist,
-                  iconSize: 28,
-                  valueChanged: (value) {
-                    if (!inwishlist) {
-                      AddWishlistRequest addWishlistRequest =
-                          AddWishlistRequest();
-                      addWishlistRequest.userId = int.parse(userId);
-                      addWishlistRequest.productId = product.productId;
-                      APIService apiService = new APIService();
-                      apiService
-                          .addToWishlist(addWishlistRequest)
-                          .then((value) {
-                        if (value == true) {
-                          setState(() {
-                            inwishlist = true;
-                          });
-                        }
-                      });
-                    } else {}
-                  },
-                ),
+          ),
+          //Stepper buttom
+          button(),
+
+          //button
+
+          discount(
+              mrp: double.parse(product?.mrpPrice ?? '0') ?? 0,
+              slp: double.parse(product?.slPrice) ?? 0),
+          Positioned(
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: FavoriteButton(
+                isFavorite: inwishlist,
+                iconSize: 28,
+                valueChanged: (value) {
+                  if (!inwishlist) {
+                    AddWishlistRequest addWishlistRequest =
+                        AddWishlistRequest();
+                    addWishlistRequest.userId = int.parse(userId);
+                    addWishlistRequest.productId = product.productId;
+                    APIService apiService = new APIService();
+                    apiService.addToWishlist(addWishlistRequest).then((value) {
+                      if (value == true) {
+                        setState(() {
+                          inwishlist = true;
+                        });
+                      }
+                    });
+                  } else {}
+                },
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -378,14 +360,84 @@ class _ProductCardState extends State<ProductCard>
     }
   }
 
- discount({double mrp,double slp}) {
-   int discount =0;
-   if(mrp!=slp){
-    int discount = (((mrp - slp)/mrp)*100).round();
-   }else{
-     
-   }
-    if (discount>0) {
+  Widget button() {
+    if (incart) {
+      return Positioned(
+         bottom: 30,
+        left: 15,
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+              color: Colors.transparent,
+              height: 40,
+              width: MediaQuery.of(context).size.width * 0.43,
+              child: StepperTouch(
+                initialValue: 1,
+                direction: Axis.horizontal,
+                withSpring: true,
+                onChanged: (int value) {},
+              )),
+        ),
+      );
+    } else {
+      return Positioned(
+        bottom: 30,
+        left: 15,
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.40,
+            height: 40,
+            child: ProgressButton.icon(
+              progressIndicatorSize: 28.0,
+              iconedButtons: {
+                ButtonState.idle: IconedButton(
+                  text: "Add to Cart",
+                  icon: Icon(Icons.shopping_cart_outlined,
+                      size: 23, color: Colors.white),
+                  color: Color(0xff032e6b),
+                ),
+                ButtonState.loading: IconedButton(
+                  text: "Loading",
+                  icon: Icon(Icons.blur_circular),
+                  color: Color(0xff032e6b),
+                ),
+                ButtonState.fail: IconedButton(
+                    text: "Failed",
+                    icon: Icon(Icons.cancel, color: Colors.white),
+                    color: Colors.red.shade300),
+                ButtonState.success: IconedButton(
+                    text: "Added",
+                    icon: Icon(
+                      Icons.check_circle,
+                      color: Colors.white,
+                    ),
+                    color: Colors.green.shade400)
+              },
+              onPressed: () {
+                print(widget.product.productId);
+                addToCart(
+                    productId: widget.product.productId,
+                    userId: userId,
+                    slPrice: double.parse(widget.product.slPrice),
+                    productName: widget.product.productName,
+                    quantity: 1,
+                    grandTotal: double.parse(widget.product.slPrice));
+              },
+              state: stateTextWithIcon,
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
+  discount({double mrp, double slp}) {
+    int discount = 0;
+    if (mrp != slp) {
+      discount = (((mrp - slp) / mrp) * 100).round();
+    } else {}
+    if (discount > 0) {
       return Positioned(
         top: 5,
         left: 7,
@@ -419,7 +471,6 @@ class _ProductCardState extends State<ProductCard>
       String productName,
       double mrpPrice,
       double slPrice,
-
       double grandTotal}) async {
     print('productId $productId');
     switch (stateTextWithIcon) {
@@ -444,6 +495,9 @@ class _ProductCardState extends State<ProductCard>
           if (value == true) {
             setState(() {
               stateTextWithIcon = ButtonState.success;
+            });
+            setState(() {
+              incart=true;
             });
           }
           if (value == false) {

@@ -59,11 +59,13 @@ class _ProductViewState extends State<ProductView> {
               Navigator.pop(context);
             },
           ),
+          titleSpacing: 0,
+          
           title: Text(
             widget.product.productName,
             style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
+              fontSize: 17,
+              fontWeight: FontWeight.normal,
               color: Colors.black,
             ),
           ),
@@ -269,20 +271,24 @@ class _ProductViewState extends State<ProductView> {
                                 width: double.infinity,
                                 child: Column(
                                   children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 16.0),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            "Description",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18),
-                                          ),
-                                        ],
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 16.0),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "Description",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    Padding(
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
                                       padding: const EdgeInsets.only(top: 10.0),
                                       child: ReadMoreText(
                                         widget.product.productDescription,
@@ -317,7 +323,8 @@ class _ProductViewState extends State<ProductView> {
                                         ],
                                       ),
                                     ),
-                                    Padding(
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
                                       padding: const EdgeInsets.only(top: 10.0),
                                       child: ReadMoreText(
                                         widget.product.productDescription,

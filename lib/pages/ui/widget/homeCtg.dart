@@ -42,7 +42,7 @@ class _HomeCtgState extends State<HomeCtg> {
         return HorizontalRow(productList: snapshot.data,);
         }
         else{
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         } 
       }),
   );
@@ -78,19 +78,22 @@ Widget ctgAttributes(){
 
   }
   return Container(
-    height: 40,
+  
        child: FutureBuilder(
           future: apiService.getCategoryAttributeBySecondOrder(widget.ctgyNameAndId.mnId),
           builder: (context,snapshot){
             if(snapshot.hasData){
-              return ListView.builder(
-                cacheExtent: 1000,
-                scrollDirection: Axis.horizontal,
-                itemCount: snapshot.data.length,
-                itemBuilder: (context,index){
-                  CategoryAttribute ctgAttr = snapshot.data[index];
-                  return label(categoryAttribute: ctgAttr);
-                });
+              return Container(
+                height: snapshot.data.length>0?40:0,
+                child: ListView.builder(
+                  cacheExtent: 1000,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context,index){
+                    CategoryAttribute ctgAttr = snapshot.data[index];
+                    return label(categoryAttribute: ctgAttr);
+                  }),
+              );
             }else{
               return CircularProgressIndicator();
             }

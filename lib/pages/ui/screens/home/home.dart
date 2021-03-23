@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
+import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/model/getBanner_model.dart';
 import 'package:sanchika/model/getCatg_model.dart';
 import 'package:sanchika/model/product.dart';
@@ -80,6 +81,17 @@ class _HomeState extends State<Home> {
   Future<List<Product>> killeroffers;
   Future<List<Product>> activeProducts;
   List<WishlistItem> wishlist;
+  List<CartItem> cartItems;
+  Future<List<CartItem>> getCart(String userId)async{
+    APIService apiService = new APIService();
+    List<CartItem> cartitems = await apiService.getCartItems(userId);
+    setState(() {
+      cartItems = cartitems;
+
+    }); 
+    return cartitems;
+
+  }
   Future<List<WishlistItem>> getWishlist(String userId) async {
     APIService apiService = new APIService();
     List<WishlistItem> allWishlistItems =
@@ -122,6 +134,7 @@ class _HomeState extends State<Home> {
     getUserId().then((value) {
       print(userId);
       getWishlist(userId);
+      getCart(userId);
     });
     killeroffers = getKilleroffer();
     activeProducts = getActiveProduct();
@@ -211,7 +224,7 @@ class _HomeState extends State<Home> {
                 onPressed: () {
                   BlocProvider.of<NavigationBloc>(context)
                       .add(NavigationEvents.WishlistClickedEvent);
-                  widget.onMenuItemClicked();
+                  // widget.onMenuItemClicked();
                 },
               ),
               Stack(
@@ -220,45 +233,45 @@ class _HomeState extends State<Home> {
                     padding: EdgeInsets.only(top: 8),
                     icon: Icon(
                       Icons.shopping_cart,
-                      color:Color(0xff032e6b).withAlpha(180),
+                      color: Color(0xff032e6b).withAlpha(180),
                       size: 24,
                     ),
                     onPressed: () {
                       BlocProvider.of<NavigationBloc>(context)
                           .add(NavigationEvents.CartClickedEvent);
-                      widget.onMenuItemClicked();
+                      // widget.onMenuItemClicked();
                     },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, left: 25),
-                    child: Container(
-                      height: 18,
-                      width: 18,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color:Color(0xff032e6b),
-                      ),
-                      child: Center(
-                        child: FutureBuilder(
-                          future: apiService.cartlength(uid: userId),
-                          builder: (context,snapshot){
-                            if(snapshot.hasData){
-                              return  Text(
-                            snapshot.data,
-                            style: TextStyle(
-                              color: Colors.white,
+                    FutureBuilder(
+                  future: apiService.cartlength(uid: userId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if(int.parse(snapshot.data)>0){
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 8.0, left: 25),
+                        child: Container(
+                          height: 18,
+                          width: 18,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color(0xff032e6b),
+                          ),
+                          child: Center(
+                            child: Text(
+                              snapshot.data,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
                             ),
-                          );
-                            }else{
-                             return Text('0',style: TextStyle(
-                              color: Colors.white,),);
-                            }
-                          },
-                          
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
+                      );
+                    }else{
+                      return SizedBox();
+                    }} else {
+                      return SizedBox();
+                    }
+                  }),
                 ],
               ),
             ],
@@ -308,7 +321,7 @@ class _HomeState extends State<Home> {
                       //         return CircularProgressIndicator();
                       //       }
                       //     }),
-                           FutureBuilder(
+                      FutureBuilder(
                           future: ctgNameandId,
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
@@ -317,7 +330,6 @@ class _HomeState extends State<Home> {
                               return CircularProgressIndicator();
                             }
                           }),
-
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -345,217 +357,58 @@ class _HomeState extends State<Home> {
                               return HorizontalRow(
                                 productList: productList,
                                 wishlist: wishlist,
+                                cartItems: cartItems,
+                                
                               );
                             } else {
                               return CircularProgressIndicator();
                             }
                           }),
                       Container(
-                        
                         child: FutureBuilder(
                           future: apiService.getCatg(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               return ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
                                   itemCount: snapshot.data.length,
                                   itemBuilder: (context, index) {
                                     CtgyNameAndId ctgyNameAndId =
                                         snapshot.data[index];
-                                    return HomeCtg(ctgyNameAndId: ctgyNameAndId);
+                                    if (index%2 == 0) {
+                                      return Column(
+                                        children: [
+                                          HomeCtg(ctgyNameAndId: ctgyNameAndId),
+                                          Container(
+                                             height: MediaQuery.of(context).size.height * 0.26,
+                                            child: FutureBuilder(
+                                                future: bannerList,
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.hasData) {
+                                                    print(snapshot.data);
+                                                    return HomeCrousal(
+                                                        banners: snapshot.data);
+                                                  } else {
+                                                    const spinkit =
+                                                        SpinKitDoubleBounce(
+                                                      color: Color(0xff032e6b),
+                                                      size: 50.0,
+                                                    );
+                                                    return Center(child: spinkit);
+                                                  }
+                                                }),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                    return HomeCtg(
+                                        ctgyNameAndId: ctgyNameAndId);
                                   });
                             } else {
                               return CircularProgressIndicator();
                             }
                           },
-                        ),
-                      ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 8.0, left: 16.0, bottom: 8.0),
-                            child: Text(
-                              "Staples Trending Products",
-                              style: TextStyle(
-                                  color: Color(0xff032e6b),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // Productcard(product: products[3]),
-                            // Productcard(product: products[4]),
-                            // Productcard(product: products[4]),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 8.0, left: 16.0, bottom: 8.0, right: 14),
-                              child: Text(
-                                "See more >>",
-                                style: TextStyle(
-                                  color: Color(0xff032e6b),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15.0, left: 16.0, bottom: 8.0),
-                            child: Text(
-                              "PROCESSED FOOD",
-                              style: TextStyle(
-                                  color: Color(0xff032e6b),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            children: [
-                              categoryBox(
-                                name: 'BREAKFAST',
-                                img: 'assets/images/breakfast.png',
-                              ),
-                              categoryBox(
-                                name: 'BEVRAGES',
-                                img: 'assets/images/drinks.png',
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              categoryBox(
-                                name: 'HOME CARE',
-                                img: 'assets/images/household.jpg',
-                              ),
-                              categoryBox(
-                                name: 'AVACAROS',
-                                img: 'assets/images/avacados.jpg',
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              categoryBox(
-                                name: 'PLUMS',
-                                img: 'assets/images/household.jpg',
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Container(
-                                  height: MediaQuery.of(context).size.height *
-                                          0.15 -
-                                      8,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        offset: const Offset(3.0, 2.0),
-                                        color: Colors.grey[200],
-                                        blurRadius: 3.0,
-                                        spreadRadius: 2.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'See More >>',
-                                      style: TextStyle(
-                                        color: Colors.deepPurpleAccent,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        child: Column(
-                          children: [
-                            Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(15),
-                                        topRight: Radius.circular(15),
-                                      ),
-                                      color: Colors.green[200],
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 8.0,
-                                          left: 10.0,
-                                          bottom: 0.0,
-                                          right: 10),
-                                      child: Text(
-                                        "COOKING  MEDIUM ",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(top: 8),
-                              decoration: BoxDecoration(
-                                color: Colors.green[200],
-                              ),
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    cardcat(
-                                      img: 'assets/images/hcereal.jpg',
-                                      name: 'Cooking Oil',
-                                    ),
-                                    cardcat(
-                                        img: 'assets/images/spices.jpg',
-                                        name: 'SPICES'),
-                                    cardcat(
-                                        img: 'assets/images/suagr.jpg',
-                                        name: 'SUGAR')
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
                         ),
                       ),
                       SizedBox(
@@ -642,52 +495,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget categoryBox({String name, String img}) {
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.15 - 8,
-        width: MediaQuery.of(context).size.width * 0.3,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              offset: const Offset(3.0, 2.0),
-              color: Colors.grey[200],
-              blurRadius: 3.0,
-              spreadRadius: 2.0,
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.15 - 40,
-              decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  image: DecorationImage(
-                      image: AssetImage(img), fit: BoxFit.contain)),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Container(
-              child: Center(
-                child: Text(
-                  name,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+  
 }
 
 class HomeMenuRow extends StatelessWidget {
@@ -718,10 +526,12 @@ class HomeMenuRow extends StatelessWidget {
 class HorizontalRow extends StatelessWidget {
   final List<WishlistItem> wishlist;
   final List<Product> productList;
+  final List<CartItem> cartItems;
   const HorizontalRow({
     Key key,
     this.productList,
     this.wishlist,
+    this.cartItems,
   }) : super(key: key);
 
   @override
@@ -746,6 +556,7 @@ class HorizontalRow extends StatelessWidget {
                   child: ProductCard(
                     product: product,
                     wishlist: wishlist,
+                    cartItems: cartItems,
                   ),
                 );
               },

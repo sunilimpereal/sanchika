@@ -168,7 +168,7 @@ class _CartCardState extends State<CartCard> {
                                       SizedBox(
                                         width: 5,
                                       ),
-                                      price1(int.parse(product.mrpPrice)),
+                                      price1(double.parse(product.mrpPrice)),
                                     ],
                                   ),
                                   Padding(
@@ -216,7 +216,7 @@ class _CartCardState extends State<CartCard> {
   }
 
   //scrached price
-  Text price1(int price1) {
+  Text price1(double price1) {
     if (price1 != null) {
       return Text(
         '₹$price1',
@@ -234,7 +234,7 @@ class _CartCardState extends State<CartCard> {
  discount({double mrp,double slp}) {
    int discount =0;
    if(mrp!=slp){
-    int discount = (((mrp - slp)/mrp)*100).round();
+     discount = (((mrp - slp)/mrp)*100).round();
    }else{
      
    }

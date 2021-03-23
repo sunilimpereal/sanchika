@@ -54,12 +54,14 @@ class _ProductAttributeState extends State<ProductAttribute> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(color: Color(0xff0B3666)),
+            titleSpacing: 0,
             title: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                SizedBox(height:8),
                 Text(
                   widget.ctgyNameAndId.ctgyNm,
-                  style: TextStyle(color: Color(0xff0B3666)),
+                  style: TextStyle(color: Color(0xff0B3666),fontSize: 16),
                 ),
               ],
             ),
@@ -81,6 +83,9 @@ class _ProductAttributeState extends State<ProductAttribute> {
                     .toList(),
               ),
             ),
+            actions: [
+              IconButton(icon: Icon(Icons.sort), onPressed:(){})
+            ],
           ),
           body: TabBarView(
             children: attributeList.map((e) {
