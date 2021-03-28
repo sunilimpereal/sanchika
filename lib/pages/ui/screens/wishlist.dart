@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/localization/localization_methods.dart';
+import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/model/wishlist_model.dart';
 import 'package:sanchika/pages/ui/widget/wishlist_card.dart';
 import 'package:sanchika/services/api_service.dart';
@@ -16,7 +17,7 @@ class Wishlist extends StatefulWidget with NavigationStates {
 
   final Function onMenuItemClicked;
   final Function onMenuTap;
-  
+
   @override
   _WishlistState createState() => _WishlistState();
 }
@@ -30,38 +31,51 @@ class _WishlistState extends State<Wishlist> {
     setState(() {
       userId = uid;
     });
+    return uid;
   }
-    Artboard _riveArtboard;
+
+  List<CartItem> cartItems;
+  Future<List<CartItem>> getCart(String userId) async {
+    APIService apiService = new APIService();
+    List<CartItem> cartitems = await apiService.getCartItems(userId);
+    setState(() {
+      cartItems = cartitems;
+    });
+    return cartitems;
+  }
+
+  Artboard _riveArtboard;
   RiveAnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    getUserId();
-    apiService =APIService();
+    getUserId().then((value) {
+        getCart(value);
+    });
+    apiService = APIService();
     print(userId);
-      rootBundle.load('assets/rive/wishlist.riv').then((value) async{
-      final file =RiveFile();
-      if(file.import(value)){
+    rootBundle.load('assets/rive/wishlist.riv').then((value) async {
+      final file = RiveFile();
+      if (file.import(value)) {
         final artboard = file.mainArtboard;
         artboard.addController(_controller = SimpleAnimation('Animation 1'));
         setState(() {
           _riveArtboard = artboard;
-          _controller.isActive = true ;
+          _controller.isActive = true;
         });
       }
     });
   }
+
   @override
   void dispose() {
-  
     super.dispose();
-   
   }
-  reload(){
-  
+
+  reload() {
     setState(() {
-      userId=userId;
+      userId = userId;
     });
   }
 
@@ -80,64 +94,58 @@ class _WishlistState extends State<Wishlist> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: GestureDetector(
-          onTap: (){
-            setState(() {
-              
-            });
+          onTap: () {
+            setState(() {});
           },
-                  child: Text(
+          child: Text(
             getTranslated(context, "Wishlist"),
             style: TextStyle(color: Colors.black),
           ),
         ),
-        leading: InkWell(
-          child: Icon(Icons.menu, color: Colors.black),
-          onTap: widget.onMenuTap,
-        ),
+        leading: leading(),
         actions: [
           Stack(
-              children: [
-                IconButton(
-                  padding: EdgeInsets.only(top: 8),
-                  icon: Icon(
-                    Icons.shopping_cart,
-                    color: Color(0xff032e6b).withAlpha(180),
-                    size: 24,
-                  ),
-                  onPressed: () {
-                    BlocProvider.of<NavigationBloc>(context)
-                        .add(NavigationEvents.CartClickedEvent);
-                    widget.onMenuItemClicked();
-                  },
+            children: [
+              IconButton(
+                padding: EdgeInsets.only(top: 8),
+                icon: Icon(
+                  Icons.shopping_cart,
+                  color: Color(0xff032e6b).withAlpha(180),
+                  size: 24,
                 ),
-                FutureBuilder(
-                    future: apiService.cartlength(uid: userId),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 8.0, left: 25),
-                          child: Container(
-                            height: 18,
-                            width: 18,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Color(0xff032e6b),
-                            ),
-                            child: Center(
-                              child: Text(
-                                snapshot.data,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
+                onPressed: () {
+                  BlocProvider.of<NavigationBloc>(context)
+                      .add(NavigationEvents.CartClickedEvent);
+                  widget.onMenuItemClicked();
+                },
+              ),
+              FutureBuilder(
+                  future: apiService.cartlength(uid: userId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 8.0, left: 25),
+                        child: Container(
+                          height: 18,
+                          width: 18,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color(0xff032e6b),
+                          ),
+                          child: Center(
+                            child: Text(
+                              snapshot.data,
+                              style: TextStyle(
+                                color: Colors.white,
                               ),
                             ),
                           ),
-                        );
-                      } else {
-                        return SizedBox();
-                      }
-                    }),
-              
+                        ),
+                      );
+                    } else {
+                      return SizedBox();
+                    }
+                  }),
             ],
           ),
         ],
@@ -152,7 +160,11 @@ class _WishlistState extends State<Wishlist> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   WishlistItem item = snapshot.data[index];
-                  return WishlistCard(productId: item.productId,notifyParent: reload,);
+                  return WishlistCard(
+                    productId: item.productId,
+                    cartItems: cartItems,
+                    notifyParent: reload,
+                  );
                   //  Column(
                   //   children: [
                   //     Text(item.productId),
@@ -168,20 +180,26 @@ class _WishlistState extends State<Wishlist> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                        Padding(
-              padding: const EdgeInsets.only(bottom: 0.0),
-              child: Container(
-                height: 250,
-                child: _riveArtboard == null? const SizedBox():Rive(artboard: _riveArtboard,fit: BoxFit.contain,)),
-            ),
-                      Text('No Items In Wishlist',
-                      style: TextStyle(
-                        color: Colors.blue.shade400,
-                        fontSize: 27,
-                        fontWeight: FontWeight.w600,
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 0.0),
+                        child: Container(
+                            height: 250,
+                            child: _riveArtboard == null
+                                ? const SizedBox()
+                                : Rive(
+                                    artboard: _riveArtboard,
+                                    fit: BoxFit.contain,
+                                  )),
                       ),
+                      Text(
+                        'No Items In Wishlist',
+                        style: TextStyle(
+                          color: Colors.blue.shade400,
+                          fontSize: 27,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      SizedBox(height:10),
+                      SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: () {},
                         child: Text('Explore More'),
@@ -192,16 +210,28 @@ class _WishlistState extends State<Wishlist> {
               );
             }
           } else {
-             const spinkit = SpinKitDoubleBounce(
-              color:  Color(0xff032e6b),
+            const spinkit = SpinKitDoubleBounce(
+              color: Color(0xff032e6b),
               size: 50.0,
             );
-            return Center(child:spinkit);
-           
+            return Center(child: spinkit);
           }
         },
-      )
-          ),
+      )),
+    );
+  }
+   InkWell leading() {
+    if (widget.onMenuTap == null) {
+      return InkWell(
+        child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      );
+    }
+    return InkWell(
+      child: Icon(Icons.menu, color: Colors.black),
+      onTap: widget.onMenuTap,
     );
   }
 }

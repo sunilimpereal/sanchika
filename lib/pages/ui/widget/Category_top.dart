@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sanchika/model/CtgAttribute.dart';
 import 'package:sanchika/model/getCatg_model.dart';
-import 'package:sanchika/pages/ui/sub_screens/productAttribute_view.dart';
+import 'package:sanchika/pages/ui/screens/categories/productAttribute_view.dart';
 import 'package:sanchika/pages/ui/widget/categories_home_card.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'dart:math';

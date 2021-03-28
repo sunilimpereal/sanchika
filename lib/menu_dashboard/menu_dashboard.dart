@@ -11,7 +11,9 @@ import 'package:sanchika/pages/ui/screens/orders/myOrders.dart';
 import 'package:sanchika/pages/ui/screens/offers.dart';
 import 'package:sanchika/pages/ui/screens/profile.dart';
 import 'package:sanchika/pages/ui/screens/wishlist.dart';
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:sanchika/utils/constants.dart';
+
 
 class MenuDashboard extends StatefulWidget {
   @override
@@ -70,35 +72,40 @@ class _MenuDashboardState extends State<MenuDashboard>
 
     return Scaffold(
       backgroundColor: kBackgroundColor,
-      body: BlocProvider<NavigationBloc>(
-        create: (context) => NavigationBloc(
-            onMenuTap: onMenuTap, onMenuItemClicked: onMenuItemClicked),
-        child: Stack(
-          children: [
-            BlocBuilder<NavigationBloc, NavigationStates>(
-              builder: (context, NavigationStates navigationState) {
-                return Menu(
-                    slideAnimation: _slideAnimation,
-                    menuAnimation: _menuScaleAnimation,
-                    selectedIndex: findSelectedIndex(navigationState),
-                    onMenuItemClicked: onMenuItemClicked);
-              },
-            ),
-            Dashboard(
-              duration: duration,
-              onMenuTap: onMenuTap,
-              scaleAnimation: _scaleAnimation,
-              isCollapsed: isCollapsed,
-              screenWidth: screenWidth,
-              onMenuItemClicked: onMenuItemClicked,
-              child: BlocBuilder<NavigationBloc, NavigationStates>(builder: (
-                context,
-                NavigationStates navigationState,
-              ) {
-                return navigationState as Widget;
-              }),
-            ),
-          ],
+      body: DoubleBackToCloseApp(
+         snackBar: const SnackBar(
+            content: Text('Tap back again to leave'),
+          ),
+              child: BlocProvider<NavigationBloc>(
+          create: (context) => NavigationBloc(
+              onMenuTap: onMenuTap, onMenuItemClicked: onMenuItemClicked),
+          child: Stack(
+            children: [
+              BlocBuilder<NavigationBloc, NavigationStates>(
+                builder: (context, NavigationStates navigationState) {
+                  return Menu(
+                      slideAnimation: _slideAnimation,
+                      menuAnimation: _menuScaleAnimation,
+                      selectedIndex: findSelectedIndex(navigationState),
+                      onMenuItemClicked: onMenuItemClicked);
+                },
+              ),
+              Dashboard(
+                duration: duration,
+                onMenuTap: onMenuTap,
+                scaleAnimation: _scaleAnimation,
+                isCollapsed: isCollapsed,
+                screenWidth: screenWidth,
+                onMenuItemClicked: onMenuItemClicked,
+                child: BlocBuilder<NavigationBloc, NavigationStates>(builder: (
+                  context,
+                  NavigationStates navigationState,
+                ) {
+                  return navigationState as Widget;
+                }),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -8,10 +8,7 @@ import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/model/getBanner_model.dart';
 import 'package:sanchika/model/getCatg_model.dart';
 import 'package:sanchika/model/product.dart';
-import 'package:sanchika/model/topMenu_model.dart';
 import 'package:sanchika/model/wishlist_model.dart';
-import 'package:sanchika/pages/ui/screens/wishlist.dart';
-import 'package:sanchika/pages/ui/sub_screens/personalCare.dart';
 import 'package:sanchika/pages/ui/widget/Category_top.dart';
 import 'package:sanchika/pages/ui/widget/categories_home_card.dart';
 import 'package:sanchika/pages/ui/widget/homeCtg.dart';
@@ -19,6 +16,7 @@ import 'package:sanchika/pages/ui/widget/home_crousal.dart';
 import 'package:sanchika/pages/ui/widget/product_card.dart';
 import 'package:sanchika/search/product_search_delegate.dart';
 import 'package:sanchika/services/api_service.dart';
+import 'package:sanchika/utils/checkInternet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
 
@@ -131,6 +129,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    checkInternet().checkConnection(context);
     getUserId().then((value) {
       print(userId);
       getWishlist(userId);
@@ -147,6 +146,11 @@ class _HomeState extends State<Home> {
     print(activeProducts);
   }
 
+@override
+  void dispose() {
+     checkInternet().listener.cancel();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -169,7 +173,7 @@ class _HomeState extends State<Home> {
                           showSearch(
                               context: context,
                               delegate:
-                                  ProductSearch(productsList: activeProducts));
+                                  ProductSearch(productsList: activeProducts,cartItems: cartItems,wishlist: wishlist));
                         },
                         readOnly: true,
                         keyboardType: TextInputType.text,

@@ -91,78 +91,81 @@ class _Stepper2State extends State<StepperTouch>
           type: MaterialType.canvas,
           clipBehavior: Clip.antiAlias,
           borderRadius: BorderRadius.circular(60.0),
-          color: Colors.blue.withOpacity(0.2),
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Positioned(
-                  left: widget.direction == Axis.horizontal ? 15.0 : null,
-                  bottom: widget.direction == Axis.horizontal ? null : 10.0,
-                  child: GestureDetector(
-                    onTap: () {
-                      if(_value>0){
-                      setState(() {
-                        _value--;
-                      });
-                      }
-                    },
-                    child: Container(
-                      height: 80,
-                      width: 80,
-                      color: Colors.transparent,
-                      child:  Icon(Icons.remove,
-                            size: 60.0, color: widget.buttonsColor),
-                      
-                    ),
-                  )),
-              Positioned(
-                  right: widget.direction == Axis.horizontal ? 20.0 : null,
-                  top: widget.direction == Axis.horizontal ? 20 : 0.0,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _value++;
-                      });
-                    },
-                    child: Container(
-                      height: 80,
-                      width: 80,
-                      color: Colors.transparent,
-                      child:  Icon(Icons.add,
-                            size: 60.0, color: widget.buttonsColor),
-                      
-                    ),
-                  )),
-              GestureDetector(
-                onHorizontalDragStart: _onPanStart,
-                onHorizontalDragUpdate: _onPanUpdate,
-                onHorizontalDragEnd: _onPanEnd,
-                child: SlideTransition(
-                  position: _animation,
-                  child: Material(
-                    color: widget.dragButtonColor,
-                    shape: const CircleBorder(),
-                    elevation: 5.0,
-                    child: Center(
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 500),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return ScaleTransition(
-                              child: child, scale: animation);
-                        },
-                        child: Text(
-                          '$_value',
-                          key: ValueKey<int>(_value),
-                          style: TextStyle(
-                              color: widget.counterColor, fontSize: 56.0),
+          color: Color(0xff0b3666),
+          child: Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Positioned(
+                    left: widget.direction == Axis.horizontal ? 15.0 : null,
+                    bottom: widget.direction == Axis.horizontal ? null : 10.0,
+                    child: GestureDetector(
+                      onTap: () {
+                        if(_value>0){
+                        setState(() {
+                          _value--;
+                        });
+                        }
+                      },
+                      child: Container(
+                        height: 80,
+                        width: 80,
+                        color: Colors.transparent,
+                        child:  Icon(Icons.remove,
+                              size: 60.0, color: widget.buttonsColor),
+                        
+                      ),
+                    )),
+                Positioned(
+                    right: widget.direction == Axis.horizontal ? 20.0 : null,
+                    top: widget.direction == Axis.horizontal ? 20 : 0.0,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _value++;
+                        });
+                      },
+                      child: Container(
+                        height: 80,
+                        width: 80,
+                        color: Colors.transparent,
+                        child:  Icon(Icons.add,
+                              size: 60.0, color: widget.buttonsColor),
+                        
+                      ),
+                    )),
+                GestureDetector(
+                  onHorizontalDragStart: _onPanStart,
+                  onHorizontalDragUpdate: _onPanUpdate,
+                  onHorizontalDragEnd: _onPanEnd,
+                  child: SlideTransition(
+                    position: _animation,
+                    child: Material(
+                      color: widget.dragButtonColor,
+                      shape: const CircleBorder(),
+                      elevation: 5.0,
+                      child: Center(
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 500),
+                          transitionBuilder:
+                              (Widget child, Animation<double> animation) {
+                            return ScaleTransition(
+                                child: child, scale: animation);
+                          },
+                          child: Text(
+                            '$_value',
+                            key: ValueKey<int>(_value),
+                            style: TextStyle(
+                                color: widget.counterColor, fontSize: 56.0),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

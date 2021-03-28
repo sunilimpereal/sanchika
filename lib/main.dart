@@ -7,12 +7,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sanchika/localization/localization.dart';
 import 'package:sanchika/menu_dashboard/menu_dashboard.dart';
 import 'package:sanchika/pages/authentication/login_page.dart';
-import 'package:sanchika/widgets/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:rive_splash_screen/rive_splash_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
-import 'package:flutter/services.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.

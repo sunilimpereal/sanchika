@@ -138,6 +138,7 @@ class _ProductCardState extends State<ProductCard>
                           inWishlist: inwishlist,
                           product: product,
                           userId: userId,
+                          cartItems: widget.cartItems,
                           onMenuItemClicked: widget.onMenuItemClicked,
                         )),
               );
@@ -145,8 +146,8 @@ class _ProductCardState extends State<ProductCard>
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                padding: EdgeInsets.all(8.0),
-                height: MediaQuery.of(context).size.height * .35 + 7,
+                padding: EdgeInsets.all(.0),
+                height: MediaQuery.of(context).size.height * .35 + 9,
                 width: MediaQuery.of(context).size.width * 0.43,
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
@@ -198,7 +199,7 @@ class _ProductCardState extends State<ProductCard>
                         //   widget.product.type == null ? '' : widget.product.type,
                         //   style: TextStyle(
                         //     fontSize: 14,
-                        //     fontFamily: 'Poppins',
+                        //     fontFamily: 'Poppins,
                         //     fontWeight: FontWeight.w600,
                         //   ),
                         // ),
@@ -364,7 +365,7 @@ class _ProductCardState extends State<ProductCard>
     if (incart) {
       return Positioned(
          bottom: 30,
-        left: 15,
+        left: 10,
         child: Align(
           alignment: Alignment.bottomCenter,
           child: Container(

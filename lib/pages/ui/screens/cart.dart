@@ -6,8 +6,8 @@ import 'package:rive/rive.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/localization/localization_methods.dart';
 import 'package:sanchika/model/cart_model.dart';
+import 'package:sanchika/pages/ui/screens/orders/checkout.dart';
 import 'package:sanchika/pages/ui/widget/cart_card.dart';
-import 'package:sanchika/pages/ui/widget/checkout.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,21 +23,27 @@ class Cart extends StatefulWidget with NavigationStates {
 
 class _CartState extends State<Cart> {
   Future<List<CartItem>> cartItems;
-  double cartTotal=0;
+  double cartTotal = 0;
+  String userId;
+  Future<String> getUserId() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String uid = preferences.getString('userId');
+    setState(() {
+      userId = uid;
+    });
+    return uid;
+  }
 
-  Future<List<CartItem>> getCart() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String userId = sharedPreferences.getString('userId');
+  Future<List<CartItem>> getCartTotal(String userId) async {
     APIService apiService = new APIService();
     List<CartItem> cartitems = await apiService.getCartItems(userId);
     double total = 0;
-    for (CartItem c in cartitems){
+    for (CartItem c in cartitems) {
       double it = double.parse(c.totalAmount);
-      total = total+it;
+      total = total + it;
     }
     setState(() {
       cartTotal = total;
-
     });
 
     return cartitems;
@@ -45,10 +51,17 @@ class _CartState extends State<Cart> {
 
   Artboard _riveArtboard;
   RiveAnimationController _controller;
+    reload() {
+    setState(() {
+      userId = userId;
+    });
+  }
   @override
   void initState() {
+    getUserId().then((value) {
+        getCartTotal(value);
+    });
     super.initState();
-    cartItems = getCart();
     rootBundle.load('assets/rive/wishlist.riv').then((value) async {
       final file = RiveFile();
       if (file.import(value)) {
@@ -64,6 +77,12 @@ class _CartState extends State<Cart> {
 
   @override
   Widget build(BuildContext context) {
+    
+  Future<List<CartItem>> getCart(String userId) async {
+    APIService apiService = new APIService();
+    List<CartItem> cartitems = await apiService.getCartItems(userId);
+    return cartitems;
+  }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -89,13 +108,13 @@ class _CartState extends State<Cart> {
               Row(
                 children: [
                   FutureBuilder(
-                    future: getCart(),
+                    future: cartItems,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         List<CartItem> cartitems = snapshot.data;
                         cartitems.map((e) {
                           setState(() {
-                            cartTotal = cartTotal+double.parse(e.totalAmount);
+                            cartTotal = cartTotal + double.parse(e.totalAmount);
                           });
                         });
                         String number = snapshot.data.length.toString();
@@ -120,11 +139,11 @@ class _CartState extends State<Cart> {
         actions: [
           IconButton(
             padding: EdgeInsets.only(top: 8),
-           icon: Icon(
-                  Icons.favorite_rounded,
-                  color: Color(0xff032e6b).withAlpha(180),
-                  size: 24,
-                ),
+            icon: Icon(
+              Icons.favorite_rounded,
+              color: Color(0xff032e6b).withAlpha(180),
+              size: 24,
+            ),
             onPressed: () {
               BlocProvider.of<NavigationBloc>(context)
                   .add(NavigationEvents.WishlistClickedEvent);
@@ -134,14 +153,20 @@ class _CartState extends State<Cart> {
         ],
       ),
       body: FutureBuilder(
-        future: getCart(),
+        future: getCart(userId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
+              cacheExtent: 100000,
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   CartItem cartItem = snapshot.data[index];
-                  return CartCard(productId: cartItem.productId,qty:cartItem.quantity,);
+                  return CartCard(
+                    userId:userId,
+                    productId: cartItem.productId,
+                    qty: cartItem.quantity,
+                    notifyParent: reload,
+                  );
                 });
           } else {
             const spinkit = SpinKitDoubleBounce(
@@ -191,7 +216,7 @@ class _CartState extends State<Cart> {
               ),
             ),
             FutureBuilder(
-                future: cartItems,
+                future: getCart(userId),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return GestureDetector(
@@ -236,9 +261,10 @@ class _CartState extends State<Cart> {
                                 Text(
                                   'Checkout',
                                   style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ],
                             ),
@@ -247,7 +273,7 @@ class _CartState extends State<Cart> {
                       ),
                     );
                   }
-                })
+                },),
           ],
         ),
       ),

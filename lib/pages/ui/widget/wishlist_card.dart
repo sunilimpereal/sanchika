@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
-import 'package:sanchika/model/getProductDetail_model.dart';
+import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/model/product.dart';
-import 'package:sanchika/pages/ui/screens/wishlist.dart';
+import 'package:sanchika/pages/ui/widget/stepper.dart';
 import 'package:sanchika/services/api_service.dart';
-import 'package:sanchika/utils/numericStepButton.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WishlistCard extends StatefulWidget {
   String productId;
+  List<CartItem> cartItems;
   final Function() notifyParent;
-  WishlistCard({this.productId, this.notifyParent});
+  WishlistCard({this.productId,this.cartItems, this.notifyParent});
   @override
   _WishlistCardState createState() => _WishlistCardState();
 }
@@ -36,12 +36,25 @@ class _WishlistCardState extends State<WishlistCard> {
       userId = uid;
     });
   }
+  bool incart = false;
+    void checkCart() {
+    for (CartItem c in widget.cartItems??[]) {
+      if (c.productId == widget.productId) {
+        print('hurran');
+        setState(() {
+          incart = true;
+        });
+      }
+    }
+  }
+
 
   @override
   void initState() {
     super.initState();
     getUserId();
     print(widget.productId);
+    checkCart();
   }
 
   @override
@@ -61,267 +74,236 @@ class _WishlistCardState extends State<WishlistCard> {
         });
   }
 
-  @override
   Widget _wishlistcardUi(BuildContext context, Product product) {
-    return Container(
-      padding: EdgeInsets.all(8),
-      height: MediaQuery.of(context).size.height * 0.20,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            offset: const Offset(3.0, 2.0),
-            color: Colors.grey[200],
-            blurRadius: 3.0,
-            spreadRadius: 2.0,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(0),
-            decoration: BoxDecoration(
+    Widget button() {
+    if (incart) {
+      return Container(
               color: Colors.transparent,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              children: [
-                Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15.0),
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.09,
-                        width: MediaQuery.of(context).size.width * 0.20,
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                              fit: BoxFit.contain,
-                              image: NetworkImage(product.productImage)),
-                        ),
-                      ),
+              height: 38,
+              width: MediaQuery.of(context).size.width * 0.28,
+              child: StepperTouch(
+                initialValue: 1,
+                direction: Axis.horizontal,
+                withSpring: true,
+                onChanged: (int value) {},
+              )
+      );
+    } else {
+      return Container(
+            width: MediaQuery.of(context).size.width * 0.33,
+            height: 35,
+            child: ProgressButton.icon(
+              progressIndicatorSize: 28.0,
+              iconedButtons: {
+                ButtonState.idle: IconedButton(
+                  text: "Add to Cart",
+                  icon: Icon(Icons.shopping_cart_outlined,
+                      size: 23, color: Colors.white),
+                  color: Color(0xff032e6b),
+                ),
+                ButtonState.loading: IconedButton(
+                  text: "Loading",
+                  icon: Icon(Icons.blur_circular),
+                  color: Color(0xff032e6b),
+                ),
+                ButtonState.fail: IconedButton(
+                    text: "Failed",
+                    icon: Icon(Icons.cancel, color: Colors.white),
+                    color: Colors.red.shade300),
+                ButtonState.success: IconedButton(
+                    text: "Added",
+                    icon: Icon(
+                      Icons.check_circle,
+                      color: Colors.white,
                     ),
-                    discount(mrp: double.parse(product.mrpPrice),slp: double.parse(product.slPrice)),
+                    color: Colors.green.shade400)
+              },
+              onPressed: () {
+                print(product.productId);
+                addToCart(
+                    productId: product.productId,
+                    userId: userId,
+                    slPrice: double.parse(product.slPrice),
+                    productName: product.productName,
+                    quantity: 1,
+                    grandTotal: double.parse(product.slPrice));
+              },
+              state: stateTextWithIcon,
+            ),
+         
+      );
+    }
+  }
+    return Stack(
+      children: [
+        Container(
+          padding: EdgeInsets.all(8),
+          height: MediaQuery.of(context).size.height * 0.15,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                offset: const Offset(3.0, 2.0),
+                color: Colors.grey[200],
+                blurRadius: 3.0,
+                spreadRadius: 2.0,
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(0),
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.09,
+                            width: MediaQuery.of(context).size.width * 0.20,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                  fit: BoxFit.contain,
+                                  image: NetworkImage(product.productImage)),
+                            ),
+                          ),
+                        ),
+                        discount(
+                            mrp: double.parse(product.mrpPrice),
+                            slp: double.parse(product.slPrice)),
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8),
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.72,
-              color: Colors.white,
-              child: Column(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.72,
-                    padding: EdgeInsets.all(0),
-                    color: Colors.white,
-                    child: Container(
-                      color: Colors.white,
-                      child: Row(
-                        children: [
-                          Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  color: Colors.white,
-                                  width: MediaQuery.of(context).size.width *
-                                      0.72 *
-                                      0.75,
-                                  child: Container(
-                                    child: Column(
-                                      children: [
-                                        Row(
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.72,
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.72,
+                        padding: EdgeInsets.all(0),
+                        color: Colors.white,
+                        child: Container(
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      color: Colors.white,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.72 *
+                                          0.75,
+                                      child: Container(
+                                        child: Column(
                                           children: [
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.72 *
-                                                  0.75,
-                                              child: Text(
-                                                product.productName,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 2,
-                                                style: TextStyle(
-                                                  fontFamily: 'Poppins',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600,
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.72 *
+                                                      0.75,
+                                                  child: Text(
+                                                    product.productName,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 2,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Poppins',
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
+                                              ],
                                             ),
                                           ],
                                         ),
-                                      ],
+                                      ),
                                     ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // productType(widget.product.type),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height:10),
+                      Container(
+                        padding: EdgeInsets.all(0),
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        height: 40,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "₹${product.slPrice}",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                price1(double.parse(product.mrpPrice)),
                               ],
                             ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // productType(widget.product.type),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(0),
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    height: 30,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "₹${product.slPrice}",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            price1(double.parse(product.mrpPrice)),
+                            button(),
                           ],
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                offset: const Offset(3.0, 2.0),
-                                color: Colors.grey[200],
-                                blurRadius: 3.0,
-                                spreadRadius: 2.0,
-                              ),
-                            ],
-                          ),
-                          child: NumericStepButton(
-                            initialValue: 1,
-                            maxValue: 20,
-                            onChanged: (value) {
-                              setState(() {
-                                qty = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        width: 130,
-                        height: 40,
-                        child: ProgressButton.icon(
-                          progressIndicatorSize: 24.0,
-                          iconedButtons: {
-                            ButtonState.idle: IconedButton(
-                              text: "Remove",
-                              icon: Icon(Icons.cancel,
-                                  size: 21, color: Colors.white),
-                              color: Colors.redAccent[100],
-                            ),
-                            ButtonState.loading: IconedButton(
-                              text: "Loading",
-                              icon: Icon(Icons.blur_circular),
-                              color: Colors.redAccent[100],
-                            ),
-                            ButtonState.fail: IconedButton(
-                                text: "Failed",
-                                icon: Icon(Icons.cancel, color: Colors.white),
-                                color: Colors.red.shade300),
-                            ButtonState.success: IconedButton(
-                                text: "Removed",
-                                icon: Icon(
-                                  Icons.check_circle,
-                                  color: Colors.white,
-                                ),
-                                color: Colors.green.shade400)
-                          },
-                          onPressed: () {
-                            print(product.productId);
-                            removeWishlistItem(
-                              pid: product.productId,
-                              uid: userId,
-                            );
-                          },
-                          state: stateTextWithIconRemove,
-                        ),
-                      ),
-                      SizedBox(width: 6),
-                      Container(
-                        width: 130,
-                        height: 40,
-                        child: ProgressButton.icon(
-                          progressIndicatorSize: 28.0,
-                          iconedButtons: {
-                            ButtonState.idle: IconedButton(
-                              text: "Add to Cart",
-                              icon: Icon(Icons.shopping_cart_outlined,
-                                  size: 21, color: Colors.white),
-                              color: Color(0xff032e6b),
-                            ),
-                            ButtonState.loading: IconedButton(
-                              text: "Loading",
-                              icon: Icon(Icons.blur_circular),
-                              color: Color(0xff032e6b),
-                            ),
-                            ButtonState.fail: IconedButton(
-                                text: "Failed",
-                                icon: Icon(Icons.cancel, color: Colors.white),
-                                color: Colors.red.shade300),
-                            ButtonState.success: IconedButton(
-                                text: "Added",
-                                icon: Icon(
-                                  Icons.check_circle,
-                                  color: Colors.white,
-                                ),
-                                color: Colors.green.shade400)
-                          },
-                          onPressed: () {
-                            print(product.productId);
-                            addToCart(
-                              productId: product.productId,
-                              userId: userId,
-                              productName: product.productName,
-                              quantity: qty,
-                              mrpPrice: double.parse(product.mrpPrice),
-                              slPrice: double.parse(product.slPrice),
-                              grandTotal: double.parse(product.slPrice) * qty,
-                            );
-                          },
-                          state: stateTextWithIcon,
                         ),
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        ),
+        Positioned(
+            top: -7,
+            right: 0,
+            child: IconButton(
+              icon: Icon(Icons.clear),
+              iconSize: 20,
+              onPressed: () {
+                print(product.productId);
+                removeWishlistItem(
+                  pid: product.productId,
+                  uid: userId,
+                );
+              },
+              color: Colors.grey,
+            )),
+      ],
     );
+      
   }
 
   //scrached price
@@ -371,16 +353,14 @@ class _WishlistCardState extends State<WishlistCard> {
   //     return Container();
   //   }
   // }
+  
 
-
- discount({double mrp,double slp}) {
-   int discount =0;
-   if(mrp!=slp){
-    int discount = (((mrp - slp)/mrp)*100).round();
-   }else{
-     
-   }
-    if (discount>0) {
+  discount({double mrp, double slp}) {
+    int discount = 0;
+    if (mrp != slp) {
+     discount = (((mrp - slp) / mrp) * 100).round();
+    } else {}
+    if (discount > 0) {
       return Positioned(
         top: 5,
         left: 7,
@@ -442,7 +422,7 @@ class _WishlistCardState extends State<WishlistCard> {
     widget.notifyParent();
   }
 
-  void addToCart(
+ void addToCart(
       {String productId,
       String userId,
       int quantity,
@@ -473,6 +453,9 @@ class _WishlistCardState extends State<WishlistCard> {
           if (value == true) {
             setState(() {
               stateTextWithIcon = ButtonState.success;
+            });
+            setState(() {
+              incart=true;
             });
           }
           if (value == false) {

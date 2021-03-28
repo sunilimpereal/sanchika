@@ -7,10 +7,12 @@ import 'package:http/http.dart' as http;
 import 'package:sanchika/model/AllProducts.dart';
 import 'package:sanchika/model/CtgAttribute.dart';
 import 'package:sanchika/model/activeProduct_model.dart';
+import 'package:sanchika/model/addRating.dart';
 import 'package:sanchika/model/addToCart_model.dart';
 import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/model/ctg_secondAttribute_model.dart';
 import 'package:sanchika/model/getAddresss_model.dart';
+import 'package:sanchika/model/getAllRatingReview_model.dart';
 import 'package:sanchika/model/getCatg_model.dart';
 import 'package:sanchika/model/getProductAttribute_model.dart';
 import 'package:sanchika/model/getProductDetail_model.dart';
@@ -23,6 +25,7 @@ import 'package:sanchika/model/cat_product_model.dart';
 import 'package:sanchika/model/signUp_model.dart';
 import 'package:sanchika/model/subMenu_model.dart';
 import 'package:sanchika/model/topMenu_model.dart';
+import 'package:sanchika/model/userOrderDetails.dart';
 import 'package:sanchika/model/wishlist_model.dart';
 import 'package:sanchika/model/getBanner_model.dart';
 import 'package:sanchika/pages/ui/screens/404_page.dart';
@@ -280,13 +283,24 @@ class APIService {
      final response = await http.post(url,
         body: jsonEncode(addtocartRequest.toJson()), headers: headerList);
     
-   
     print('Addto cart response : ${response.statusCode}');
     if(response.statusCode==200){
       return true;
     }
     else{
       print(response.statusCode);
+      return false;
+    }
+  }
+  //Delete from cart
+  Future<bool> removeCartItem({String userId,String pid})async{
+    String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/cart/delete-cart-list?uid=$userId&pid=$pid";
+    final response = await http.get(url,headers:headerList);
+    
+    print('delete CartItem : ${response.statusCode} ${userId} ${pid}');
+    if(response.statusCode==200){
+      return true;
+    }else{
       return false;
     }
   }
@@ -432,6 +446,47 @@ class APIService {
     return productList;
     }else{
       return [];
+    }
+  }
+
+  //get rating and review
+  Future<List<RatingAndReview>> getRatingAndReview(String productId)async {
+    String url ="http://sanchika.in:8081/sanchikaapi//sanchika/user/getAllRatingAndReview";
+      final response = await http.get(url);
+    print('getRating status :${response.statusCode}');
+    if(response.statusCode==200){
+      GetAllRatingAndReview allRatingAndReview = getAllRatingAndReviewFromJson(response.body);
+      List<RatingAndReview> productRating = allRatingAndReview.data.rattingAndViewIsGetting.where((e) =>e.productId==productId ).toList();
+      return productRating;
+    }
+    else{
+      return [];
+    }
+  }
+
+  //add rating and review
+  Future<bool> addReview(RatingRequestModel ratingRequestModel)async{
+    String url="";
+    final response = await http.post(url,
+        body: jsonEncode(ratingRequestModel.toJson()), headers: headerList);
+        print('Response of addReview ${response.statusCode}');
+    if(response.statusCode==200){
+      return true;
+    }else{
+      return false;
+    }
+  }
+  //User Order Details save
+  Future<bool> userorderDetailsSave(OrderuserDetailsRequestModel orderuserDetailsRequestModel)async{
+    String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/order/order-user-details"
+";
+    final response = await http.post(url,body:orderuserDetailsRequestModelToJson(orderuserDetailsRequestModel));
+    print('Order User details save : ${response.statusCode}');
+    if(response.statusCode==200){
+      return true;
+    }
+    else{
+      return false;
     }
   }
 

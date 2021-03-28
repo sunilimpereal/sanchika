@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/model/product.dart';
+import 'package:sanchika/model/wishlist_model.dart';
 import 'package:sanchika/pages/ui/widget/product_card.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,7 +10,10 @@ import 'package:toast/toast.dart';
 
 class ProductSearch extends SearchDelegate<Product> {
   Future<List<Product>> productsList;
-  ProductSearch({this.productsList});
+  List<WishlistItem> wishlist;
+  List<CartItem> cartItems;
+
+  ProductSearch({this.productsList, this.wishlist, this.cartItems});
   Future<List<String>> getRecentSearch() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     List<String> recent = preferences.getStringList('recentSearch');
@@ -27,35 +32,16 @@ class ProductSearch extends SearchDelegate<Product> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setStringList('recentSearch', []);
   }
-  
+
   //API TO call products
 
   APIService apiService = new APIService();
   Future<List<Product>> getProductListHo() async {
-     print('i am home');
+    print('i am home');
     List<Product> productList = await apiService.getAllProducts();
     print(productList);
     return productList;
   }
-
-//   List<Product> filterProducts({List<Product> productList, String type}) {
-//     if (type == 'Relevance') {
-//       return productList;
-//     }
-//     if (type == 'Discount') {
-//       return productList;
-//     }
-//     if (type == 'Sort High to Low') {
-//       productList.sort((a, b) => a.slPrice.compareTo(b.slPrice));
-//       return productList;
-//     }
-//     if (type == 'Sort Low to High') {
-//       productList.sort((a, b) => a.slPrice.compareTo(b.slPrice));
-//       return productList;
-//     }
-//     return productList;
-//   }
-// //a
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -90,10 +76,13 @@ class ProductSearch extends SearchDelegate<Product> {
           addRecentSearch(query);
           List<Product> productList = snapshot.data;
           List<Product> result = productList
-              .where((a) => a.productName.toLowerCase().contains(query.toLowerCase()))
+              .where((a) =>
+                  a.productName.toLowerCase().contains(query.toLowerCase()))
               .toList();
           return SearchResult(
             productList: result,
+            wishlist: wishlist??[],
+            cartItem: cartItems??[],
           );
         } else {
           return Center(
@@ -195,13 +184,13 @@ class ProductSearch extends SearchDelegate<Product> {
   }
 }
 
-
-
 class SearchResult extends StatefulWidget {
   final List<Product> productList;
+  final List<WishlistItem> wishlist;
+  final List<CartItem> cartItem;
 
   SearchResult({
-    this.productList,
+    this.productList,this.wishlist,this.cartItem,
   });
 
   @override
@@ -239,12 +228,14 @@ class _SearchResultState extends State<SearchResult> {
     }
     if (type == 'Price High to Low') {
       setState(() {
-        productList.sort((b, a) => double.parse( a.slPrice).compareTo( double.parse(b.slPrice)));
+        productList.sort((b, a) =>
+            double.parse(a.slPrice).compareTo(double.parse(b.slPrice)));
       });
     }
     if (type == 'Price Low to High') {
       setState(() {
-        productList.sort((a, b) => double.parse(a.slPrice).compareTo(double.parse(b.slPrice)));
+        productList.sort((a, b) =>
+            double.parse(a.slPrice).compareTo(double.parse(b.slPrice)));
       });
     }
   }
@@ -458,14 +449,14 @@ class _SearchResultState extends State<SearchResult> {
               crossAxisCount: 2,
               childAspectRatio: MediaQuery.of(context).size.width *
                   0.5 /
-                  (MediaQuery.of(context).size.height * .37),
+                  (MediaQuery.of(context).size.height * .39),
             ),
             itemCount: widget.productList.length,
             itemBuilder: (context, index) {
               Product product = widget.productList[index];
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: Container(child: ProductCard(product: product)),
+                child: Container(child: ProductCard(product: product,wishlist: widget.wishlist,cartItems: widget.cartItem,)),
               );
             },
           ),

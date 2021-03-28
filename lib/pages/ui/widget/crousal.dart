@@ -10,7 +10,7 @@ class Crousal extends StatefulWidget {
 
 class _CrousalState extends State<Crousal> {
   int photoIndex = 0;
-
+ 
   void _previousImage() {
     setState(() {
       photoIndex = photoIndex > 0 ? photoIndex - 1 : 0;
