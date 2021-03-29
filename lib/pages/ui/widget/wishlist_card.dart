@@ -59,6 +59,7 @@ class _WishlistCardState extends State<WishlistCard> {
 
   @override
   Widget build(BuildContext context) {
+    checkCart();
     return FutureBuilder(
         future: getProductDetail(),
         builder: (context, snapshot) {

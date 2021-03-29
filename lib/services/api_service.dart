@@ -478,8 +478,7 @@ class APIService {
   }
   //User Order Details save
   Future<bool> userorderDetailsSave(OrderuserDetailsRequestModel orderuserDetailsRequestModel)async{
-    String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/order/order-user-details"
-";
+    String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/order/order-user-details";
     final response = await http.post(url,body:orderuserDetailsRequestModelToJson(orderuserDetailsRequestModel));
     print('Order User details save : ${response.statusCode}');
     if(response.statusCode==200){
@@ -489,5 +488,4 @@ class APIService {
       return false;
     }
   }
-
 }

@@ -108,7 +108,7 @@ class _CartState extends State<Cart> {
               Row(
                 children: [
                   FutureBuilder(
-                    future: cartItems,
+                    future: getCart(userId),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         List<CartItem> cartitems = snapshot.data;
@@ -119,7 +119,7 @@ class _CartState extends State<Cart> {
                         });
                         String number = snapshot.data.length.toString();
                         return Text(
-                          "$number items",
+                          number=='1'?"$number item":"$number items",
                           style: TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.w300,
@@ -225,7 +225,7 @@ class _CartState extends State<Cart> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => Checkoutpage(
-                                    cartItem: snapshot.data[0],
+                                    cartItems: snapshot.data,
                                   )),
                         );
                       },

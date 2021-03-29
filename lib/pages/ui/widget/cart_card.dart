@@ -17,26 +17,25 @@ class CartCard extends StatefulWidget {
 
 class _CartCardState extends State<CartCard> {
   Future<Product> productDetail;
-  Future<Product> getProductDetail() async {
-    APIService apiService = APIService();
-    List<Product> product =
-        await apiService.getProductDetail(productId: widget.productId);
-    print(widget.productId);
-    setState(() {});
-    return product[0];
-  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    productDetail = getProductDetail();
   }
 
   @override
   Widget build(BuildContext context) {
+    Future<Product> getProductDetail() async {
+      APIService apiService = APIService();
+      List<Product> product =
+          await apiService.getProductDetail(productId: widget.productId);
+      print(widget.productId);
+      return product[0];
+    }
+
     return FutureBuilder(
-      future: productDetail,
+      future: getProductDetail(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return cartCardUi(context, snapshot.data);
@@ -148,7 +147,6 @@ class _CartCardState extends State<CartCard> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.8,
                                   height: 45,
-                                
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -170,11 +168,8 @@ class _CartCardState extends State<CartCard> {
                                         ],
                                       ),
                                       Container(
-                                     
-                                       
                                         child: Container(
                                             color: Colors.transparent,
-                                           
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *

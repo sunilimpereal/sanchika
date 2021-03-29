@@ -18,6 +18,7 @@ import 'package:sanchika/search/product_search_delegate.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:sanchika/utils/checkInternet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:translator/translator.dart';
 
 class Home extends StatefulWidget with NavigationStates {
@@ -80,16 +81,15 @@ class _HomeState extends State<Home> {
   Future<List<Product>> activeProducts;
   List<WishlistItem> wishlist;
   List<CartItem> cartItems;
-  Future<List<CartItem>> getCart(String userId)async{
+  Future<List<CartItem>> getCart(String userId) async {
     APIService apiService = new APIService();
     List<CartItem> cartitems = await apiService.getCartItems(userId);
     setState(() {
       cartItems = cartitems;
-
-    }); 
+    });
     return cartitems;
-
   }
+
   Future<List<WishlistItem>> getWishlist(String userId) async {
     APIService apiService = new APIService();
     List<WishlistItem> allWishlistItems =
@@ -146,11 +146,12 @@ class _HomeState extends State<Home> {
     print(activeProducts);
   }
 
-@override
+  @override
   void dispose() {
-     checkInternet().listener.cancel();
+    checkInternet().listener.cancel();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -172,8 +173,10 @@ class _HomeState extends State<Home> {
                         onTap: () {
                           showSearch(
                               context: context,
-                              delegate:
-                                  ProductSearch(productsList: activeProducts,cartItems: cartItems,wishlist: wishlist));
+                              delegate: ProductSearch(
+                                  productsList: activeProducts,
+                                  cartItems: cartItems,
+                                  wishlist: wishlist));
                         },
                         readOnly: true,
                         keyboardType: TextInputType.text,
@@ -246,36 +249,38 @@ class _HomeState extends State<Home> {
                       // widget.onMenuItemClicked();
                     },
                   ),
-                    FutureBuilder(
-                  future: apiService.cartlength(uid: userId),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      if(int.parse(snapshot.data)>0){
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 8.0, left: 25),
-                        child: Container(
-                          height: 18,
-                          width: 18,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xff032e6b),
-                          ),
-                          child: Center(
-                            child: Text(
-                              snapshot.data,
-                              style: TextStyle(
-                                color: Colors.white,
+                  FutureBuilder(
+                      future: apiService.cartlength(uid: userId),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          if (int.parse(snapshot.data) > 0) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, left: 25),
+                              child: Container(
+                                height: 18,
+                                width: 18,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xff032e6b),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    snapshot.data,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }else{
-                      return SizedBox();
-                    }} else {
-                      return SizedBox();
-                    }
-                  }),
+                            );
+                          } else {
+                            return SizedBox();
+                          }
+                        } else {
+                          return SizedBox();
+                        }
+                      }),
                 ],
               ),
             ],
@@ -311,7 +316,18 @@ class _HomeState extends State<Home> {
                                   color: Color(0xff032e6b),
                                   size: 50.0,
                                 );
-                                return Center(child: spinkit);
+                                return Center(
+                                  child: Shimmer.fromColors(
+                                      baseColor: Colors.grey[300],
+                                      highlightColor: Colors.white,
+                                      period: Duration(milliseconds: 1000),
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.26,
+                                        color: Colors.grey,
+                                      )),
+                                );
                               }
                             }),
                       ),
@@ -362,7 +378,6 @@ class _HomeState extends State<Home> {
                                 productList: productList,
                                 wishlist: wishlist,
                                 cartItems: cartItems,
-                                
                               );
                             } else {
                               return CircularProgressIndicator();
@@ -380,12 +395,15 @@ class _HomeState extends State<Home> {
                                   itemBuilder: (context, index) {
                                     CtgyNameAndId ctgyNameAndId =
                                         snapshot.data[index];
-                                    if (index%2 == 0) {
+                                    if (index % 2 == 0) {
                                       return Column(
                                         children: [
                                           HomeCtg(ctgyNameAndId: ctgyNameAndId),
                                           Container(
-                                             height: MediaQuery.of(context).size.height * 0.26,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.26,
                                             child: FutureBuilder(
                                                 future: bannerList,
                                                 builder: (context, snapshot) {
@@ -399,7 +417,8 @@ class _HomeState extends State<Home> {
                                                       color: Color(0xff032e6b),
                                                       size: 50.0,
                                                     );
-                                                    return Center(child: spinkit);
+                                                    return Center(
+                                                        child: spinkit);
                                                   }
                                                 }),
                                           ),
@@ -498,8 +517,6 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
-  
 }
 
 class HomeMenuRow extends StatelessWidget {
@@ -510,18 +527,20 @@ class HomeMenuRow extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-            child: SizedBox(
-                height: 70,
-                child: ListView.builder(
-                    addAutomaticKeepAlives: true,
-                    controller: ScrollController(),
-                    scrollDirection: Axis.horizontal,
-                    cacheExtent: 10000,
-                    itemCount: ctgNameandId.length,
-                    itemBuilder: (context, index) {
-                      CtgyNameAndId ctgItem = ctgNameandId[index];
-                      return CategoryHomeCard(ctgyNameAndId: ctgItem);
-                    })))
+          child: SizedBox(
+            height: 70,
+            child: ListView.builder(
+                addAutomaticKeepAlives: true,
+                controller: ScrollController(),
+                scrollDirection: Axis.horizontal,
+                cacheExtent: 10000,
+                itemCount: ctgNameandId.length,
+                itemBuilder: (context, index) {
+                  CtgyNameAndId ctgItem = ctgNameandId[index];
+                  return CategoryHomeCard(ctgyNameAndId: ctgItem);
+                }),
+          ),
+        )
       ],
     );
   }

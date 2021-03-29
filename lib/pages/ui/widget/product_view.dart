@@ -10,6 +10,7 @@ import 'package:sanchika/model/getAllRatingReview_model.dart';
 import 'package:sanchika/model/product.dart';
 import 'package:sanchika/model/wishlist_model.dart';
 import 'package:sanchika/pages/ui/screens/cart.dart';
+import 'package:sanchika/pages/ui/screens/home/home.dart';
 import 'package:sanchika/pages/ui/screens/wishlist.dart';
 import 'package:sanchika/pages/ui/widget/crousal.dart';
 import 'package:sanchika/pages/ui/widget/stepper.dart';
@@ -186,7 +187,9 @@ class _ProductViewState extends State<ProductView> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                   Container(
+                     width:MediaQuery.of(context).size.width*0.7,
+                     child: Text(
                       widget.product.productName,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
@@ -194,7 +197,7 @@ class _ProductViewState extends State<ProductView> {
                           fontWeight: FontWeight.w600,
                           fontSize: 20,
                           fontFamily: 'Poppins'),
-                    ),
+                    ),),
                     SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -334,6 +337,8 @@ class _ProductViewState extends State<ProductView> {
                   ],
                 ),
               ),
+                  SizedBox(height:10),
+
 
               Container(
                 width: double.infinity,
@@ -354,6 +359,7 @@ class _ProductViewState extends State<ProductView> {
                   ],
                 ),
               ),
+              SizedBox(height:10),
 
               // Review Section
               Container(
@@ -391,6 +397,22 @@ class _ProductViewState extends State<ProductView> {
                         ],
                       ),
                     ),
+                     FutureBuilder(
+                          future: apiService.getKillerOffeers(),
+                          builder: (BuildContext context, snapshot) {
+                            print(snapshot);
+
+                            if (snapshot.hasData) {
+                              List<Product> productList = snapshot.data;
+                              return HorizontalRow(
+                                productList: productList,
+                                cartItems: widget.cartItems,
+                              );
+                            } else {
+                              return CircularProgressIndicator();
+                            }
+                          }),
+                          SizedBox(height:40),
                   ],
                 ),
               ),
