@@ -67,7 +67,7 @@ class _CartCardState extends State<CartCard> {
                 children: [
                   SizedBox(),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.156 + 10,
+                    height: MediaQuery.of(context).size.height * 0.158 + 15,
                     width: MediaQuery.of(context).size.width,
                     color: Colors.white,
                     child: Row(

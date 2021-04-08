@@ -20,6 +20,9 @@ import 'package:sanchika/model/killerOffer.dart';
 import 'dart:convert';
 
 import 'package:sanchika/model/login_model.dart';
+import 'package:sanchika/model/myInformation.dart';
+import 'package:sanchika/model/myOrders.dart';
+import 'package:sanchika/model/orderDetails.dart';
 import 'package:sanchika/model/product.dart';
 import 'package:sanchika/model/cat_product_model.dart';
 import 'package:sanchika/model/signUp_model.dart';
@@ -29,6 +32,7 @@ import 'package:sanchika/model/userOrderDetails.dart';
 import 'package:sanchika/model/wishlist_model.dart';
 import 'package:sanchika/model/getBanner_model.dart';
 import 'package:sanchika/pages/ui/screens/404_page.dart';
+import 'package:sanchika/pages/ui/widget/order_details.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class APIService {
@@ -295,7 +299,7 @@ class APIService {
   //Delete from cart
   Future<bool> removeCartItem({String userId,String pid})async{
     String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/cart/delete-cart-list?uid=$userId&pid=$pid";
-    final response = await http.get(url,headers:headerList);
+    final response = await http.delete(url,headers:headerList);
     
     print('delete CartItem : ${response.statusCode} ${userId} ${pid}');
     if(response.statusCode==200){
@@ -476,8 +480,8 @@ class APIService {
       return false;
     }
   }
-  //User Order Details save
-  Future<bool> userorderDetailsSave(OrderuserDetailsRequestModel orderuserDetailsRequestModel)async{
+  // Save User Order Details save
+  Future<bool> saveUserorderDetailsSave(OrderuserDetailsRequestModel orderuserDetailsRequestModel)async{
     String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/order/order-user-details";
     final response = await http.post(url,body:orderuserDetailsRequestModelToJson(orderuserDetailsRequestModel));
     print('Order User details save : ${response.statusCode}');
@@ -486,6 +490,48 @@ class APIService {
     }
     else{
       return false;
+    }
+  }
+  Future<MyInformationClass> getuserInformation(String userId)async{
+    String url ="http://sanchika.in:8081/sanchikaapi/sanchika/user/myInformation?uid=1100110000000011";
+    final response = await http.get(url);
+    print('Get User Details ;${response.statusCode}');
+    if(response.statusCode==200){
+      MyInformation myInformation = myInformationFromJson(response.body);
+      MyInformationClass myInformationClass = myInformation.data.myInformation;
+      return myInformationClass;
+
+    }else{
+      return null;
+    }
+
+  }
+  //get My Orders
+  Future<List<OrderSummary>> getMyOrders({String userId})async{
+    String url="http://sanchika.in:8081/sanchikaapi/sanchika/user/order/get-order-user-wise?uid=$userId";
+    final response= await http.get(url);
+    print("get MyOrders response = ${response.statusCode}");
+    if(response.statusCode==200){
+      MyOrder myOrder = myOrderFromJson(response.body);
+      List<OrderSummary> orders = myOrder.data.getOrderSummary;
+      return orders;
+    }else{
+      return [];
+    }
+
+  }
+
+  //orderDetail
+  Future<List<OderCheckOut>> orderDetail({String ordnum})async{
+    String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/order/after-order-summary?ordnum=$ordnum";
+    final response = await http.get("");
+    print("orderDetail response = ${response.statusCode}");
+    if(response.statusCode==200){
+      OrderDetail orderDetail = orderDetailFromJson(response.body);
+     List<OderCheckOut> ords = orderDetail.data.oderCheckOut;
+      return ords;
+    }else{
+      return [];
     }
   }
 }

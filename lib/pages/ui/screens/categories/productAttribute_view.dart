@@ -367,7 +367,7 @@ class _ShowProductsState extends State<ShowProducts> {
           crossAxisCount: 2,
           childAspectRatio: MediaQuery.of(context).size.width *
               0.5 /
-              (MediaQuery.of(context).size.height * .37),
+              (MediaQuery.of(context).size.height * .39),
         ),
         itemCount: widget.productList.length,
         itemBuilder: (context, index) {

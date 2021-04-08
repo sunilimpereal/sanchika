@@ -5,7 +5,9 @@ import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/localization/localization_methods.dart';
 import 'package:sanchika/main.dart';
 import 'package:sanchika/model/language.dart';
+import 'package:sanchika/model/myOrders.dart';
 import 'package:sanchika/pages/authentication/login_page.dart';
+import 'package:sanchika/pages/ui/screens/orders/myOrders.dart';
 import 'package:sanchika/pages/ui/sub_screens/changePassword/password%20change.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -299,22 +301,28 @@ class PprofileState extends State<Profile> {
               SizedBox(
                 height: 1,
               ),
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      offset: const Offset(3.0, 2.0),
-                      color: Colors.grey[300],
-                      blurRadius: 2.0,
-                      spreadRadius: 2.0,
-                    ),
-                  ],
-                ),
-                child: ListTile(
-                  tileColor: Colors.white,
-                  leading: Icon(Icons.history),
-                  title: Text(getTranslated(context, "My_Orders")),
-                  trailing: Icon(Icons.keyboard_arrow_right),
+              GestureDetector(
+                onTap: (){
+                     Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MyOrders()));
+                },
+                              child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(3.0, 2.0),
+                        color: Colors.grey[300],
+                        blurRadius: 2.0,
+                        spreadRadius: 2.0,
+                      ),
+                    ],
+                  ),
+                  child: ListTile(
+                    tileColor: Colors.white,
+                    leading: Icon(Icons.history),
+                    title: Text(getTranslated(context, "My_Orders")),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                  ),
                 ),
               ),
               SizedBox(

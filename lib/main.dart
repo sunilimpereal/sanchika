@@ -126,11 +126,11 @@ class _SplashscreenState extends State<Splashscreen> {
   void initState() {
     super.initState();
 
-     rootBundle.load('assets/rive/splash_screen.riv').then((value) async{
+     rootBundle.load('assets/rive/sanchika.riv').then((value) async{
       final file =RiveFile();
       if(file.import(value)){
         final artboard = file.mainArtboard;
-        artboard.addController(_controller = SimpleAnimation('logo fill'));
+        artboard.addController(_controller = SimpleAnimation('splash'));
         setState(() {
           _riveArtboard = artboard;
           _controller.isActive = true ;

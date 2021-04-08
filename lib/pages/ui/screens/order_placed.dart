@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sanchika/menu_dashboard/menu_dashboard.dart';
 class Orderplaced extends StatefulWidget {
+  String paymentId;
+  Orderplaced({this.paymentId});
   @override
   _OrderplacedState createState() => _OrderplacedState();
 }
@@ -13,6 +15,8 @@ class _OrderplacedState extends State<Orderplaced> {
         backgroundColor: Colors.white,
         titleSpacing: 0,
         elevation: 0,
+        backwardsCompatibility: false,
+        leading: Container(),
         iconTheme: IconThemeData(color: Colors.black),
         title: Text(
           'Order Placed',

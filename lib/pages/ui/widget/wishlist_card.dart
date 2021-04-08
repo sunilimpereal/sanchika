@@ -135,176 +135,178 @@ class _WishlistCardState extends State<WishlistCard> {
       );
     }
   }
-    return Stack(
-      children: [
-        Container(
-          padding: EdgeInsets.all(8),
-          height: MediaQuery.of(context).size.height * 0.15,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                offset: const Offset(3.0, 2.0),
-                color: Colors.grey[200],
-                blurRadius: 3.0,
-                spreadRadius: 2.0,
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(0),
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
+    return Wrap(
+          children:[ Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.all(8),
+            height: MediaQuery.of(context).size.height * 0.20,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  offset: const Offset(3.0, 2.0),
+                  color: Colors.grey[200],
+                  blurRadius: 3.0,
+                  spreadRadius: 2.0,
                 ),
-                child: Column(
-                  children: [
-                    Stack(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * 0.09,
-                            width: MediaQuery.of(context).size.width * 0.20,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(10),
-                              image: DecorationImage(
-                                  fit: BoxFit.contain,
-                                  image: NetworkImage(product.productImage)),
-                            ),
-                          ),
-                        ),
-                        discount(
-                            mrp: double.parse(product.mrpPrice),
-                            slp: double.parse(product.slPrice)),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 8),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.72,
-                  color: Colors.white,
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(0),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   child: Column(
                     children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.72,
-                        padding: EdgeInsets.all(0),
-                        color: Colors.white,
-                        child: Container(
-                          color: Colors.white,
-                          child: Row(
-                            children: [
-                              Container(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      color: Colors.white,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.72 *
-                                          0.75,
-                                      child: Container(
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.72 *
-                                                      0.75,
-                                                  child: Text(
-                                                    product.productName,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 2,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Poppins',
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                      Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 0.09,
+                              width: MediaQuery.of(context).size.width * 0.20,
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                    fit: BoxFit.contain,
+                                    image: NetworkImage(product.productImage)),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // productType(widget.product.type),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height:10),
-                      Container(
-                        padding: EdgeInsets.all(0),
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        height: 40,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  "₹${product.slPrice}",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                price1(double.parse(product.mrpPrice)),
-                              ],
                             ),
-                            button(),
-                          ],
-                        ),
+                          ),
+                          discount(
+                              mrp: double.parse(product.mrpPrice),
+                              slp: double.parse(product.slPrice)),
+                        ],
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.72,
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.72,
+                          padding: EdgeInsets.all(0),
+                          color: Colors.white,
+                          child: Container(
+                            color: Colors.white,
+                            child: Row(
+                              children: [
+                                Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        color: Colors.white,
+                                        width: MediaQuery.of(context).size.width *
+                                            0.72 *
+                                            0.75,
+                                        child: Container(
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    width: MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.72 *
+                                                        0.75,
+                                                    child: Text(
+                                                      product.productName,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 2,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // productType(widget.product.type),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height:10),
+                        Container(
+                          padding: EdgeInsets.all(0),
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          height: 40,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "₹${product.slPrice}",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  price1(double.parse(product.mrpPrice)),
+                                ],
+                              ),
+                              button(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        Positioned(
-            top: -7,
-            right: 0,
-            child: IconButton(
-              icon: Icon(Icons.clear),
-              iconSize: 20,
-              onPressed: () {
-                print(product.productId);
-                removeWishlistItem(
-                  pid: product.productId,
-                  uid: userId,
-                );
-              },
-              color: Colors.grey,
-            )),
-      ],
-    );
-      
+          Positioned(
+              top: -7,
+              right: 0,
+              child: IconButton(
+                icon: Icon(Icons.clear),
+                iconSize: 20,
+                onPressed: () {
+                  print(product.productId);
+                  removeWishlistItem(
+                    pid: product.productId,
+                    uid: userId,
+                  );
+                },
+                color: Colors.grey,
+              )),
+        ],
+      ),
+    
+          ]);
   }
 
   //scrached price

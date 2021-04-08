@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/localization/localization_methods.dart';
+import 'package:sanchika/model/myOrders.dart';
+import 'package:sanchika/services/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyOrders extends StatefulWidget with NavigationStates {
   final Function onMenuTap;
@@ -14,105 +17,125 @@ class MyOrders extends StatefulWidget with NavigationStates {
 }
 
 class _MyOrdersState extends State<MyOrders> {
+  List<OrderSummary> myOrders = [];
+  Future<List<OrderSummary>> getOrders(String userId) async {
+    APIService apiService = new APIService();
+    List<OrderSummary> orders = await apiService.getMyOrders(userId: userId);
+
+    return orders;
+  }
+
+  String userId;
+  Future<String> getUserId() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String uid = preferences.getString('userId');
+    setState(() {
+      userId = uid;
+    });
+  }
+
+  @override
+  void initState() {
+    getUserId().then((value) {
+      print(userId);
+      getOrders(userId);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: Text(
-          getTranslated(context, "Orders"),
-          style: TextStyle(color: Colors.black),
-        ),
-        actions: [
-          IconButton(
-            padding: EdgeInsets.only(top: 0),
-            icon: Icon(
-              Icons.favorite_rounded,
-              color: Colors.grey[800],
-              size: 24,
-            ),
-            onPressed: () {
-              BlocProvider.of<NavigationBloc>(context)
-                  .add(NavigationEvents.WishlistClickedEvent);
-              widget.onMenuItemClicked();
-            },
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          title: Text(
+            getTranslated(context, "Orders"),
+            style: TextStyle(color: Colors.black),
           ),
-          Stack(
-            children: [
-              IconButton(
-                padding: EdgeInsets.only(top: 8),
-                icon: Icon(
-                  Icons.shopping_cart,
-                  color: Colors.grey[800],
-                  size: 24,
-                ),
-                onPressed: () {
-                  BlocProvider.of<NavigationBloc>(context)
-                      .add(NavigationEvents.CartClickedEvent);
-                  widget.onMenuItemClicked();
-                },
+          actions: [
+            IconButton(
+              padding: EdgeInsets.only(top: 0),
+              icon: Icon(
+                Icons.favorite_rounded,
+                color: Colors.grey[800],
+                size: 24,
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0, left: 25),
-                child: Container(
-                  height: 18,
-                  width: 18,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.red,
+              onPressed: () {
+                BlocProvider.of<NavigationBloc>(context)
+                    .add(NavigationEvents.WishlistClickedEvent);
+                widget.onMenuItemClicked();
+              },
+            ),
+            Stack(
+              children: [
+                IconButton(
+                  padding: EdgeInsets.only(top: 8),
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: Colors.grey[800],
+                    size: 24,
                   ),
-                  child: Center(
-                    child: Text(
-                      '3',
-                      style: TextStyle(
-                        color: Colors.white,
+                  onPressed: () {
+                    BlocProvider.of<NavigationBloc>(context)
+                        .add(NavigationEvents.CartClickedEvent);
+                    widget.onMenuItemClicked();
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 25),
+                  child: Container(
+                    height: 18,
+                    width: 18,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.red,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '3',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
-        leading: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: InkWell(
-            child: Icon(
-              Icons.menu,
-              color: Colors.black,
+              ],
             ),
-            onTap: widget.onMenuTap,
-          ),
+          ],
+          leading: leading(),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // expansionTile(),
-              myordertile(
-                  orderid: 'ORD1121', date: 'Jun 15,2020', status: 'Delivered'),
-              myordertile(
-                  orderid: 'ORD1121', date: 'Jun 15,2020', status: 'Pending')
-            ],
-          ),
-        ),
-      ),
-    );
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FutureBuilder(
+              future: getOrders(userId),
+              builder: (context, snapshot) {
+                List<OrderSummary> orders = snapshot.data;
+                print(orders);
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                      itemCount: orders.length,
+                      itemBuilder: (context, index) {
+                        return myordertile(orderSummary: orders[index]);
+                      });
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              }),
+        ));
   }
 
-  ListTile myordertile({String orderid, String date, String status}) {
+  ListTile myordertile({OrderSummary orderSummary}) {
     return ListTile(
       title: Text(
-        orderid,
+        orderSummary.orderId ?? "",
         style: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.w500,
         ),
       ),
-      subtitle: Text(date),
+      subtitle: Text(orderSummary.orderDate),
       leading: Image(
         image: AssetImage('assets/images/order.png'),
       ),
@@ -121,9 +144,11 @@ class _MyOrdersState extends State<MyOrders> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              status,
+              orderSummary.orderStatus,
               style: TextStyle(
-                color: status == 'Delivered' ? Colors.green : Colors.red,
+                color: orderSummary.orderStatus == 'delivered'
+                    ? Colors.green
+                    : Colors.red,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -133,71 +158,18 @@ class _MyOrdersState extends State<MyOrders> {
       ),
     );
   }
-
-  ExpansionTile expansionTile() {
-    return ExpansionTile(
-      title: Row(
-        children: [
-          Column(
-            children: [
-              Text(
-                "Order (12/2/20)",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "20 items            ",
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ],
-      ),
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 30),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Total",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Text(
-                '₹2000',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              )
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 30),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Pending",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.redAccent,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+   InkWell leading() {
+    if (widget.onMenuTap == null) {
+      return InkWell(
+        child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      );
+    }
+    return InkWell(
+      child: Icon(Icons.menu, color: Colors.black),
+      onTap: widget.onMenuTap,
     );
   }
 }

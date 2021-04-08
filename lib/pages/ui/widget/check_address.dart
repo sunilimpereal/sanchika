@@ -299,7 +299,7 @@ class _CheckAddressState extends State<CheckAddress> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              MenuDashboard()),
+                                              AdminWait()),
                                     );
                                   } else {
                                     showDialog<void>(

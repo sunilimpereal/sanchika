@@ -508,6 +508,7 @@ class _ProductViewState extends State<ProductView> {
             addToCart(
               productId: widget.product.productId,
               userId: widget.userId,
+              mrpPrice: double.parse(widget.product.mrpPrice), 
               slPrice: double.parse(widget.product.slPrice),
               productName: widget.product.productName,
               quantity: 1,

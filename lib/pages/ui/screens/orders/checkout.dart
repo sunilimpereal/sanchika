@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/model/getAddresss_model.dart';
+import 'package:sanchika/model/orderItem_model.dart';
 import 'package:sanchika/model/product.dart';
-import 'package:sanchika/pages/ui/screens/payment_page.dart';
+import 'package:sanchika/pages/ui/screens/payment/payment_page.dart';
+import 'package:sanchika/pages/ui/screens/saveOrderDetails.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
@@ -18,6 +19,15 @@ class Checkoutpage extends StatefulWidget {
 class _CheckoutpageState extends State<Checkoutpage> {
   APIService apiService;
   String userId;
+  List<OrderItem> orderitems;
+  void getOrderitems(){
+    for(CartItem a in widget.cartItems){
+      OrderItem orderItem;
+      orderItem.totalQuantity = a.quantity.toString();
+      orderItem.userId = userId;
+      orderItem.orderDate = DateTime.now().toString();
+    }
+  }
   Future<String> getUserId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String uid = preferences.getString('userId');
@@ -26,6 +36,23 @@ class _CheckoutpageState extends State<Checkoutpage> {
       userId = uid;
     });
     return userId;
+  }
+
+
+  double totalAmount;
+   double saved=0;
+  void getTotal() {
+    double total = 0;
+    double totalselling=0;
+   
+    for (CartItem item in widget.cartItems) {
+      total += double.parse(item.totalAmount);
+      totalselling +=item.mrp;
+    }
+    setState(() {
+      saved = total - totalselling;
+      totalAmount = total;
+    });
   }
 
   Address address;
@@ -42,6 +69,7 @@ class _CheckoutpageState extends State<Checkoutpage> {
   void initState() {
     super.initState();
     apiService = APIService();
+    getTotal();
     getUserId().then((value) {
       getAddress(userId);
     });
@@ -49,7 +77,8 @@ class _CheckoutpageState extends State<Checkoutpage> {
 
   @override
   Widget build(BuildContext context) {
-    int offset =0;
+    print(totalAmount);
+    int offset = 0;
     int time = 800;
     return Scaffold(
       appBar: AppBar(
@@ -73,7 +102,8 @@ class _CheckoutpageState extends State<Checkoutpage> {
             ),
             productView(),
             SizedBox(height: 0),
-            totalCard(),
+            totalCard( total: totalAmount,saved: saved),
+            SizedBox(height:50)
           ],
         ),
       ),
@@ -84,7 +114,9 @@ class _CheckoutpageState extends State<Checkoutpage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Payment()),
+              MaterialPageRoute(builder: (context) => Payment(
+                totalAmount: totalAmount,
+              )),
             );
           },
           child: Container(
@@ -146,7 +178,7 @@ class _CheckoutpageState extends State<Checkoutpage> {
   }
 
   Widget productView() {
-    int offset =0;
+    int offset = 0;
     int time = 800;
 
     return Container(
@@ -154,15 +186,16 @@ class _CheckoutpageState extends State<Checkoutpage> {
       child: ListView.builder(
         itemCount: widget.cartItems.length,
         itemBuilder: (context, index) {
-          offset+=30;
-          time = 1600+offset; 
-          return productCard(widget.cartItems[index],offset: offset,timer: time);
+          offset += 30;
+          time = 1600 + offset;
+          return productCard(widget.cartItems[index],
+              offset: offset, timer: time);
         },
       ),
     );
   }
 
-  Widget productCard(CartItem cartitem,{int offset,int timer}) {
+  Widget productCard(CartItem cartitem, {int offset, int timer}) {
     return FutureBuilder(
         future: apiService.getProductDetail(productId: cartitem.productId),
         builder: (context, snapshot) {
@@ -192,7 +225,7 @@ class _CheckoutpageState extends State<Checkoutpage> {
                                 image: NetworkImage(product.productImage))),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal:8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Container(
                           color: Colors.transparent,
                           width: MediaQuery.of(context).size.width * 0.6,
@@ -266,89 +299,91 @@ class _CheckoutpageState extends State<Checkoutpage> {
               height: 120,
               width: MediaQuery.of(context).size.width * 0.95,
               child: Shimmer.fromColors(
-                baseColor: Colors.grey[300],
-                highlightColor: Colors.white,
-                period: Duration(milliseconds: timer),
-                child:
-                Container(
-              padding: EdgeInsets.all(4),
-              height: 120,
-              width: MediaQuery.of(context).size.width * 0.95,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.transparent,
-              ),
-              child: Stack(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 120,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                           ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                   
-                                    height: 15,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.58,
-                                    decoration: BoxDecoration(
-                                       color: Colors.grey,
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                Container(
-                                  height: 20,
-                                  width: 50,
-                                    decoration: BoxDecoration(
-                                       color: Colors.grey,
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    ),
+                  baseColor: Colors.grey[300],
+                  highlightColor: Colors.white,
+                  period: Duration(milliseconds: timer),
+                  child: Container(
+                    padding: EdgeInsets.all(4),
+                    height: 120,
+                    width: MediaQuery.of(context).size.width * 0.95,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.transparent,
+                    ),
+                    child: Stack(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 100,
+                              height: 120,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
                                 ),
-                                 Container(
-                                   height:20,
-                                   width: 50,
-                                     decoration: BoxDecoration(
-                                       color: Colors.grey,
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                   
-                                 )
-                                ],
                               ),
-                              Divider(
-                                height: 1,
-                              )
-                            ],
-                          ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          height: 15,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.58,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          height: 20,
+                                          width: 50,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 20,
+                                          width: 50,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Divider(
+                                      height: 1,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            )
-              ),
+                      ],
+                    ),
+                  )),
             );
           }
         });
@@ -360,7 +395,7 @@ class _CheckoutpageState extends State<Checkoutpage> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width * 0.95,
-          height: 120,
+          height: 140,
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -422,12 +457,23 @@ class _CheckoutpageState extends State<Checkoutpage> {
                       ],
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(Icons.edit),
-                          
+                          IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(Icons.edit),
+                            iconSize: 24,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        SaveUserOrderdetail()),
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -472,7 +518,7 @@ class _CheckoutpageState extends State<Checkoutpage> {
         ));
   }
 
-  Widget totalCard() {
+  Widget totalCard({double total,double saved}) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
@@ -514,7 +560,7 @@ class _CheckoutpageState extends State<Checkoutpage> {
                   ),
                 ),
                 Text(
-                  '₹${widget.cartItems[0].totalAmount}',
+                  '₹$totalAmount',
                   style: TextStyle(
                     fontSize: 18,
                     fontFamily: 'Poppins',
@@ -550,7 +596,7 @@ class _CheckoutpageState extends State<Checkoutpage> {
                     ),
                   ),
                   Text(
-                    '₹ 0.0',
+                    '₹ $saved',
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Poppins',

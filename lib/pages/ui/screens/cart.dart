@@ -51,15 +51,17 @@ class _CartState extends State<Cart> {
 
   Artboard _riveArtboard;
   RiveAnimationController _controller;
-    reload() {
+  reload() {
+    getCartTotal(userId);
     setState(() {
       userId = userId;
     });
   }
+
   @override
   void initState() {
     getUserId().then((value) {
-        getCartTotal(value);
+      getCartTotal(value);
     });
     super.initState();
     rootBundle.load('assets/rive/wishlist.riv').then((value) async {
@@ -77,12 +79,12 @@ class _CartState extends State<Cart> {
 
   @override
   Widget build(BuildContext context) {
-    
-  Future<List<CartItem>> getCart(String userId) async {
-    APIService apiService = new APIService();
-    List<CartItem> cartitems = await apiService.getCartItems(userId);
-    return cartitems;
-  }
+    Future<List<CartItem>> getCart(String userId) async {
+      APIService apiService = new APIService();
+      List<CartItem> cartitems = await apiService.getCartItems(userId);
+      return cartitems;
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -112,14 +114,10 @@ class _CartState extends State<Cart> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         List<CartItem> cartitems = snapshot.data;
-                        cartitems.map((e) {
-                          setState(() {
-                            cartTotal = cartTotal + double.parse(e.totalAmount);
-                          });
-                        });
+                    
                         String number = snapshot.data.length.toString();
                         return Text(
-                          number=='1'?"$number item":"$number items",
+                          number == '1' ? "$number item" : "$number items ",
                           style: TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.w300,
@@ -155,14 +153,16 @@ class _CartState extends State<Cart> {
       body: FutureBuilder(
         future: getCart(userId),
         builder: (context, snapshot) {
+          List<CartItem> cartitems = snapshot.data;
+
           if (snapshot.hasData) {
             return ListView.builder(
-              cacheExtent: 100000,
+                cacheExtent: 100000,
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   CartItem cartItem = snapshot.data[index];
                   return CartCard(
-                    userId:userId,
+                    userId: userId,
                     productId: cartItem.productId,
                     qty: cartItem.quantity,
                     notifyParent: reload,
@@ -206,7 +206,7 @@ class _CartState extends State<Cart> {
                 ),
                 child: Center(
                   child: Text(
-                    "₹${cartTotal}",
+                    "₹$cartTotal",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w600,
@@ -216,67 +216,115 @@ class _CartState extends State<Cart> {
               ),
             ),
             FutureBuilder(
-                future: getCart(userId),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Checkoutpage(
-                                    cartItems: snapshot.data,
-                                  )),
-                        );
-                      },
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.only(left: 0.0, bottom: 3, top: 3),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.55,
-                          height: 45,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xff0b3666),
-                            boxShadow: [
-                              BoxShadow(
-                                offset: const Offset(3.0, 2.0),
-                                color: Colors.grey[200],
-                                blurRadius: 3.0,
-                                spreadRadius: 2.0,
+              future: getCart(userId),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Checkoutpage(
+                                  cartItems: snapshot.data,
+                                )),
+                      );
+                    },
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 0.0, bottom: 3, top: 3),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.55,
+                        height: 45,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Color(0xff0b3666),
+                          boxShadow: [
+                            BoxShadow(
+                              offset: const Offset(3.0, 2.0),
+                              color: Colors.grey[200],
+                              blurRadius: 3.0,
+                              spreadRadius: 2.0,
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.shopping_cart_outlined,
+                                  color: Colors.white70,
+                                ),
+                              ),
+                              Text(
+                                'Checkout',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
                               ),
                             ],
                           ),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Icon(
-                                    Icons.shopping_cart_outlined,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                                Text(
-                                  'Checkout',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
                         ),
                       ),
-                    );
-                  }
-                },),
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget cartTot(String userId) {
+    Future<List<CartItem>> getCart(String userId) async {
+      APIService apiService = new APIService();
+      List<CartItem> cartitems = await apiService.getCartItems(userId);
+      return cartitems;
+    }
+
+    return FutureBuilder(
+      future: getCart(userId),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          List<CartItem> cartitems = snapshot.data;
+          cartitems.map((e) {
+            setState(() {
+              cartTotal = cartTotal + double.parse(e.totalAmount);
+            });
+          });
+          String number = snapshot.data.length.toString();
+          return Padding(
+            padding: const EdgeInsets.only(left: 4.0, bottom: 3, top: 3),
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              height: 45,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: Center(
+                child: Text(
+                  "₹${cartTotal}",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          );
+        } else {
+          return Container();
+        }
+      },
     );
   }
 

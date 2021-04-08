@@ -44,11 +44,11 @@ class Data {
     List<CartItem> getCartList;
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
-        getCartList: List<CartItem>.from(json["Get Cart List "].map((x) => CartItem.fromJson(x))),
+        getCartList: List<CartItem>.from(json["Cart User  Details "].map((x) => CartItem.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
-        "Get Cart List ": List<dynamic>.from(getCartList.map((x) => x.toJson())),
+        "Cart User  Details ": List<dynamic>.from(getCartList.map((x) => x.toJson())),
     };
 }
 
