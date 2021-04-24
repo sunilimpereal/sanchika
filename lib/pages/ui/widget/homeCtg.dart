@@ -36,7 +36,7 @@ class _HomeCtgState extends State<HomeCtg> {
   return Container(
     width: double.maxFinite,
     child: FutureBuilder(
-      future:apiService.getKillerOffeers() ,
+      future:apiService.getHomeProducts(widget.ctgyNameAndId.mnId) ,
       builder: (context,snapshot){
         if(snapshot.hasData){
         return HorizontalRow(productList: snapshot.data,);

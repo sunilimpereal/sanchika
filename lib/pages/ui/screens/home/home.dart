@@ -43,6 +43,7 @@ class _HomeState extends State<Home> {
     });
   }
 
+  int pos = 1;
   List<Product> products;
 
   String search = 'Search';
@@ -73,6 +74,12 @@ class _HomeState extends State<Home> {
           processedFood = result.text;
         }
       });
+    });
+  }
+
+  void reload() {
+    setState(() {
+      userId = userId;
     });
   }
 
@@ -221,18 +228,54 @@ class _HomeState extends State<Home> {
               ],
             ),
             actions: [
-              IconButton(
-                padding: EdgeInsets.only(top: 0),
-                icon: Icon(
-                  Icons.favorite_rounded,
-                  color: Color(0xff032e6b).withAlpha(180),
-                  size: 24,
-                ),
-                onPressed: () {
-                  BlocProvider.of<NavigationBloc>(context)
-                      .add(NavigationEvents.WishlistClickedEvent);
-                  // widget.onMenuItemClicked();
-                },
+              Stack(
+                children: [
+                  IconButton(
+                    padding: EdgeInsets.only(top: 0),
+                    icon: Icon(
+                      Icons.favorite_rounded,
+                      color: Color(0xff032e6b).withAlpha(180),
+                      size: 24,
+                    ),
+                    onPressed: () {
+                      BlocProvider.of<NavigationBloc>(context)
+                          .add(NavigationEvents.WishlistClickedEvent);
+                      // widget.onMenuItemClicked();
+                    },
+                  ),
+                  FutureBuilder(
+                      future: apiService.countWishlist(userId),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          if (int.parse(snapshot.data) > 0) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, left: 25),
+                              child: Container(
+                                height: 18,
+                                width: 18,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xff032e6b),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    snapshot.data,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            return SizedBox();
+                          }
+                        } else {
+                          return SizedBox();
+                        }
+                      }),
+                ],
               ),
               Stack(
                 children: [
@@ -309,8 +352,13 @@ class _HomeState extends State<Home> {
                             future: bannerList,
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
-                                print(snapshot.data);
-                                return HomeCrousal(banners: snapshot.data);
+                                List<BannerMaster> banner = snapshot.data;
+                                List<BannerMaster> bannerpos = banner
+                                    .where((element) =>
+                                        element.textLine == "1")
+                                    .toList();
+                                print("bannerpos $bannerpos");
+                                return HomeCrousal(banners: bannerpos);
                               } else {
                                 const spinkit = SpinKitDoubleBounce(
                                   color: Color(0xff032e6b),
@@ -378,6 +426,7 @@ class _HomeState extends State<Home> {
                                 productList: productList,
                                 wishlist: wishlist,
                                 cartItems: cartItems,
+                                reload: reload,
                               );
                             } else {
                               return CircularProgressIndicator();
@@ -408,9 +457,21 @@ class _HomeState extends State<Home> {
                                                 future: bannerList,
                                                 builder: (context, snapshot) {
                                                   if (snapshot.hasData) {
+                                                    List<BannerMaster> banner =
+                                                        snapshot.data;
+                                                    List<BannerMaster>
+                                                        bannerpos = banner
+                                                            .where((element) =>
+                                                                element
+                                                                    .textLine == (index+1).toString())
+                                                            .toList();
                                                     print(snapshot.data);
+                                                    if(bannerpos !=[]){
                                                     return HomeCrousal(
-                                                        banners: snapshot.data);
+                                                        banners: bannerpos);
+                                                    }else{
+                                                      return Container();
+                                                    }
                                                   } else {
                                                     const spinkit =
                                                         SpinKitDoubleBounce(
@@ -550,8 +611,10 @@ class HorizontalRow extends StatelessWidget {
   final List<WishlistItem> wishlist;
   final List<Product> productList;
   final List<CartItem> cartItems;
+  final Function reload;
   const HorizontalRow({
     Key key,
+    this.reload,
     this.productList,
     this.wishlist,
     this.cartItems,
@@ -563,7 +626,7 @@ class HorizontalRow extends StatelessWidget {
       children: [
         Expanded(
           child: SizedBox(
-            height: 300,
+             height: MediaQuery.of(context).size.height * .38,
             child: ListView.builder(
               cacheExtent: 10000.0,
               dragStartBehavior: DragStartBehavior.start,
@@ -580,6 +643,7 @@ class HorizontalRow extends StatelessWidget {
                     product: product,
                     wishlist: wishlist,
                     cartItems: cartItems,
+                    reload: reload,
                   ),
                 );
               },

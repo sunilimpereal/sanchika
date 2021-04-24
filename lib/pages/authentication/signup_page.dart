@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rive/rive.dart';
 import 'package:sanchika/model/signUp_model.dart';
 import 'package:sanchika/pages/ui/widget/check_address.dart';
-import 'package:sanchika/pages/ui/widget/otp.dart';
 import 'package:sanchika/pages/ui/widget/termsConditions.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:sanchika/utils/constants.dart';

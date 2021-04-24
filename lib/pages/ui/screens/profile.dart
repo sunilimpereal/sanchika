@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/localization/localization_methods.dart';
 import 'package:sanchika/main.dart';
+import 'package:sanchika/model/getAddresss_model.dart';
 import 'package:sanchika/model/language.dart';
 import 'package:sanchika/model/myOrders.dart';
 import 'package:sanchika/pages/authentication/login_page.dart';
@@ -295,7 +296,20 @@ class PprofileState extends State<Profile> {
                   leading: Icon(Icons.pin_drop),
                   title: Text('Address'),
                   trailing: Icon(Icons.keyboard_arrow_right),
-                  subtitle: Text('3057 Creek Road,Madison,TN'),
+                  subtitle:FutureBuilder(
+                    future:apiService.getAddress(userId),
+                    builder:(context,snapshot){
+                      if(snapshot.hasData){
+                        ShippingAddress address= snapshot.data;
+                        return Text(
+                          address.asd1+","+address.city1+","+address.pin1+","+address.state1
+                        );
+                      }else{
+                        return Text("");
+                      }
+                    }
+
+                  ),
                 ),
               ),
               SizedBox(

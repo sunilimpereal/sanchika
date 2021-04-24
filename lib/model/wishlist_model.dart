@@ -119,3 +119,52 @@ class AddWishlistRequest {
         "userId": userId,
     };
 }
+
+
+CountWishlistItem countWishlistItemFromJson(String str) => CountWishlistItem.fromJson(json.decode(str));
+
+String countWishlistItemToJson(CountWishlistItem data) => json.encode(data.toJson());
+
+class CountWishlistItem {
+    CountWishlistItem({
+        this.status,
+        this.statusMsg,
+        this.errorCode,
+        this.data,
+    });
+
+    String status;
+    String statusMsg;
+    dynamic errorCode;
+    Data1 data;
+
+    factory CountWishlistItem.fromJson(Map<String, dynamic> json) => CountWishlistItem(
+        status: json["status"],
+        statusMsg: json["statusMsg"],
+        errorCode: json["errorCode"],
+        data: Data1.fromJson(json["data"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "status": status,
+        "statusMsg": statusMsg,
+        "errorCode": errorCode,
+        "data": data.toJson(),
+    };
+}
+
+class Data1 {
+    Data1({
+        this.countWishList,
+    });
+
+    String countWishList;
+
+    factory Data1.fromJson(Map<String, dynamic> json) => Data1(
+        countWishList: json["Count WishList "],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "Count WishList ": countWishList,
+    };
+}

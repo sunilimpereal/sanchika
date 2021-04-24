@@ -34,6 +34,8 @@ class _MyOrdersState extends State<MyOrders> {
     });
   }
 
+  APIService apiService = APIService();
+
   @override
   void initState() {
     getUserId().then((value) {
@@ -54,18 +56,53 @@ class _MyOrdersState extends State<MyOrders> {
             style: TextStyle(color: Colors.black),
           ),
           actions: [
-            IconButton(
-              padding: EdgeInsets.only(top: 0),
-              icon: Icon(
-                Icons.favorite_rounded,
-                color: Colors.grey[800],
-                size: 24,
-              ),
-              onPressed: () {
-                BlocProvider.of<NavigationBloc>(context)
-                    .add(NavigationEvents.WishlistClickedEvent);
-                widget.onMenuItemClicked();
-              },
+            Stack(
+              children: [
+                IconButton(
+                  padding: EdgeInsets.only(top: 0),
+                  icon: Icon(
+                    Icons.favorite_rounded,
+                    color: Color(0xff032e6b).withAlpha(180),
+                    size: 24,
+                  ),
+                  onPressed: () {
+                    BlocProvider.of<NavigationBloc>(context)
+                        .add(NavigationEvents.WishlistClickedEvent);
+                    // widget.onMenuItemClicked();
+                  },
+                ),
+                FutureBuilder(
+                    future: apiService.countWishlist(userId),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        if (int.parse(snapshot.data) > 0) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8.0, left: 25),
+                            child: Container(
+                              height: 18,
+                              width: 18,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Color(0xff032e6b),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  snapshot.data,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        } else {
+                          return SizedBox();
+                        }
+                      } else {
+                        return SizedBox();
+                      }
+                    }),
+              ],
             ),
             Stack(
               children: [
@@ -73,34 +110,46 @@ class _MyOrdersState extends State<MyOrders> {
                   padding: EdgeInsets.only(top: 8),
                   icon: Icon(
                     Icons.shopping_cart,
-                    color: Colors.grey[800],
+                    color: Color(0xff032e6b).withAlpha(180),
                     size: 24,
                   ),
                   onPressed: () {
                     BlocProvider.of<NavigationBloc>(context)
                         .add(NavigationEvents.CartClickedEvent);
-                    widget.onMenuItemClicked();
+                    // widget.onMenuItemClicked();
                   },
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 25),
-                  child: Container(
-                    height: 18,
-                    width: 18,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.red,
-                    ),
-                    child: Center(
-                      child: Text(
-                        '3',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                FutureBuilder(
+                    future: apiService.cartlength(uid: userId),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        if (int.parse(snapshot.data) > 0) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8.0, left: 25),
+                            child: Container(
+                              height: 18,
+                              width: 18,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Color(0xff032e6b),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  snapshot.data,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        } else {
+                          return SizedBox();
+                        }
+                      } else {
+                        return SizedBox();
+                      }
+                    }),
               ],
             ),
           ],
@@ -158,7 +207,8 @@ class _MyOrdersState extends State<MyOrders> {
       ),
     );
   }
-   InkWell leading() {
+
+  InkWell leading() {
     if (widget.onMenuTap == null) {
       return InkWell(
         child: Icon(Icons.keyboard_arrow_left, color: Colors.black),

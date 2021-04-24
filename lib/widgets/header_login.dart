@@ -61,11 +61,12 @@ class _MyHeaderState extends State<MyHeader> {
                   ),
                   Positioned(
                     top: 20 - widget.offset / 2,
-                    left: 200,
+                    left: 180,
                     child: Text(
                       "${widget.textTop} \n${widget.textBottom}",
                       style: kHeadingTextStyle.copyWith(
                         color: Colors.white,
+                        fontSize: 18,
                       ),
                     ),
                   ),

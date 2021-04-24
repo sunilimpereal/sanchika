@@ -97,19 +97,54 @@ class _ProductViewState extends State<ProductView> {
           ),
         ),
         actions: [
-          IconButton(
-            padding: EdgeInsets.only(top: 0),
-            icon: Icon(
-              Icons.favorite_rounded,
-              color: Color(0xff032e6b).withAlpha(180),
-              size: 24,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Wishlist()),
-              );
-            },
+          Stack(
+            children: [
+              IconButton(
+                padding: EdgeInsets.only(top: 0),
+                icon: Icon(
+                  Icons.favorite_rounded,
+                  color: Color(0xff032e6b).withAlpha(180),
+                  size: 24,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Wishlist()),
+                  );
+                },
+              ),
+              FutureBuilder(
+                  future: apiService.countWishlist(userId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (int.parse(snapshot.data) > 0) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8.0, left: 25),
+                          child: Container(
+                            height: 18,
+                            width: 18,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color(0xff032e6b),
+                            ),
+                            child: Center(
+                              child: Text(
+                                snapshot.data,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    } else {
+                      return SizedBox();
+                    }
+                  }),
+            ],
           ),
           Stack(
             children: [
@@ -174,11 +209,11 @@ class _ProductViewState extends State<ProductView> {
                     widget.product.productImage ?? '',
                     widget.product.productImage1 ?? '',
                     widget.product.productImage2 ?? '',
-                    widget.product.productImage3??'',
-                    widget.product.productImage4??'',
-                    widget.product.productImage5??'',
-                    widget.product.productImage6??'',
-                    widget.product.productImage??'',
+                    widget.product.productImage3 ?? '',
+                    widget.product.productImage4 ?? '',
+                    widget.product.productImage5 ?? '',
+                    widget.product.productImage6 ?? '',
+                    widget.product.productImage ?? '',
                   ],
                 ),
               )),
@@ -187,17 +222,18 @@ class _ProductViewState extends State<ProductView> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                   Container(
-                     width:MediaQuery.of(context).size.width*0.7,
-                     child: Text(
-                      widget.product.productName,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          fontFamily: 'Poppins'),
-                    ),),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: Text(
+                        widget.product.productName,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                            fontFamily: 'Poppins'),
+                      ),
+                    ),
                     SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -337,44 +373,55 @@ class _ProductViewState extends State<ProductView> {
                   ],
                 ),
               ),
-                  SizedBox(height:10),
-
-
-              Container(
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 016.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            "Rating & Review",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 20),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height:10),
+              SizedBox(height: 10),
 
               // Review Section
               Container(
                 child: FutureBuilder(
-                    future: apiService.getRatingAndReview('1001'),
+                    future:
+                        apiService.getRatingAndReview(widget.product.productId),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         List<RatingAndReview> rat = snapshot.data;
-                        rat.sort((a, b) => DateFormat('yyyy/MM/dd')
-                            .parse(b.ratingDate)
-                            .compareTo(
-                                DateFormat('yyyy/MM/dd').parse(a.ratingDate)));
-                        return RatingReview(
-                          ratingAndReview: rat,
-                        );
+                        print("print ${snapshot.data}");
+                        if (rat.length != 0) {
+                          rat.sort((a, b) => DateFormat('yyyy/MM/dd')
+                              .parse(b.ratingDate)
+                              .compareTo(DateFormat('yyyy/MM/dd')
+                                  .parse(a.ratingDate)));
+                          return Column(
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 016.0),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            "Rating & Review",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 20),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              RatingReview(
+                                ratingAndReview: rat,
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Container(
+                            height: 0,
+                          );
+                        }
                       } else {
                         return Center(child: CircularProgressIndicator());
                       }
@@ -397,22 +444,22 @@ class _ProductViewState extends State<ProductView> {
                         ],
                       ),
                     ),
-                     FutureBuilder(
-                          future: apiService.getKillerOffeers(),
-                          builder: (BuildContext context, snapshot) {
-                            print(snapshot);
+                    FutureBuilder(
+                        future: apiService.getKillerOffeers(),
+                        builder: (BuildContext context, snapshot) {
+                          print(snapshot);
 
-                            if (snapshot.hasData) {
-                              List<Product> productList = snapshot.data;
-                              return HorizontalRow(
-                                productList: productList,
-                                cartItems: widget.cartItems,
-                              );
-                            } else {
-                              return CircularProgressIndicator();
-                            }
-                          }),
-                          SizedBox(height:40),
+                          if (snapshot.hasData) {
+                            List<Product> productList = snapshot.data;
+                            return HorizontalRow(
+                              productList: productList,
+                              cartItems: widget.cartItems,
+                            );
+                          } else {
+                            return CircularProgressIndicator();
+                          }
+                        }),
+                    SizedBox(height: 40),
                   ],
                 ),
               ),
@@ -508,7 +555,7 @@ class _ProductViewState extends State<ProductView> {
             addToCart(
               productId: widget.product.productId,
               userId: widget.userId,
-              mrpPrice: double.parse(widget.product.mrpPrice), 
+              mrpPrice: double.parse(widget.product.mrpPrice),
               slPrice: double.parse(widget.product.slPrice),
               productName: widget.product.productName,
               quantity: 1,

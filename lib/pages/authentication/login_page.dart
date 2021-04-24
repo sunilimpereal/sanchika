@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rive/rive.dart';
@@ -30,14 +32,14 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     requestModel = new LoginRequestModel();
-     rootBundle.load('assets/rive/login.riv').then((value) async{
-      final file =RiveFile();
-      if(file.import(value)){
+    rootBundle.load('assets/rive/login.riv').then((value) async {
+      final file = RiveFile();
+      if (file.import(value)) {
         final artboard = file.mainArtboard;
         artboard.addController(_controller = SimpleAnimation('loop'));
         setState(() {
           _riveArtboard = artboard;
-          _controller.isActive = true ;
+          _controller.isActive = true;
         });
       }
     });
@@ -62,12 +64,16 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-
             MyHeader(
-             child: Container(
-               width: MediaQuery.of(context).size.width*0.8,
-               height: 300,
-                child: _riveArtboard == null? const SizedBox():Rive(artboard: _riveArtboard,fit: BoxFit.contain,)),
+              child: Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: 300,
+                  child: _riveArtboard == null
+                      ? const SizedBox()
+                      : Rive(
+                          artboard: _riveArtboard,
+                          fit: BoxFit.contain,
+                        )),
               textTop: "Order and",
               textBottom: "Get to door steps",
               offset: offset,
@@ -129,6 +135,13 @@ class _LoginPageState extends State<LoginPage> {
                             Container(
                               height: 60,
                               child: TextFormField(
+                                onTap: () {
+                                  Timer(
+                                    Duration(milliseconds: 500),
+                                    () => controller.jumpTo(
+                                        controller.position.maxScrollExtent-20),
+                                  );
+                                },
                                 decoration: InputDecoration(
                                   labelText: 'Email',
                                   fillColor: Colors.white,
@@ -203,7 +216,7 @@ class _LoginPageState extends State<LoginPage> {
                                       );
                                     },
                                     child: Text(
-                                      'forgot Password?',
+                                      'Forgot Password?',
                                       style: TextStyle(color: Colors.redAccent),
                                     ),
                                   ),
@@ -248,7 +261,6 @@ class _LoginPageState extends State<LoginPage> {
                                   color: Colors.transparent,
                                   child: InkWell(
                                     onTap: () {
-                                    
                                       //Login Button
                                       if (validateAndSave()) {
                                         setState(() {
@@ -257,7 +269,7 @@ class _LoginPageState extends State<LoginPage> {
                                         APIService apiService = APIService();
                                         print(requestModel.toJson());
                                         apiService
-                                            .login(requestModel,context)
+                                            .login(requestModel, context)
                                             .then((value) async {
                                           if (value != null) {
                                             SharedPreferences preferences =
@@ -267,12 +279,12 @@ class _LoginPageState extends State<LoginPage> {
                                                 'login', 'logged');
                                             preferences.setString(
                                                 'email', requestModel.email);
-                                              
+
                                             preferences.setString(
                                                 'name', value.data.login.name);
-                                                  preferences.setString(
-                                                'userId', value.data.login.userId);
-                                                print(value.data.login.userId);
+                                            preferences.setString('userId',
+                                                value.data.login.userId);
+                                            print(value.data.login.userId);
                                             print(value.toJson());
                                             setState(() {
                                               isApiCallProcess = false;
@@ -284,9 +296,9 @@ class _LoginPageState extends State<LoginPage> {
                                                       MenuDashboard()),
                                             );
                                           } else {
-                                             setState(() {
-                                          isApiCallProcess = false;
-                                        });
+                                            setState(() {
+                                              isApiCallProcess = false;
+                                            });
                                           }
                                         });
 

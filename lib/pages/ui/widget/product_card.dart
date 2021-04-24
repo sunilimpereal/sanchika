@@ -18,11 +18,12 @@ class ProductCard extends StatefulWidget {
   List<WishlistItem> wishlist;
   List<CartItem> cartItems;
   Product product;
+  Function reload;
 
   final translator = GoogleTranslator();
   Function onMenuItemClicked;
   ProductCard(
-      {this.product, this.wishlist, this.cartItems, this.onMenuItemClicked});
+      {this.product, this.wishlist, this.cartItems,this.reload, this.onMenuItemClicked});
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -127,7 +128,8 @@ class _ProductCardState extends State<ProductCard>
   @override
   Widget _cardUi({BuildContext context, Product product, bool inwishlist}) {
     return Container(
-      child: Stack(
+      color: Colors.transparent,
+      child: Column(
         children: [
           GestureDetector(
             onTap: () {
@@ -143,115 +145,113 @@ class _ProductCardState extends State<ProductCard>
                         )),
               );
             },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                padding: EdgeInsets.all(.0),
-                height: MediaQuery.of(context).size.height * .35 + 9,
-                width: MediaQuery.of(context).size.width * 0.43,
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Hero(
-                        tag: 'image' + product.productName,
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * .28 * 0.6,
-                          width: MediaQuery.of(context).size.width * 0.45 - 5,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 0.0, right: 0.0, bottom: 0.0),
-                            child: Stack(children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  image: DecorationImage(
-                                      image: NetworkImage(
-                                          widget.product.productImage),
-                                      fit: BoxFit.contain),
-                                ),
-                              ),
-                            ]),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        width: double.maxFinite,
-                        child: Text(
-                          product.productName,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          // Text(
-                          //   widget.product.type == null ? '' : widget.product.type,
-                          //   style: TextStyle(
-                          //     fontSize: 14,
-                          //     fontFamily: 'Poppins,
-                          //     fontWeight: FontWeight.w600,
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 0,
-                      ),
-                      Row(
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    padding: EdgeInsets.all(.0),
+                    height: MediaQuery.of(context).size.height * .34,
+                    width: MediaQuery.of(context).size.width * 0.43,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal:8.0),
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Hero(
+                            tag: 'image' + product.productName,
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * .28 * 0.6,
+                              width: MediaQuery.of(context).size.width * 0.45 - 5,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 0.0, right: 0.0, bottom: 0.0),
+                                child: Stack(children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                              widget.product.productImage),
+                                          fit: BoxFit.contain),
+                                    ),
+                                  ),
+                                ]),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            width: double.maxFinite,
+                            child: Text(
+                              product.productName,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
                           Row(
                             children: [
-                              Text(
-                                '₹${product.slPrice}',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              price1(double.parse(widget.product.mrpPrice) ?? 0),
+                              // Text(
+                              //   widget.product.type == null ? '' : widget.product.type,
+                              //   style: TextStyle(
+                              //     fontSize: 14,
+                              //     fontFamily: 'Poppins,
+                              //     fontWeight: FontWeight.w600,
+                              //   ),
+                              // ),
                             ],
                           ),
-                          //TODO:
-                          // dropdown(),
+                          SizedBox(
+                            height: 0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    '₹${product.slPrice}',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  price1(double.parse(widget.product.mrpPrice) ?? 0),
+                                ],
+                              ),
+                              //TODO:
+                              // dropdown(),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: 50,
+                            width: 150,
+                          )
+
+                 
                         ],
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        height: 50,
-                        width: 150,
-                      )
-
-             
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ),
-          //Stepper buttom
+                 //Stepper buttom
           button(),
-
-          //button
-
           discount(
               mrp: double.parse(product?.mrpPrice ?? '0') ?? 0,
               slp: double.parse(product?.slPrice) ?? 0),
@@ -271,8 +271,10 @@ class _ProductCardState extends State<ProductCard>
                     APIService apiService = new APIService();
                     apiService.addToWishlist(addWishlistRequest).then((value) {
                       if (value == true) {
+                           widget.reload;
                         setState(() {
                           inwishlist = true;
+                       
                         });
                       }
                     });
@@ -281,6 +283,14 @@ class _ProductCardState extends State<ProductCard>
               ),
             ),
           )
+              ],
+            ),
+          ),
+         
+
+          //button
+
+          
         ],
       ),
     );
@@ -334,7 +344,7 @@ class _ProductCardState extends State<ProductCard>
   Widget button() {
     if (incart) {
       return Positioned(
-         bottom: 30,
+         bottom: 0,
         left: 10,
         child: Align(
           alignment: Alignment.bottomCenter,
@@ -352,7 +362,7 @@ class _ProductCardState extends State<ProductCard>
       );
     } else {
       return Positioned(
-        bottom: 30,
+        bottom: 0,
         left: 15,
         child: Align(
           alignment: Alignment.bottomCenter,

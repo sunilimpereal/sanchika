@@ -9,7 +9,7 @@ class CategoryHomeCard extends StatefulWidget {
   CtgyNameAndId ctgyNameAndId;
   Color color;
 
-  CategoryHomeCard({Key key, this.ctgyNameAndId,this.color}) : super(key: key);
+  CategoryHomeCard({Key key, this.ctgyNameAndId, this.color}) : super(key: key);
 
   @override
   _CategoryHomeCardState createState() => _CategoryHomeCardState();
@@ -62,33 +62,28 @@ class _CategoryHomeCardState extends State<CategoryHomeCard> {
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(20),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/'),
-                      fit: BoxFit.contain,
-                    ),
+                  image: DecorationImage(
+                    image: NetworkImage(
+                        "http://sanchika.in:8082/sanchika/img/testing/dept/${widget.ctgyNameAndId.mnId}.png"),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
               Container(
                 padding: const EdgeInsets.all(5.0),
                 height: MediaQuery.of(context).size.height * 0.07,
-               
                 decoration: BoxDecoration(),
                 child: Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                  widget.ctgyNameAndId.ctgyNm,
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: widget.color??Colors.black
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    widget.ctgyNameAndId.ctgyNm,
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: widget.color ?? Colors.black),
                   ),
-                ),
-                    )),
+                )),
               )
             ],
           ),

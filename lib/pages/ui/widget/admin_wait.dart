@@ -10,6 +10,7 @@ class _AdminWaitState extends State<AdminWait> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
         child: Column(
           children: [
@@ -45,22 +46,22 @@ class _AdminWaitState extends State<AdminWait> {
             ),
 
             // ignore: deprecated_member_use
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MenuDashboard()),
-                );
-              },
-              child: Text(
-                'Home(for now)',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 18),
-              ),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => MenuDashboard()),
+            //     );
+            //   },
+            //   child: Text(
+            //     'Home(for now)',
+            //     textAlign: TextAlign.center,
+            //     style: TextStyle(
+            //         color: Colors.black,
+            //         fontWeight: FontWeight.normal,
+            //         fontSize: 18),
+            //   ),
+            // ),
           ],
         ),
       ),

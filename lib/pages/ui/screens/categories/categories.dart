@@ -154,7 +154,6 @@ class _CategoriesState extends State<Categories> {
       ),
     );
   }
-
 }
 
 class Category_disp extends StatefulWidget {
@@ -216,13 +215,16 @@ class _Category_dispState extends State<Category_disp> {
                         })))
           ],
         ),
-        SubCategory(ctgyNameAndId: activeCtg,)
+        SubCategory(
+          ctgyNameAndId: activeCtg,
+        )
       ],
     );
   }
 }
+
 class SubCategory extends StatefulWidget {
- final CtgyNameAndId ctgyNameAndId;
+  final CtgyNameAndId ctgyNameAndId;
   SubCategory({this.ctgyNameAndId});
 
   @override
@@ -272,17 +274,17 @@ class _SubCategoryState extends State<SubCategory> {
                         return Padding(
                           padding: const EdgeInsets.all(0.0),
                           child: GestureDetector(
-                            onTap: (){
+                              onTap: () {
                                 Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProductAttribute(
-                                          categoryAttribute: ctgAttr,
-                                          ctgyNameAndId: widget.ctgyNameAndId,
-                                        )),
-                              );
-                            },
-                            child: CategoryCard(categoryAttribute: ctgAttr)),
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ProductAttribute(
+                                            categoryAttribute: ctgAttr,
+                                            ctgyNameAndId: widget.ctgyNameAndId,
+                                          )),
+                                );
+                              },
+                              child: CategoryCard(categoryAttribute: ctgAttr)),
                         );
                       }),
                 );
@@ -296,7 +298,7 @@ class _SubCategoryState extends State<SubCategory> {
 }
 
 class CategoryCard extends StatelessWidget {
- final  CategoryAttribute categoryAttribute;
+  final CategoryAttribute categoryAttribute;
 
   const CategoryCard({this.categoryAttribute});
   @override
@@ -324,13 +326,15 @@ class CategoryCard extends StatelessWidget {
               decoration: BoxDecoration(
                   color: Colors.transparent,
                   image: DecorationImage(
-                      image: NetworkImage('http://sanchika.in:8082/sanchika/img/testing/dept/${categoryAttribute.categoryId}.png'), fit: BoxFit.contain)),
+                      image: NetworkImage(
+                          'http://sanchika.in:8082/sanchika/img/testing/dept/${categoryAttribute.categoryId}.png'),
+                      fit: BoxFit.contain)),
             ),
             SizedBox(
               height: 4,
             ),
             Container(
-               width: MediaQuery.of(context).size.width * 0.3,
+              width: MediaQuery.of(context).size.width * 0.3,
               child: Center(
                 child: Text(
                   categoryAttribute.categoryValue,

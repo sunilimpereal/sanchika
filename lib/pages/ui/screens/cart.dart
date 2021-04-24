@@ -57,9 +57,11 @@ class _CartState extends State<Cart> {
       userId = userId;
     });
   }
+  APIService apiService = APIService();
 
   @override
   void initState() {
+    apiService = APIService(); 
     getUserId().then((value) {
       getCartTotal(value);
     });
@@ -114,7 +116,7 @@ class _CartState extends State<Cart> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         List<CartItem> cartitems = snapshot.data;
-                    
+
                         String number = snapshot.data.length.toString();
                         return Text(
                           number == '1' ? "$number item" : "$number items ",
@@ -135,19 +137,55 @@ class _CartState extends State<Cart> {
           ),
         ),
         actions: [
-          IconButton(
-            padding: EdgeInsets.only(top: 8),
-            icon: Icon(
-              Icons.favorite_rounded,
-              color: Color(0xff032e6b).withAlpha(180),
-              size: 24,
-            ),
-            onPressed: () {
-              BlocProvider.of<NavigationBloc>(context)
-                  .add(NavigationEvents.WishlistClickedEvent);
-              widget.onMenuItemClicked();
-            },
+          Stack(
+            children: [
+              IconButton(
+                padding: EdgeInsets.only(top: 0),
+                icon: Icon(
+                  Icons.favorite_rounded,
+                  color: Color(0xff032e6b).withAlpha(180),
+                  size: 24,
+                ),
+                onPressed: () {
+                  BlocProvider.of<NavigationBloc>(context)
+                      .add(NavigationEvents.WishlistClickedEvent);
+                  widget.onMenuItemClicked();
+                },
+              ),
+              FutureBuilder(
+                  future: apiService.countWishlist(userId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (int.parse(snapshot.data) > 0) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8.0, left: 25),
+                          child: Container(
+                            height: 18,
+                            width: 18,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color(0xff032e6b),
+                            ),
+                            child: Center(
+                              child: Text(
+                                snapshot.data,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    } else {
+                      return SizedBox();
+                    }
+                  }),
+            ],
           ),
+       
         ],
       ),
       body: FutureBuilder(
