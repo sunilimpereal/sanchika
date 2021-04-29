@@ -45,7 +45,7 @@ class _ProductViewState extends State<ProductView> {
 
   void checkCart() {
     for (CartItem c in widget.cartItems ?? []) {
-      if (c.productId == widget.product.productId) {
+      if (c.productId == widget.product.pdmPdtId) {
         setState(() {
           incart = true;
         });
@@ -89,7 +89,7 @@ class _ProductViewState extends State<ProductView> {
         ),
         titleSpacing: 0,
         title: Text(
-          widget.product.productName,
+          widget.product.pdmPdtNm,
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.normal,
@@ -203,17 +203,17 @@ class _ProductViewState extends State<ProductView> {
             children: [
               Container(
                   child: Hero(
-                tag: 'image' + widget.product.productName,
+                tag: 'image' + widget.product.pdmPdtId,
                 child: Crousal(
                   photos: [
-                    widget.product.productImage ?? '',
-                    widget.product.productImage1 ?? '',
-                    widget.product.productImage2 ?? '',
-                    widget.product.productImage3 ?? '',
-                    widget.product.productImage4 ?? '',
-                    widget.product.productImage5 ?? '',
-                    widget.product.productImage6 ?? '',
-                    widget.product.productImage ?? '',
+                    widget.product.pdmIm1 ?? '',
+                    widget.product.pdmIm2 ?? '',
+                    widget.product.pdmIm3 ?? '',
+                    widget.product.pdmIm4 ?? '',
+                    widget.product.pdmIm5 ?? '',
+                    widget.product.pdmIm5 ?? '',
+                    widget.product.pdmIm6 ?? '',
+                    widget.product.pdmIm7 ?? '',
                   ],
                 ),
               )),
@@ -225,7 +225,7 @@ class _ProductViewState extends State<ProductView> {
                     Container(
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: Text(
-                        widget.product.productName,
+                        widget.product.pdmPdtNm,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -248,7 +248,7 @@ class _ProductViewState extends State<ProductView> {
                               addWishlistRequest.userId =
                                   int.parse(widget.userId);
                               addWishlistRequest.productId =
-                                  widget.product.productId;
+                                  widget.product.pdmPdtId;
                               APIService apiService = new APIService();
                               apiService
                                   .addToWishlist(addWishlistRequest)
@@ -272,8 +272,8 @@ class _ProductViewState extends State<ProductView> {
                 child: Row(
                   children: [
                     discount(
-                        mrp: double.parse(widget.product.mrpPrice),
-                        slp: double.parse(widget.product.slPrice)),
+                        mrp: double.parse(widget.product.mrpPr??'0'),
+                        slp: double.parse(widget.product.slPrc??'0')),
                   ],
                 ),
               ),
@@ -285,7 +285,7 @@ class _ProductViewState extends State<ProductView> {
                     child: Row(
                       children: [
                         Text(
-                          '₹ ${widget.product.slPrice}',
+                          '₹ ${widget.product.slPrc}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 26,
@@ -297,7 +297,7 @@ class _ProductViewState extends State<ProductView> {
                   SizedBox(
                     width: 5,
                   ),
-                  price1(double.parse(widget.product.mrpPrice)),
+                  price1(double.parse(widget.product.mrpPr??'0')),
                 ],
               ),
               Container(
@@ -323,7 +323,7 @@ class _ProductViewState extends State<ProductView> {
                       width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.only(top: 10.0),
                       child: ReadMoreText(
-                        widget.product.productDescription,
+                        widget.product.pdmPdtDscr,
                         trimLines: 3,
                         trimMode: TrimMode.Line,
                         trimCollapsedText: 'more',
@@ -358,7 +358,7 @@ class _ProductViewState extends State<ProductView> {
                       width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.only(top: 10.0),
                       child: ReadMoreText(
-                        widget.product.productDescription,
+                        widget.product.pdmPdtDscr,
                         trimLines: 3,
                         trimMode: TrimMode.Line,
                         trimCollapsedText: 'more',
@@ -379,7 +379,7 @@ class _ProductViewState extends State<ProductView> {
               Container(
                 child: FutureBuilder(
                     future:
-                        apiService.getRatingAndReview(widget.product.productId),
+                        apiService.getRatingAndReview(widget.product.pdmPdtId),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         List<RatingAndReview> rat = snapshot.data;
@@ -551,15 +551,15 @@ class _ProductViewState extends State<ProductView> {
                 color: Colors.green.shade400)
           },
           onPressed: () {
-            print(widget.product.productId);
+            print(widget.product.pdmPdtId);
             addToCart(
-              productId: widget.product.productId,
+              productId: widget.product.pdmPdtId,
               userId: widget.userId,
-              mrpPrice: double.parse(widget.product.mrpPrice),
-              slPrice: double.parse(widget.product.slPrice),
-              productName: widget.product.productName,
+              mrpPrice: double.parse(widget.product.mrpPr??"0"),
+              slPrice: double.parse(widget.product.slPrc??'0'),
+              productName: widget.product.pdmPdtNm,
               quantity: 1,
-              grandTotal: double.parse(widget.product.slPrice),
+              grandTotal: double.parse(widget.product.slPrc??'0'),
             );
           },
           state: stateTextWithIcon,

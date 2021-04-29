@@ -1,110 +1,117 @@
+
 class Product {
-  Product({
-    this.id,
-    this.productId,
-    this.productStatus,
-    this.productQuantity,
-    this.productWeight,
-    this.brandId,
-    this.status,
-    this.productName,
-    this.productImage,
-    this.productImage1,
-    this.productImage2,
-    this.productImage3,
-    this.productImage4,
-    this.productImage5,
-    this.productImage6,
-    this.productCategoryId,
-    this.productCategoryNm,
-    this.productDescription,
-    this.slPrice,
-    this.mrpPrice,
-  });
+    Product({
+        this.pdmId,
+        this.pdmPdtId,
+        this.pdmAcv,
+        this.stmCurrStkQty,
+        this.pdmWtCls,
+        this.pdmBrnId,
+        this.pdmSts,
+        this.pdmPdtNm,
+        this.pdmIm1,
+        this.pdmIm2,
+        this.pdmIm3,
+        this.pdmIm4,
+        this.pdmIm5,
+        this.pdmIm6,
+        this.pdmIm7,
+        this.pdmPdtCtgyId,
+        this.pdmPdtDscr,
+        this.avCapId,
+        this.avCapVl,
+        this.acCapNm,
+        this.mrpPr,
+        this.slPrc,
+        this.amAtrVl,
+        this.lvPdtNm,
+        this.pdmPdtMdl,
+        this.pdmWt,
+    });
 
-  String id;
-  String productId;
-  String productStatus;
-  String productQuantity;
-  String productWeight;
-  String brandId;
-  String status;
-  String productName;
-  String productImage;
-  String productImage1;
-  String productImage2;
-  String productImage3;
-  String productImage4;
-  String productImage5;
-  String productImage6;
-  String productCategoryId;
-  String productCategoryNm;
-  String productDescription;
-  String slPrice;
-  String mrpPrice;
+    String pdmId;
+    String pdmPdtId;
+    String pdmAcv;
+    String stmCurrStkQty;
+    String pdmWtCls;
+    String pdmBrnId;
+    String pdmSts;
+    String pdmPdtNm;
+    String pdmIm1;
+    String pdmIm2;
+    String pdmIm3;
+    String pdmIm4;
+    String pdmIm5;
+    String pdmIm6;
+    String pdmIm7;
+    String pdmPdtCtgyId;
+    String pdmPdtDscr;
+    String avCapId;
+    String avCapVl;
+    String acCapNm;
+    String mrpPr;
+    String slPrc;
+    String amAtrVl;
+    String lvPdtNm;
+    String pdmPdtMdl;
+    String pdmWt;
 
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
-        id: json["id"],
-        productId: json["productId"],
-        productStatus: json["productStatus"],
-        productQuantity: json["productQuantity"],
-        productWeight: json["productWeight"],
-        brandId: json["brandId"],
-        status: json["status"],
-        productName: json["productName"],
-        productImage: json["productImage1"],
-        productImage1: json["productImage2"],
-        productImage2: json["productImage3"],
-        productImage3: json["productImage4"],
-        productImage4: json["productImage5"],
-        productImage5: json["productImage6"],
-        productImage6: json["productImage7"],
-        productCategoryId: json["productCategoryId"],
-        productCategoryNm: json["productCategoryNM"],
-        productDescription: json["productDescription"],
-        slPrice: json["slPrice"],
-        mrpPrice: json["mrpPrice"],
-      );
+    factory Product.fromJson(Map<String, dynamic> json) => Product(
+        pdmId: json["pdm_id"],
+        pdmPdtId: json["pdm_pdt_id"],
+        pdmAcv: json["pdm_acv"],
+        stmCurrStkQty: json["stm_curr_stk_qty"],
+        pdmWtCls: json["pdm_wt_cls"],
+        pdmBrnId: json["pdm_brn_id"],
+        pdmSts: json["pdm_sts"],
+        pdmPdtNm: json["pdm_pdt_nm"],
+        pdmIm1: json["pdm_im1"],
+        pdmIm2: json["pdm_im2"],
+        pdmIm3: json["pdm_im3"],
+        pdmIm4: json["pdm_im4"],
+        pdmIm5: json["pdm_im5"],
+        pdmIm6: json["pdm_im6"],
+        pdmIm7: json["pdm_im7"],
+        pdmPdtCtgyId: json["pdm_pdt_ctgy_id"],
+        pdmPdtDscr: json["pdm_pdt_dscr"],
+        avCapId: json["av_cap_id"],
+        avCapVl: json["av_cap_vl"],
+        acCapNm: json["ac_cap_nm"],
+        mrpPr: json["mrp_pr"],
+        slPrc: json["sl_prc"],
+        amAtrVl: json["am_atr_vl"],
+        lvPdtNm: json["lv_pdt_nm"],
+        pdmPdtMdl: json["pdm_pdt_mdl"],
+        pdmWt: json["pdm_wt"],
+    );
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "productId": productId,
-        "productStatus": productStatus,
-        "productQuantity": productQuantity,
-        "productWeight": productWeight,
-        "brandId": brandId,
-        "status": status,
-        "productName": productName,
-        "productImage": productImage,
-        "productCategoryId": productCategoryId,
-        "productCategoryNM": productCategoryNm,
-        "productDescription": productDescription,
-        "slPrice": slPrice,
-        "mrpPrice": mrpPrice,
-      };
+    Map<String, dynamic> toJson() => {
+        "pdm_id": pdmId,
+        "pdm_pdt_id": pdmPdtId,
+        "pdm_acv": pdmAcv,
+        "stm_curr_stk_qty": stmCurrStkQty,
+        "pdm_wt_cls": pdmWtCls,
+        "pdm_brn_id": pdmBrnId,
+        "pdm_sts": pdmSts,
+        "pdm_pdt_nm": pdmPdtNm,
+        "pdm_im1": pdmIm1,
+        "pdm_im2": pdmIm2,
+        "pdm_im3": pdmIm3,
+        "pdm_im4": pdmIm4,
+        "pdm_im5": pdmIm5,
+        "pdm_im6": pdmIm6,
+        "pdm_im7": pdmIm7,
+        "pdm_pdt_ctgy_id": pdmPdtCtgyId,
+        "pdm_pdt_dscr": pdmPdtDscr,
+        "av_cap_id": avCapId,
+        "av_cap_vl": avCapVl,
+        "ac_cap_nm": acCapNm,
+        "mrp_pr": mrpPr,
+        "sl_prc": slPrc,
+        "am_atr_vl": amAtrVl,
+        "lv_pdt_nm": lvPdtNm,
+        "pdm_pdt_mdl": pdmPdtMdl,
+        "pdm_wt": pdmWt,
+    };
 }
 
-// class Product {
-//   String name;
-//   int price;
-//   int price1;
-//   String type;
-//   List<String> typeList;
-//   int discount;
-//   String description;
-//   String ingredients;
-//   List<String> images;
-//   List<String> relatedproducts;
-//   Product({
-//     this.name,
-//     this.price,
-//     this.typeList,
-//     this.price1,
-//     this.type,
-//     this.discount,
-//     this.description,
-//     this.ingredients,
-//     this.images,
-//     this.relatedproducts,
-//   });
-// }

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:sanchika/model/AllProducts.dart';
 import 'package:sanchika/model/CtgAttribute.dart';
@@ -25,17 +24,14 @@ import 'package:sanchika/model/multiitemSaveOrder.dart';
 import 'package:sanchika/model/myInformation.dart';
 import 'package:sanchika/model/myOrders.dart';
 import 'package:sanchika/model/orderDetails.dart';
+import 'package:sanchika/model/placedOrder.dart';
 import 'package:sanchika/model/product.dart';
 import 'package:sanchika/model/cat_product_model.dart';
 import 'package:sanchika/model/signUp_model.dart';
-import 'package:sanchika/model/subMenu_model.dart';
-import 'package:sanchika/model/topMenu_model.dart';
 import 'package:sanchika/model/userOrderDetails.dart';
 import 'package:sanchika/model/wishlist_model.dart';
 import 'package:sanchika/model/getBanner_model.dart';
 import 'package:sanchika/pages/ui/screens/404_page.dart';
-import 'package:sanchika/pages/ui/widget/order_details.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class APIService {
   // config details
@@ -138,10 +134,10 @@ class APIService {
     final response = await http.get(
       url,
     );
-    FlutterError.onError = (FlutterErrorDetails details) {
-      // print('error');
-      return null;
-    };
+    // FlutterError.onError = (FlutterErrorDetails details) {
+    //   print('error');
+    //   return [];
+    // };
 
     print('wishist response ${response.statusCode}');
     if (response.statusCode == 200) {
@@ -151,7 +147,7 @@ class APIService {
       print(wishlistItems);
       return wishlistItems;
     } else {
-      return null;
+      return [];
     }
   }
 
@@ -169,18 +165,20 @@ class APIService {
       return false;
     }
   }
-  Future<String> countWishlist(String userId)async {
-    String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/wishList/countWishList?uid=$userId";
+
+  Future<String> countWishlist(String userId) async {
+    String url =
+        "http://sanchika.in:8081/sanchikaapi/sanchika/user/wishList/countWishList?uid=$userId";
     final response = await http.get(url);
-     print('count wishlist Item response ${response.statusCode}');
-     if(response.statusCode==200){
-       CountWishlistItem countWishlistItem = countWishlistItemFromJson(response.body);
-       String count = countWishlistItem.data.countWishList;
-       return count;
-     }else{
-       return "";
-     }
-  
+    print('count wishlist Item response ${response.statusCode}');
+    if (response.statusCode == 200) {
+      CountWishlistItem countWishlistItem =
+          countWishlistItemFromJson(response.body);
+      String count = countWishlistItem.data.countWishList;
+      return count;
+    } else {
+      return "";
+    }
   }
 
   //Remove from Wishlist
@@ -212,7 +210,7 @@ class APIService {
       print(products);
       return products;
     } else {
-      return null;
+      return [];
     }
   }
 
@@ -250,28 +248,28 @@ class APIService {
   }
 
   //get prdocut from each category
-  Future<List<CtgyProductDetailsList>> getCtegoryProducts() async {
-    String url =
-        "http://sanchika.in:8081/sanchikaapi/sanchika/user/getCtgyProductDetails?ctgyId=1285";
-    print('url');
-    var response = await http.get(url, headers: headerList);
-    print(response.body);
-    print(response.statusCode);
-    FlutterError.onError = (FlutterErrorDetails details) {
-      // print('error');
-      return null;
-    };
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      GetProduct getProduct = getProductFromJson(response.body);
-      List<CtgyProductDetailsList> productList =
-          getProduct.data.ctgyProductDetailsList;
-      print(productList);
-      return productList;
-    } else {
-      return null;
-    }
-  }
+  // Future<List<CtgyProductDetailsList>> getCtegoryProducts() async {
+  //   String url =
+  //       "http://sanchika.in:8081/sanchikaapi/sanchika/user/getCtgyProductDetails?ctgyId=1285";
+  //   print('url');
+  //   var response = await http.get(url, headers: headerList);
+  //   print(response.body);
+  //   print(response.statusCode);
+  //   FlutterError.onError = (FlutterErrorDetails details) {
+  //     // print('error');
+  //     return null;
+  //   };
+  //   print(response.statusCode);
+  //   if (response.statusCode == 200) {
+  //     GetProduct getProduct = getProductFromJson(response.body);
+  //     List<CtgyProductDetailsList> productList =
+  //         getProduct.data.ctgyProductDetailsList;
+  //     print(productList);
+  //     return productList;
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
   //Get Cart Items
   Future<List<CartItem>> getCartItems(String userId) async {
@@ -363,6 +361,7 @@ class APIService {
 
   //get each product detail
   Future<List<Product>> getProductDetail({String productId}) async {
+    print('productId $productId');
     String url =
         "http://sanchika.in:8081/sanchikaapi/sanchika/user/searchAPI?nameOrId=$productId";
     final response = await http.get(url, headers: headerList);
@@ -391,38 +390,6 @@ class APIService {
       return bannerList;
     } else {
       return null;
-    }
-  }
-
-  //get Top Menu
-  Future<List<TopMenu>> getTopMenu() async {
-    String url =
-        "http://sanchika.in:8081/sanchikaapi/sanchika/user/menu/topmenu";
-    final response = await http.get(url, headers: headerList);
-    print('Top Menu response ${response.statusCode}');
-    if (response.statusCode == 200) {
-      GetTopMenu topMenuItems = getTopMenuFromJson(response.body);
-      List<TopMenu> topMenuList = topMenuItems.data.topMenu;
-      print(topMenuList);
-      return topMenuList;
-    } else {
-      return [];
-    }
-  }
-
-  //get Sub menu
-  Future<List<SubMenu>> getSubMenu(int menuId, String title) async {
-    String url =
-        "http://sanchika.in:8081/sanchikaapi/sanchika/user/menu/submenu?menuid=$menuId&title=$title";
-    final response = await http.get(url, headers: headerList);
-    print('SubMenu response ${response.statusCode}');
-    if (response.statusCode == 200) {
-      GetSubMenu subMenu = getSubMenuFromJson(response.body);
-      List<SubMenu> subMenuList = subMenu.data.subMenu;
-      print(subMenuList);
-      return subMenuList;
-    } else {
-      return [];
     }
   }
 
@@ -491,24 +458,26 @@ class APIService {
       return [];
     }
   }
+
   //get Home Products
-  Future<List<Product>> getHomeProducts(String ctgId)async{
-    String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user//home-screan?catgyId=$ctgId";
+  Future<List<Product>> getHomeProducts(String ctgId) async {
+    String url =
+        "http://sanchika.in:8081/sanchikaapi/sanchika/user//home-screan?catgyId=$ctgId";
     final response = await http.get(url);
     print("response of ${response.statusCode}");
-    if(response.statusCode==200){
-      GetHomeCatgProducts getHomeCatgProducts = getHomeCatgProductsFromJson(response.body);
+    if (response.statusCode == 200) {
+      GetHomeCatgProducts getHomeCatgProducts =
+          getHomeCatgProductsFromJson(response.body);
       List<Product> product = getHomeCatgProducts.data.getProductList;
       return product;
-    }else{
+    } else {
       return [];
     }
-    
-
-
   }
+
   //get Product Attribute
   Future<List<Product>> getProductAttribute({String capId}) async {
+    print('cap Id :$capId');
     String url =
         "http://sanchika.in:8081/sanchikaapi/sanchika/user/getProductAttribute?capId=$capId";
     final response = await http.get(url);
@@ -615,14 +584,19 @@ class APIService {
   }
 
   // save multi Item Order
-  Future<String> multiitemorder({List<MultItemOrder> data})async {
-    String url ="";
-    final response = await http.post(url);
+  Future<List<OrderUserDetails>> multiItemOrder({List<OrderItem> data}) async {
+    String url = "";
+    final response = await http.post(url, body: orderItemToJson(data));
     print("save multiItem Order = ${response.statusCode}");
-    if(response.statusCode == 200){
-      
-    }
-    else{
+    if (response.statusCode == 200) {
+      PlacedOrder placedOrder = placedOrderFromJson(response.body);
+      List<OrderUserDetails> orderUserDetailList;
+        placedOrder.data.orderUserDetails.forEach((key, value) {
+         orderUserDetailList.add(value);
+       });
+      return orderUserDetailList;
+    } else {
+      return [];
 
     }
   }

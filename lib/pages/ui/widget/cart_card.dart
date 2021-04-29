@@ -89,15 +89,15 @@ class _CartCardState extends State<CartCard> {
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
                                     image: NetworkImage(
-                                      product?.productImage ?? '',
+                                      product?.pdmIm1 ?? '',
                                     ),
                                     fit: BoxFit.fill,
                                   )),
                                 ),
                               ),
                               discount(
-                                  mrp: double.parse(product?.mrpPrice ?? '0'),
-                                  slp: double.parse(product?.slPrice)),
+                                  mrp: double.parse(product?.mrpPr ?? '0'),
+                                  slp: double.parse(product?.slPrc??'0')),
                             ],
                           ),
                         ),
@@ -126,7 +126,7 @@ class _CartCardState extends State<CartCard> {
                                                   .width *
                                               0.65,
                                           child: Text(
-                                            product?.productName,
+                                            product?.pdmPdtNm,
                                             maxLines: 2,
                                             style: TextStyle(
                                               fontFamily: 'Poppins',
@@ -154,7 +154,7 @@ class _CartCardState extends State<CartCard> {
                                       Row(
                                         children: [
                                           Text(
-                                            "₹${product?.slPrice}",
+                                            "₹${product?.slPrc??0}",
                                             style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w600,
@@ -164,7 +164,7 @@ class _CartCardState extends State<CartCard> {
                                             width: 5,
                                           ),
                                           price1(
-                                              double.parse(product.mrpPrice)),
+                                              double.parse(product.mrpPr??'0')),
                                         ],
                                       ),
                                       Container(

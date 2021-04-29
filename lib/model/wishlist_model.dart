@@ -83,6 +83,7 @@ class WishlistItem {
         "gid": gid,
     };
 }
+
 // To parse this JSON data, do
 //
 //     final addWishlistRequest = addWishlistRequestFromJson(jsonString);

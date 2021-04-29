@@ -120,14 +120,14 @@ class _WishlistCardState extends State<WishlistCard> {
                     color: Colors.green.shade400)
               },
               onPressed: () {
-                print(product.productId);
+                print(product.pdmId);
                 addToCart(
-                    productId: product.productId,
+                    productId: product.pdmId,
                     userId: userId,
-                    slPrice: double.parse(product.slPrice),
-                    productName: product.productName,
+                    slPrice: double.parse(product.slPrc??'0'),
+                    productName: product.pdmPdtNm,
                     quantity: 1,
-                    grandTotal: double.parse(product.slPrice));
+                    grandTotal: double.parse(product.slPrc??'0'));
               },
               state: stateTextWithIcon,
             ),
@@ -175,13 +175,13 @@ class _WishlistCardState extends State<WishlistCard> {
                                 borderRadius: BorderRadius.circular(10),
                                 image: DecorationImage(
                                     fit: BoxFit.contain,
-                                    image: NetworkImage(product.productImage)),
+                                    image: NetworkImage(product.pdmIm1)),
                               ),
                             ),
                           ),
                           discount(
-                              mrp: double.parse(product.mrpPrice),
-                              slp: double.parse(product.slPrice)),
+                              mrp: double.parse(product.mrpPr??'0'),
+                              slp: double.parse(product.slPrc??'0')),
                         ],
                       ),
                     ],
@@ -223,7 +223,7 @@ class _WishlistCardState extends State<WishlistCard> {
                                                         0.72 *
                                                         0.75,
                                                     child: Text(
-                                                      product.productName,
+                                                      product.pdmPdtNm,
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       maxLines: 2,
@@ -265,7 +265,7 @@ class _WishlistCardState extends State<WishlistCard> {
                               Row(
                                 children: [
                                   Text(
-                                    "₹${product.slPrice}",
+                                    "₹${product.slPrc?? 0}",
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
@@ -274,7 +274,7 @@ class _WishlistCardState extends State<WishlistCard> {
                                   SizedBox(
                                     width: 10,
                                   ),
-                                  price1(double.parse(product.mrpPrice)),
+                                  price1(double.parse(product.mrpPr??'0')),
                                 ],
                               ),
                               button(),
@@ -295,9 +295,9 @@ class _WishlistCardState extends State<WishlistCard> {
                 icon: Icon(Icons.clear),
                 iconSize: 20,
                 onPressed: () {
-                  print(product.productId);
+                  print(product.pdmId);
                   removeWishlistItem(
-                    pid: product.productId,
+                    pid: product.pdmId,
                     uid: userId,
                   );
                 },

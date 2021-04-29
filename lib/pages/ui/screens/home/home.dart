@@ -41,6 +41,7 @@ class _HomeState extends State<Home> {
     setState(() {
       userId = uid;
     });
+    return uid;
   }
 
   int pos = 1;
@@ -101,7 +102,7 @@ class _HomeState extends State<Home> {
     APIService apiService = new APIService();
     List<WishlistItem> allWishlistItems =
         await apiService.getWishList(userId: userId);
-    print('wishlist');
+    print('wishlistapi $allWishlistItems');
     print(allWishlistItems);
     setState(() {
       wishlist = allWishlistItems;
@@ -161,6 +162,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    print('wishlist items $wishlist');
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(0)),
       child: CustomScrollView(
@@ -422,6 +424,7 @@ class _HomeState extends State<Home> {
 
                             if (snapshot.hasData) {
                               List<Product> productList = snapshot.data;
+                              print('product list ${productList}');
                               return HorizontalRow(
                                 productList: productList,
                                 wishlist: wishlist,
@@ -636,15 +639,26 @@ class HorizontalRow extends StatelessWidget {
               itemCount: productList.length,
               itemBuilder: (context, index) {
                 print('wishlist in builder');
-                print(wishlist);
+                print('wishlist $wishlist');
                 Product product = productList[index];
                 return Container(
-                  child: ProductCard(
+                  child:
+                    ProductCard(
                     product: product,
                     wishlist: wishlist,
                     cartItems: cartItems,
                     reload: reload,
                   ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: 
+                  //   Container(
+                  //     width: 100,
+                  //     height: 100,
+                  //     color: Colors.red,
+                  //   ),
+                  // )
+                 
                 );
               },
             ),

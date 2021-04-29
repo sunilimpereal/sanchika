@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sanchika/model/getCatg_model.dart';
-import 'package:sanchika/model/topMenu_model.dart';
-import 'package:sanchika/pages/ui/sub_screens/subMenuPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
 

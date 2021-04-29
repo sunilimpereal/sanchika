@@ -329,13 +329,13 @@ class _ShowProductsState extends State<ShowProducts> {
     if (type == 'Price High to Low') {
       setState(() {
         productList.sort((b, a) =>
-            double.parse(a.slPrice).compareTo(double.parse(b.slPrice)));
+            double.parse(a.slPrc).compareTo(double.parse(b.slPrc)));
       });
     }
     if (type == 'Price Low to High') {
       setState(() {
         productList.sort((a, b) =>
-            double.parse(a.slPrice).compareTo(double.parse(b.slPrice)));
+            double.parse(a.slPrc).compareTo(double.parse(b.slPrc)));
       });
     }
   }
@@ -373,7 +373,9 @@ class _ShowProductsState extends State<ShowProducts> {
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: ProductCard(product: widget.productList[index],cartItems: widget.cartItems,),
+            child: 
+            
+            ProductCard(product: widget.productList[index],cartItems: widget.cartItems,),
           );
         });
   }

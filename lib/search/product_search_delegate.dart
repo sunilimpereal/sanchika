@@ -77,7 +77,7 @@ class ProductSearch extends SearchDelegate<Product> {
           List<Product> productList = snapshot.data;
           List<Product> result = productList
               .where((a) =>
-                  a.productName.toLowerCase().contains(query.toLowerCase()))
+                  a.pdmPdtNm.toLowerCase().contains(query.toLowerCase()))
               .toList();
           return SearchResult(
             productList: result,
@@ -108,7 +108,7 @@ class ProductSearch extends SearchDelegate<Product> {
         var results;
         if (query != '') {
           results = productList
-              .where((a) => a.productName.toLowerCase().contains(query))
+              .where((a) => a.pdmPdtNm.toLowerCase().contains(query))
               .toList();
           return ListView.builder(
             itemCount: results.length,
@@ -229,13 +229,13 @@ class _SearchResultState extends State<SearchResult> {
     if (type == 'Price High to Low') {
       setState(() {
         productList.sort((b, a) =>
-            double.parse(a.slPrice).compareTo(double.parse(b.slPrice)));
+            double.parse(a.slPrc).compareTo(double.parse(b.slPrc)));
       });
     }
     if (type == 'Price Low to High') {
       setState(() {
         productList.sort((a, b) =>
-            double.parse(a.slPrice).compareTo(double.parse(b.slPrice)));
+            double.parse(a.slPrc).compareTo(double.parse(b.slPrc)));
       });
     }
   }

@@ -109,14 +109,14 @@ class _OrderCheckoutState extends State<OrderCheckout> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              product.productName,
+                              product.pdmPdtNm,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
                             Text(
-                              "₹ ${product.slPrice}",
+                              "₹ ${product.slPrc}",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.normal,

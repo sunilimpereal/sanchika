@@ -1,48 +1,50 @@
 // To parse this JSON data, do
 //
-//     final multItemOrder = multItemOrderFromJson(jsonString);
+//     final orderItem = orderItemFromJson(jsonString);
 
 import 'dart:convert';
 
-List<MultItemOrder> multItemOrderFromJson(String str) => List<MultItemOrder>.from(json.decode(str).map((x) => MultItemOrder.fromJson(x)));
+List<OrderItem> orderItemFromJson(String str) => List<OrderItem>.from(json.decode(str).map((x) => OrderItem.fromJson(x)));
 
-String multItemOrderToJson(List<MultItemOrder> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String orderItemToJson(List<OrderItem> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class MultItemOrder {
-    MultItemOrder({
-        this.companyCode,
-        this.storeCode,
-        this.orderDate,
-        this.ordeeTime,
-        this.orderInvoiceNumber,
-        this.orderInvoiceDate,
-        this.ordermode,
-        this.orderDeliverydate,
-        this.userId,
-        this.userName,
-        this.phoneNumber,
-        this.email,
-        this.customerType,
-        this.orderShppingState,
-        this.adminComment,
-        this.userComment,
-        this.totalQuantity,
-        this.totalItem,
-        this.totalPrice,
-        this.discountAmount,
-        this.subsAmount,
-        this.taxAmount,
-        this.grandTotal,
-        this.shppingCharge,
-        this.netAmount,
-        this.paymentType,
-        this.paymentMode,
-        this.paymentRecieved,
-        this.deliveryType,
-        this.orderStatus,
-        this.orderSyncDateTime,
-        this.orderCuponCode,
-        this.cuponRedeemed,
+class OrderItem {
+    OrderItem({
+        this.wohCmyCd,
+        this.wohStrCd,
+        this.wohOrdDt,
+        this.wohOrdTime,
+        this.wohInvcNum,
+        this.wohInvcDt,
+        this.wohOrdMod,
+        this.wohDvDt,
+        this.wohUsrId,
+        this.wohUsrNm,
+        this.wohPhNum,
+        this.wohEmlId,
+        this.wohCstType,
+        this.wohShpSt,
+        this.wohAdmCmt,
+        this.wohUsrCmt,
+        this.wohTotQnt,
+        this.wohTotItm,
+        this.wohMrp,
+        this.wohTotPrc,
+        this.wohDisAmt,
+        this.wohSubsAmt,
+        this.wohTxAmt,
+        this.wohGrndTot,
+        this.wohShpChrg,
+        this.wohNetAmt,
+        this.wohPymTyp,
+        this.wohPymMod,
+        this.wohPymRecd,
+        this.wohDelvryType,
+        this.wohStatus,
+        this.wohSycDtTm,
+        this.wohCpnCd,
+        this.wohCpnRedmd,
+        this.wohTxId,
         this.ordtlIsDltd,
         this.wodItmTotWeght,
         this.wodItmWeght,
@@ -95,40 +97,42 @@ class MultItemOrder {
         this.wosdSycDtTm,
     });
 
-    String companyCode;
-    String storeCode;
-    String orderDate;
-    String ordeeTime;
-    String orderInvoiceNumber;
-    String orderInvoiceDate;
-    String ordermode;
-    String orderDeliverydate;
-    String userId;
-    String userName;
-    String phoneNumber;
-    String email;
-    String customerType;
-    String orderShppingState;
-    String adminComment;
-    String userComment;
-    String totalQuantity;
-    String totalItem;
-    int totalPrice;
-    int discountAmount;
-    int subsAmount;
-    double taxAmount;
-    int grandTotal;
-    int shppingCharge;
-    int netAmount;
-    String paymentType;
-    String paymentMode;
-    String paymentRecieved;
-    String deliveryType;
-    String orderStatus;
-    String orderSyncDateTime;
-    String orderCuponCode;
-    String cuponRedeemed;
-    bool ordtlIsDltd;
+    String wohCmyCd;
+    String wohStrCd;
+    DateTime wohOrdDt;
+    String wohOrdTime;
+    int wohInvcNum;
+    DateTime wohInvcDt;
+    String wohOrdMod;
+    DateTime wohDvDt;
+    int wohUsrId;
+    String wohUsrNm;
+    String wohPhNum;
+    String wohEmlId;
+    String wohCstType;
+    String wohShpSt;
+    String wohAdmCmt;
+    String wohUsrCmt;
+    int wohTotQnt;
+    double wohTotItm;
+    double wohMrp;
+    double wohTotPrc;
+    double wohDisAmt;
+    double wohSubsAmt;
+    double wohTxAmt;
+    double wohGrndTot;
+    double wohShpChrg;
+    double wohNetAmt;
+    String wohPymTyp;
+    String wohPymMod;
+    String wohPymRecd;
+    String wohDelvryType;
+    String wohStatus;
+    dynamic wohSycDtTm;
+    String wohCpnCd;
+    String wohCpnRedmd;
+    dynamic wohTxId;
+    String ordtlIsDltd;
     String wodItmTotWeght;
     String wodItmWeght;
     String wodOrdSchdDt;
@@ -137,16 +141,16 @@ class MultItemOrder {
     String wodPdtNm;
     String wodSlId;
     String wodQty;
-    int wodSlPrc;
-    int wodDisAmt;
-    int wodSubsAmt;
+    double wodSlPrc;
+    double wodDisAmt;
+    double wodSubsAmt;
     String wodSts;
-    int wodIsDltd;
+    String wodIsDltd;
     String wodSubsCd;
     String wodSubsRedmd;
     String wodSz;
-    int wodTotPrc;
-    int wodTxCd;
+    double wodTotPrc;
+    double wodTxCd;
     double wodCgstPer;
     double wodCgstAmt;
     double wodSgstPer;
@@ -157,10 +161,10 @@ class MultItemOrder {
     double wodCessAmt;
     double wodKfcPer;
     double wodKfcAmt;
-    int wodTotTxAmt;
+    double wodTotTxAmt;
     String wodSycDtTm;
-    int wodShpChg;
-    int wodNetAmt;
+    double wodShpChg;
+    double wodNetAmt;
     String wosdCty;
     String wosdCy;
     String wosdFsNm;
@@ -179,40 +183,42 @@ class MultItemOrder {
     String wosdAddType;
     String wosdSycDtTm;
 
-    factory MultItemOrder.fromJson(Map<String, dynamic> json) => MultItemOrder(
-        companyCode: json["companyCode"],
-        storeCode: json["storeCode"],
-        orderDate: json["orderDate"],
-        ordeeTime: json["ordeeTime"],
-        orderInvoiceNumber: json["OrderInvoiceNumber"],
-        orderInvoiceDate: json["orderInvoiceDate"],
-        ordermode: json["ordermode"],
-        orderDeliverydate: json["orderDeliverydate"],
-        userId: json["userId"],
-        userName: json["userName"],
-        phoneNumber: json["phoneNumber"],
-        email: json["email"],
-        customerType: json["customerType"],
-        orderShppingState: json["orderShppingState"],
-        adminComment: json["adminComment"],
-        userComment: json["userComment"],
-        totalQuantity: json["totalQuantity"],
-        totalItem: json["totalItem"],
-        totalPrice: json["totalPrice"],
-        discountAmount: json["discountAmount"],
-        subsAmount: json["subsAmount"],
-        taxAmount: json["taxAmount"].toDouble(),
-        grandTotal: json["grandTotal"],
-        shppingCharge: json["shppingCharge"],
-        netAmount: json["netAmount"],
-        paymentType: json["paymentType"],
-        paymentMode: json["paymentMode"],
-        paymentRecieved: json["paymentRecieved"],
-        deliveryType: json["deliveryType"],
-        orderStatus: json["orderStatus"],
-        orderSyncDateTime: json["orderSyncDateTime"],
-        orderCuponCode: json["orderCuponCode"],
-        cuponRedeemed: json["cuponRedeemed"],
+    factory OrderItem.fromJson(Map<String, dynamic> json) => OrderItem(
+        wohCmyCd: json["woh_cmy_cd"],
+        wohStrCd: json["woh_str_cd"],
+        wohOrdDt: DateTime.parse(json["woh_ord_dt"]),
+        wohOrdTime: json["woh_ord_time"],
+        wohInvcNum: json["woh_invc_num"],
+        wohInvcDt: DateTime.parse(json["woh_invc_dt"]),
+        wohOrdMod: json["woh_ord_mod"],
+        wohDvDt: DateTime.parse(json["woh_dv_dt"]),
+        wohUsrId: json["woh_usr_id"],
+        wohUsrNm: json["woh_usr_nm"],
+        wohPhNum: json["woh_ph_num"],
+        wohEmlId: json["woh_eml_id"],
+        wohCstType: json["woh_cst_type"],
+        wohShpSt: json["woh_shp_st"],
+        wohAdmCmt: json["woh_adm_cmt"],
+        wohUsrCmt: json["woh_usr_cmt"],
+        wohTotQnt: json["woh_tot_qnt"],
+        wohTotItm: json["woh_tot_itm"],
+        wohMrp: json["woh_mrp"],
+        wohTotPrc: json["woh_tot_prc"],
+        wohDisAmt: json["woh_dis_amt"],
+        wohSubsAmt: json["woh_subs_amt"],
+        wohTxAmt: json["woh_tx_amt"],
+        wohGrndTot: json["woh_grnd_tot"],
+        wohShpChrg: json["woh_shp_chrg"],
+        wohNetAmt: json["woh_net_amt"],
+        wohPymTyp: json["woh_pym_typ"],
+        wohPymMod: json["woh_pym_mod"],
+        wohPymRecd: json["woh_pym_recd"],
+        wohDelvryType: json["woh_delvry_type"],
+        wohStatus: json["woh_status"],
+        wohSycDtTm: json["woh_syc_dt_tm"],
+        wohCpnCd: json["woh_cpn_cd"],
+        wohCpnRedmd: json["woh_cpn_redmd"],
+        wohTxId: json["woh_tx_id"],
         ordtlIsDltd: json["ordtl_is_dltd"],
         wodItmTotWeght: json["wod_itm_tot_weght"],
         wodItmWeght: json["wod_itm_weght"],
@@ -266,39 +272,41 @@ class MultItemOrder {
     );
 
     Map<String, dynamic> toJson() => {
-        "companyCode": companyCode,
-        "storeCode": storeCode,
-        "orderDate": orderDate,
-        "ordeeTime": ordeeTime,
-        "OrderInvoiceNumber": orderInvoiceNumber,
-        "orderInvoiceDate": orderInvoiceDate,
-        "ordermode": ordermode,
-        "orderDeliverydate": orderDeliverydate,
-        "userId": userId,
-        "userName": userName,
-        "phoneNumber": phoneNumber,
-        "email": email,
-        "customerType": customerType,
-        "orderShppingState": orderShppingState,
-        "adminComment": adminComment,
-        "userComment": userComment,
-        "totalQuantity": totalQuantity,
-        "totalItem": totalItem,
-        "totalPrice": totalPrice,
-        "discountAmount": discountAmount,
-        "subsAmount": subsAmount,
-        "taxAmount": taxAmount,
-        "grandTotal": grandTotal,
-        "shppingCharge": shppingCharge,
-        "netAmount": netAmount,
-        "paymentType": paymentType,
-        "paymentMode": paymentMode,
-        "paymentRecieved": paymentRecieved,
-        "deliveryType": deliveryType,
-        "orderStatus": orderStatus,
-        "orderSyncDateTime": orderSyncDateTime,
-        "orderCuponCode": orderCuponCode,
-        "cuponRedeemed": cuponRedeemed,
+        "woh_cmy_cd": wohCmyCd,
+        "woh_str_cd": wohStrCd,
+        "woh_ord_dt": "${wohOrdDt.year.toString().padLeft(4, '0')}-${wohOrdDt.month.toString().padLeft(2, '0')}-${wohOrdDt.day.toString().padLeft(2, '0')}",
+        "woh_ord_time": wohOrdTime,
+        "woh_invc_num": wohInvcNum,
+        "woh_invc_dt": "${wohInvcDt.year.toString().padLeft(4, '0')}-${wohInvcDt.month.toString().padLeft(2, '0')}-${wohInvcDt.day.toString().padLeft(2, '0')}",
+        "woh_ord_mod": wohOrdMod,
+        "woh_dv_dt": "${wohDvDt.year.toString().padLeft(4, '0')}-${wohDvDt.month.toString().padLeft(2, '0')}-${wohDvDt.day.toString().padLeft(2, '0')}",
+        "woh_usr_id": wohUsrId,
+        "woh_usr_nm": wohUsrNm,
+        "woh_ph_num": wohPhNum,
+        "woh_eml_id": wohEmlId,
+        "woh_cst_type": wohCstType,
+        "woh_shp_st": wohShpSt,
+        "woh_adm_cmt": wohAdmCmt,
+        "woh_usr_cmt": wohUsrCmt,
+        "woh_tot_qnt": wohTotQnt,
+        "woh_tot_itm": wohTotItm,
+        "woh_mrp": wohMrp,
+        "woh_tot_prc": wohTotPrc,
+        "woh_dis_amt": wohDisAmt,
+        "woh_subs_amt": wohSubsAmt,
+        "woh_tx_amt": wohTxAmt,
+        "woh_grnd_tot": wohGrndTot,
+        "woh_shp_chrg": wohShpChrg,
+        "woh_net_amt": wohNetAmt,
+        "woh_pym_typ": wohPymTyp,
+        "woh_pym_mod": wohPymMod,
+        "woh_pym_recd": wohPymRecd,
+        "woh_delvry_type": wohDelvryType,
+        "woh_status": wohStatus,
+        "woh_syc_dt_tm": wohSycDtTm,
+        "woh_cpn_cd": wohCpnCd,
+        "woh_cpn_redmd": wohCpnRedmd,
+        "woh_tx_id": wohTxId,
         "ordtl_is_dltd": ordtlIsDltd,
         "wod_itm_tot_weght": wodItmTotWeght,
         "wod_itm_weght": wodItmWeght,

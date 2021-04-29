@@ -160,7 +160,9 @@ class _WishlistState extends State<Wishlist> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   WishlistItem item = snapshot.data[index];
-                  return WishlistCard(
+                  return
+                  
+                  WishlistCard(
                     productId: item.productId,
                     cartItems: cartItems,
                     notifyParent: reload,

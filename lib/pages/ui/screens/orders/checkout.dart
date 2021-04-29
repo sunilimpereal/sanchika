@@ -3,11 +3,10 @@ import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/model/getAddresss_model.dart';
 import 'package:sanchika/model/multiitemSaveOrder.dart';
 import 'package:sanchika/model/myInformation.dart';
-import 'package:sanchika/model/orderItem_model.dart';
 import 'package:sanchika/model/product.dart';
-import 'package:sanchika/pages/ui/screens/payment/payment_page.dart';
 import 'package:sanchika/pages/ui/screens/saveOrderDetails.dart';
 import 'package:sanchika/services/api_service.dart';
+import 'package:sanchika/utils/CartToOrder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -21,32 +20,13 @@ class Checkoutpage extends StatefulWidget {
 class _CheckoutpageState extends State<Checkoutpage> {
   APIService apiService;
   String userId;
-  List<MultItemOrder> multiItems = [];
+  List<OrderItem> orderItems = [];
   void getOrderitems(MyInformationClass myInformationClass) {
+    
     setState(() {
-      multiItems = widget.cartItems.map((a) {
-        print('beelo');
-        MultItemOrder orderItem = new MultItemOrder();
-        orderItem.totalQuantity = a.quantity.toString();
-        orderItem.userId = userId;
-        orderItem.orderDate = DateTime.now().toString();
-        orderItem.wodPdtId = a.productId;
-        orderItem.userId = a.userId.toString();
-        orderItem.totalPrice = double.parse(a.totalAmount).round();
-        orderItem.email = myInformation.email;
-        orderItem.wodSlPrc = a.productSellingPrice.round();
-        orderItem.userName = myInformation.firstName;
-        // orderItem.wodQty = a.quantity.toString();
-        // orderItem.wosdShipAds2 = address?.asd1 +
-        //     "," +
-        //     address?.city1 +
-        //     "," +
-        //     address?.pin1 +
-        //     "," +
-        //     address?.state1;
-        orderItem.phoneNumber = myInformation.mobile;
-        return orderItem;
-      }).toList();
+      print("first Name :${myInformation?.firstName}");
+      ConvertCartToOrder conv =  ConvertCartToOrder(userId: userId,cartItems: widget.cartItems,myInformation: myInformationClass,address: address);
+      orderItems = conv.convert();
     });
   }
 
@@ -151,7 +131,7 @@ class _CheckoutpageState extends State<Checkoutpage> {
           onTap: () {
             // APIService apiService = APIService();
             // getOrderitems();
-            print(multiItems);
+            print(orderItems);
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(
@@ -263,7 +243,7 @@ class _CheckoutpageState extends State<Checkoutpage> {
                               Radius.circular(10),
                             ),
                             image: DecorationImage(
-                                image: NetworkImage(product.productImage))),
+                                image: NetworkImage(product.pdmIm1))),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -279,7 +259,7 @@ class _CheckoutpageState extends State<Checkoutpage> {
                                     width: MediaQuery.of(context).size.width *
                                         0.58,
                                     child: Text(
-                                      product.productName,
+                                      product.pdmPdtNm,
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
@@ -330,8 +310,8 @@ class _CheckoutpageState extends State<Checkoutpage> {
                     ],
                   ),
                   discount(
-                      mrp: double.parse(product.mrpPrice),
-                      slp: double.parse(product.slPrice)),
+                      mrp: double.parse(product.mrpPr??"0"),
+                      slp: double.parse(product.slPrc??'0')),
                 ],
               ),
             );
@@ -436,7 +416,6 @@ class _CheckoutpageState extends State<Checkoutpage> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width * 0.8,
-         
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -465,9 +444,9 @@ class _CheckoutpageState extends State<Checkoutpage> {
               ]),
               SizedBox(height: 5),
               Row(children: [
-                SizedBox(width:3),
+                SizedBox(width: 3),
                 Text(
-                  myInformation.firstName + " " + myInformation.lastName,
+                  "${myInformation?.firstName}" + " " + "${myInformation?.lastName}",
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w800,
@@ -478,7 +457,7 @@ class _CheckoutpageState extends State<Checkoutpage> {
               Row(children: [
                 SizedBox(width: 3),
                 Text(
-                  myInformation.mobile,
+                  "${myInformation?.mobile}",
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w500,
@@ -492,13 +471,13 @@ class _CheckoutpageState extends State<Checkoutpage> {
                     padding: const EdgeInsets.all(0),
                     child: Text(
                       address != null
-                          ? address?.asd1 +
+                          ? "${address?.asd1}" +
                               ',' +
-                              address?.city1 +
+                              "${address?.city1 }"+
                               ',' +
-                              address.state1 +
+                              "${address.state1}" +
                               ',' +
-                              address.pin1
+                              "${address.pin1}"
                           : 'No address.update your address',
                       style: TextStyle(fontSize: 16),
                     ),
@@ -510,7 +489,6 @@ class _CheckoutpageState extends State<Checkoutpage> {
           ),
         ),
         Container(
-         
           child: Column(
             children: [
               Container(

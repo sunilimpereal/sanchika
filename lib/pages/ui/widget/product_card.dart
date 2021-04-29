@@ -23,7 +23,11 @@ class ProductCard extends StatefulWidget {
   final translator = GoogleTranslator();
   Function onMenuItemClicked;
   ProductCard(
-      {this.product, this.wishlist, this.cartItems,this.reload, this.onMenuItemClicked});
+      {this.product,
+      this.wishlist,
+      this.cartItems,
+      this.reload,
+      this.onMenuItemClicked});
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -39,18 +43,19 @@ class _ProductCardState extends State<ProductCard>
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     if (preferences.getString('language') == 'malayalam') {
-      Product productmal = widget.product;
+      Product productmal = new Product();
+      productmal = widget.product;
       final translator = GoogleTranslator();
-      translator.translate(widget.product.productName, to: 'ml').then((result) {
-        productmal.productName = result.text;
+      translator.translate(widget.product.pdmPdtNm, to: 'ml').then((result) {
+        productmal.pdmPdtNm = result.text;
         translator
-            .translate(widget.product.productDescription, to: 'ml')
+            .translate(widget.product.pdmPdtDscr, to: 'ml')
             .then((result) {
-          productmal.productDescription = result.text;
+          productmal.pdmPdtDscr = result.text;
           translator
-              .translate(widget.product.productDescription, to: 'ml')
+              .translate(widget.product.pdmPdtDscr, to: 'ml')
               .then((result) {
-            productmal.productDescription = result.text;
+            productmal.pdmPdtDscr = result.text;
             setState(() {});
           });
         });
@@ -74,8 +79,8 @@ class _ProductCardState extends State<ProductCard>
   }
 
   void checkCart() {
-    for (CartItem c in widget.cartItems??[]) {
-      if (c.productId == widget.product.productId) {
+    for (CartItem c in widget.cartItems ?? []) {
+      if (c.productId == widget.product.pdmPdtId) {
         setState(() {
           incart = true;
         });
@@ -87,7 +92,7 @@ class _ProductCardState extends State<ProductCard>
   void initState() {
     super.initState();
     getUserId();
-    print(widget.product.productId);
+    print(widget.product.pdmPdtId);
     checkCart();
   }
 
@@ -102,27 +107,30 @@ class _ProductCardState extends State<ProductCard>
   @override
   Widget build(BuildContext context) {
     bool isInWishlist = false;
-    return FutureBuilder(
-      future: translate(widget.product),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          for (WishlistItem item in widget.wishlist ?? []) {
-            print('checking');
-            if (item.productId == snapshot.data.productId) {
-              print('present');
-              return _cardUi(
-                  context: context, product: snapshot.data, inwishlist: true);
-            }
-          }
-          return _cardUi(
-              context: context,
-              product: snapshot.data,
-              inwishlist: isInWishlist);
-        } else {
-          return Container();
-        }
-      },
-    );
+    return _cardUi(
+        context: context, product: widget.product, inwishlist: isInWishlist);
+    // FutureBuilder(
+    //   future: translate(widget.product),
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasData) {
+    //       for (WishlistItem item in widget.wishlist ?? []) {
+    //         print('checking');
+    //         if (item.productId == snapshot.data.productId) {
+    //           print('present');
+    //           return _cardUi(
+    //               context: context, product: snapshot.data, inwishlist: true);
+    //         }
+    //       }
+    //       return
+    //        _cardUi(
+    //           context: context,
+    //           product: snapshot.data,
+    //           inwishlist: isInWishlist);
+    //     } else {
+    //       return Container();
+    //     }
+    //   },
+    // );
   }
 
   @override
@@ -151,180 +159,141 @@ class _ProductCardState extends State<ProductCard>
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     padding: EdgeInsets.all(.0),
-                    height: MediaQuery.of(context).size.height * .34,
+                    height: MediaQuery.of(context).size.height * .32,
                     width: MediaQuery.of(context).size.width * 0.43,
                     decoration: BoxDecoration(
                       color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal:8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 6.0,vertical: 6.0),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Hero(
-                            tag: 'image' + product.productName,
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Hero(
+                              tag: 'image' + product.pdmPdtId,
+                              child: Container(
+                                height: MediaQuery.of(context).size.height *
+                                    .28 *
+                                    0.6,
+                                width:
+                                    MediaQuery.of(context).size.width * 0.45 - 5,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 0.0, right: 0.0, bottom: 0.0),
+                                  child: Stack(children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                        // image: DecorationImage(
+                                        //     image: NetworkImage(
+                                        //         widget.product.pdmIm1),
+                                        //     fit: BoxFit.contain),
+                                      ),
+                                    ),
+                                  ]),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
                             child: Container(
-                              height: MediaQuery.of(context).size.height * .28 * 0.6,
-                              width: MediaQuery.of(context).size.width * 0.45 - 5,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 0.0, right: 0.0, bottom: 0.0),
-                                child: Stack(children: [
+                              child: Column(
+                                children: [
                                   Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      image: DecorationImage(
-                                          image: NetworkImage(
-                                              widget.product.productImage),
-                                          fit: BoxFit.contain),
+                                    width: double.maxFinite,
+                                    child: Text(
+                                      product.pdmPdtNm,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.normal,
+                                      ),
                                     ),
                                   ),
-                                ]),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            '₹${product.slPrc}',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          // price1(double.parse(
+                                          //         widget.product?.mrpPr ??
+                                          //             "10") ??
+                                          //     0),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            width: double.maxFinite,
-                            child: Text(
-                              product.productName,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              // Text(
-                              //   widget.product.type == null ? '' : widget.product.type,
-                              //   style: TextStyle(
-                              //     fontSize: 14,
-                              //     fontFamily: 'Poppins,
-                              //     fontWeight: FontWeight.w600,
-                              //   ),
-                              // ),
-                            ],
                           ),
                           SizedBox(
                             height: 0,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    '₹${product.slPrice}',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  price1(double.parse(widget.product.mrpPrice) ?? 0),
-                                ],
-                              ),
-                              //TODO:
-                              // dropdown(),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: 50,
-                            width: 150,
-                          )
-
-                 
                         ],
                       ),
                     ),
                   ),
                 ),
-                 //Stepper buttom
-          button(),
-          discount(
-              mrp: double.parse(product?.mrpPrice ?? '0') ?? 0,
-              slp: double.parse(product?.slPrice) ?? 0),
-          Positioned(
-            right: 0,
-            child: Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: FavoriteButton(
-                isFavorite: inwishlist,
-                iconSize: 28,
-                valueChanged: (value) {
-                  if (!inwishlist) {
-                    AddWishlistRequest addWishlistRequest =
-                        AddWishlistRequest();
-                    addWishlistRequest.userId = int.parse(userId);
-                    addWishlistRequest.productId = product.productId;
-                    APIService apiService = new APIService();
-                    apiService.addToWishlist(addWishlistRequest).then((value) {
-                      if (value == true) {
-                           widget.reload;
-                        setState(() {
-                          inwishlist = true;
-                       
-                        });
-                      }
-                    });
-                  } else {}
-                },
-              ),
-            ),
-          )
+                //Stepper buttom
+                button(),
+                discount(
+                    mrp: double.parse(product?.mrpPr ?? '0') ?? 0,
+                    slp: double.parse(product?.slPrc ?? "0") ?? 0),
+                Positioned(
+                  right: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: FavoriteButton(
+                      isFavorite: inwishlist,
+                      iconSize: 28,
+                      valueChanged: (value) {
+                        if (!inwishlist) {
+                          AddWishlistRequest addWishlistRequest =
+                              AddWishlistRequest();
+                          addWishlistRequest.userId = int.parse(userId);
+                          addWishlistRequest.productId = product.pdmPdtId;
+                          APIService apiService = new APIService();
+                          apiService
+                              .addToWishlist(addWishlistRequest)
+                              .then((value) {
+                            if (value == true) {
+                              widget.reload;
+                              setState(() {
+                                inwishlist = true;
+                              });
+                            }
+                          });
+                        } else {}
+                      },
+                    ),
+                  ),
+                )
               ],
             ),
           ),
-         
 
           //button
-
-          
         ],
       ),
     );
   }
-
-  // Container dropdown() {
-  //   if (widget.product.type == null || widget.product.typeList == null) {
-  //     return Container();
-  //   } else {
-  //     List<String> _typeList = widget.product.typeList;
-  //     _selectedValue = widget.product.typeList[0];
-  //     return Container(
-  //       child: Center(
-  //         child: DropdownButton<String>(
-  //           value: _selectedValue,
-  //           items: _typeList.map((String value) {
-  //             return new DropdownMenuItem(
-  //               value: value,
-  //               child: new Text(value),
-  //             );
-  //           }).toList(),
-  //           onChanged: (newValue) {
-  //             setState(() {
-  //               _selectedValue = newValue;
-  //             });
-  //           },
-  //           dropdownColor: Colors.grey[200],
-  //           style: TextStyle(
-  //               fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
 
   Text price1(double price1) {
     if (price1 != null) {
@@ -344,7 +313,7 @@ class _ProductCardState extends State<ProductCard>
   Widget button() {
     if (incart) {
       return Positioned(
-         bottom: 0,
+        bottom: 0,
         left: 10,
         child: Align(
           alignment: Alignment.bottomCenter,
@@ -396,17 +365,17 @@ class _ProductCardState extends State<ProductCard>
                     color: Colors.green.shade400)
               },
               onPressed: () {
-                print(widget.product.productId);
-                    print(widget.product.mrpPrice);
-                      print(widget.product.slPrice);
+                print(widget.product.pdmPdtId);
+                print(widget.product.mrpPr);
+                print(widget.product.slPrc);
                 addToCart(
-                    productId: widget.product.productId,
+                    productId: widget.product.pdmPdtId,
                     userId: userId,
-                    mrpPrice: double.parse(widget.product.mrpPrice),
-                    slPrice: double.parse(widget.product.slPrice),
-                    productName: widget.product.productName,
+                    mrpPrice: double.parse(widget.product.mrpPr??'0'),
+                    slPrice: double.parse(widget.product.slPrc??'0'),
+                    productName: widget.product.pdmPdtNm,
                     quantity: 1,
-                    grandTotal: double.parse(widget.product.slPrice));
+                    grandTotal: double.parse(widget.product.slPrc??'0'));
               },
               state: stateTextWithIcon,
             ),
@@ -419,7 +388,9 @@ class _ProductCardState extends State<ProductCard>
   discount({double mrp, double slp}) {
     int discount = 0;
     if (mrp != slp) {
-      discount = (((mrp - slp) / mrp) * 100).round();
+      if (mrp != 0) {
+        discount = (((mrp - slp) / mrp) * 100).round();
+      }
     } else {}
     if (discount > 0) {
       return Positioned(
@@ -456,7 +427,7 @@ class _ProductCardState extends State<ProductCard>
       double mrpPrice,
       double slPrice,
       double grandTotal}) async {
-    print('productId $productId');
+    print('userId $userId');
     switch (stateTextWithIcon) {
       case ButtonState.idle:
         setState(() {
@@ -481,7 +452,7 @@ class _ProductCardState extends State<ProductCard>
               stateTextWithIcon = ButtonState.success;
             });
             setState(() {
-              incart=true;
+              incart = true;
             });
           }
           if (value == false) {

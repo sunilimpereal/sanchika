@@ -302,7 +302,8 @@ class PprofileState extends State<Profile> {
                       if(snapshot.hasData){
                         ShippingAddress address= snapshot.data;
                         return Text(
-                          address.asd1+","+address.city1+","+address.pin1+","+address.state1
+                         
+                          "${address.asd1}"+","+"${address.city1}"+","+"${address.pin1}"+","+"${address.state1}"
                         );
                       }else{
                         return Text("");

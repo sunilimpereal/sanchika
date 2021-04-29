@@ -57,11 +57,12 @@ class _CartState extends State<Cart> {
       userId = userId;
     });
   }
+
   APIService apiService = APIService();
 
   @override
   void initState() {
-    apiService = APIService(); 
+    apiService = APIService();
     getUserId().then((value) {
       getCartTotal(value);
     });
@@ -88,237 +89,252 @@ class _CartState extends State<Cart> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: leading(),
-        elevation: 0,
-        title: GestureDetector(
-          onTap: () {},
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Text(
-                    getTranslated(context, "My_Cart"),
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Poppins'),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: leading(),
+          elevation: 0,
+          title: GestureDetector(
+            onTap: () {},
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      getTranslated(context, "My_Cart"),
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Poppins'),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 4),
+                Row(
+                  children: [
+                    FutureBuilder(
+                      future: getCart(userId),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<CartItem> cartitems = snapshot.data;
+
+                          String number = snapshot.data.length.toString();
+                          return Text(
+                            number == '1' ? "$number item" : "$number items ",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w300,
+                              fontSize: 12,
+                            ),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            Stack(
+              children: [
+                IconButton(
+                  padding: EdgeInsets.only(top: 0),
+                  icon: Icon(
+                    Icons.favorite_rounded,
+                    color: Color(0xff032e6b).withAlpha(180),
+                    size: 24,
                   ),
-                ],
-              ),
-              SizedBox(height: 4),
-              Row(
-                children: [
-                  FutureBuilder(
-                    future: getCart(userId),
+                  onPressed: () {
+                    BlocProvider.of<NavigationBloc>(context)
+                        .add(NavigationEvents.WishlistClickedEvent);
+                    widget.onMenuItemClicked();
+                  },
+                ),
+                FutureBuilder(
+                    future: apiService.countWishlist(userId),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        List<CartItem> cartitems = snapshot.data;
-
-                        String number = snapshot.data.length.toString();
-                        return Text(
-                          number == '1' ? "$number item" : "$number items ",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w300,
-                            fontSize: 12,
-                          ),
-                        );
-                      } else {
-                        return Container();
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          Stack(
-            children: [
-              IconButton(
-                padding: EdgeInsets.only(top: 0),
-                icon: Icon(
-                  Icons.favorite_rounded,
-                  color: Color(0xff032e6b).withAlpha(180),
-                  size: 24,
-                ),
-                onPressed: () {
-                  BlocProvider.of<NavigationBloc>(context)
-                      .add(NavigationEvents.WishlistClickedEvent);
-                  widget.onMenuItemClicked();
-                },
-              ),
-              FutureBuilder(
-                  future: apiService.countWishlist(userId),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      if (int.parse(snapshot.data) > 0) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 8.0, left: 25),
-                          child: Container(
-                            height: 18,
-                            width: 18,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Color(0xff032e6b),
-                            ),
-                            child: Center(
-                              child: Text(
-                                snapshot.data,
-                                style: TextStyle(
-                                  color: Colors.white,
+                        if (int.parse(snapshot.data) > 0) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8.0, left: 25),
+                            child: Container(
+                              height: 18,
+                              width: 18,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Color(0xff032e6b),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  snapshot.data,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
+                          );
+                        } else {
+                          return SizedBox();
+                        }
                       } else {
                         return SizedBox();
                       }
-                    } else {
-                      return SizedBox();
-                    }
-                  }),
-            ],
-          ),
-       
-        ],
-      ),
-      body: FutureBuilder(
-        future: getCart(userId),
-        builder: (context, snapshot) {
-          List<CartItem> cartitems = snapshot.data;
-
-          if (snapshot.hasData) {
-            return ListView.builder(
-                cacheExtent: 100000,
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  CartItem cartItem = snapshot.data[index];
-                  return CartCard(
-                    userId: userId,
-                    productId: cartItem.productId,
-                    qty: cartItem.quantity,
-                    notifyParent: reload,
-                  );
-                });
-          } else {
-            const spinkit = SpinKitDoubleBounce(
-              color: Color(0xff032e6b),
-              size: 50.0,
-            );
-            return Center(child: spinkit);
-          }
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              offset: const Offset(3.0, 2.0),
-              color: Colors.grey[400],
-              blurRadius: 3.0,
-              spreadRadius: 2.0,
+                    }),
+              ],
             ),
           ],
         ),
-        width: MediaQuery.of(context).size.width,
-        height: 55,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 4.0, bottom: 3, top: 3),
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.35,
-                height: 45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                ),
-                child: Center(
-                  child: Text(
-                    "₹$cartTotal",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                    ),
+        body: FutureBuilder(
+          future: getCart(userId),
+          builder: (context, snapshot) {
+            List<CartItem> cartitems = snapshot.data;
+
+            if (snapshot.hasData) {
+              return ListView.builder(
+                  cacheExtent: 100000,
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    CartItem cartItem = snapshot.data[index];
+                    return CartCard(
+                      userId: userId,
+                      productId: cartItem.productId,
+                      qty: cartItem.quantity,
+                      notifyParent: reload,
+                    );
+                  });
+            } else {
+              const spinkit = SpinKitDoubleBounce(
+                color: Color(0xff032e6b),
+                size: 50.0,
+              );
+              return Center(child: spinkit);
+            }
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FutureBuilder(
+            future: getCart(userId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                List<CartItem> cartitems = snapshot.data;
+                if(cartitems.length>0){
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(3.0, 2.0),
+                        color: Colors.grey[400],
+                        blurRadius: 3.0,
+                        spreadRadius: 2.0,
+                      ),
+                    ],
                   ),
-                ),
-              ),
-            ),
-            FutureBuilder(
-              future: getCart(userId),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Checkoutpage(
-                                  cartItems: snapshot.data,
-                                )),
-                      );
-                    },
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 0.0, bottom: 3, top: 3),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.55,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Color(0xff0b3666),
-                          boxShadow: [
-                            BoxShadow(
-                              offset: const Offset(3.0, 2.0),
-                              color: Colors.grey[200],
-                              blurRadius: 3.0,
-                              spreadRadius: 2.0,
+                  width: MediaQuery.of(context).size.width,
+                  height: 55,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 4.0, bottom: 3, top: 3),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.35,
+                          height: 45,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "₹$cartTotal",
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(
-                                  Icons.shopping_cart_outlined,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                              Text(
-                                'Checkout',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
                           ),
                         ),
                       ),
-                    ),
-                  );
-                } else {
-                  return Container();
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-    );
+                      FutureBuilder(
+                        future: getCart(userId),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Checkoutpage(
+                                            cartItems: snapshot.data,
+                                          )),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 0.0, bottom: 3, top: 3),
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.55,
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Color(0xff0b3666),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        offset: const Offset(3.0, 2.0),
+                                        color: Colors.grey[200],
+                                        blurRadius: 3.0,
+                                        spreadRadius: 2.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Icon(
+                                            Icons.shopping_cart_outlined,
+                                            color: Colors.white70,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Checkout',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }else{
+                return Container();
+              }
+              
+              }else{
+                return Container();
+              }
+            }));
   }
 
   Widget cartTot(String userId) {

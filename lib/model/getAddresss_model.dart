@@ -89,11 +89,11 @@ class ShippingAddress {
     dynamic gender;
     String asd1;
     dynamic asd2;
-    String pin1;
+    dynamic pin1;
     dynamic pin2;
-    String city1;
+    dynamic city1;
     dynamic city2;
-    String state1;
+    dynamic state1;
     dynamic state2;
     dynamic qualification;
     dynamic occupation;
