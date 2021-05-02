@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rive/rive.dart';
 import 'package:sanchika/menu_dashboard/menu_dashboard.dart';
 import 'package:sanchika/model/login_model.dart';
+import 'package:sanchika/pages/authentication/signup/signupbox.dart';
 import 'package:sanchika/pages/authentication/signup_page.dart';
 import 'package:sanchika/pages/ui/widget/forgotPassword.dart';
 import 'package:sanchika/services/api_service.dart';
@@ -28,8 +29,16 @@ class _LoginPageState extends State<LoginPage> {
   bool isApiCallProcess = false;
   Artboard _riveArtboard;
   RiveAnimationController _controller;
+  bool _obscureText = false;
+  void _toggle() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
   @override
   void initState() {
+    _obscureText = true;
     super.initState();
     requestModel = new LoginRequestModel();
     rootBundle.load('assets/rive/login.riv').then((value) async {
@@ -133,20 +142,22 @@ class _LoginPageState extends State<LoginPage> {
                               height: ScreenUtil.getInstance().setHeight(30),
                             ),
                             Container(
-                              height: 60,
                               child: TextFormField(
                                 onTap: () {
                                   Timer(
                                     Duration(milliseconds: 500),
                                     () => controller.jumpTo(
-                                        controller.position.maxScrollExtent-20),
+                                        controller.position.maxScrollExtent -
+                                            20),
                                   );
                                 },
                                 decoration: InputDecoration(
+                                   isDense: true,
+                                  contentPadding: EdgeInsets.all(15),
                                   labelText: 'Email',
                                   fillColor: Colors.white,
                                   border: new OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
+                                    borderRadius: BorderRadius.circular(8.0),
                                     borderSide: new BorderSide(),
                                   ),
                                 ),
@@ -172,15 +183,41 @@ class _LoginPageState extends State<LoginPage> {
                               height: ScreenUtil.getInstance().setHeight(25),
                             ),
                             Container(
-                              height: 60,
                               child: TextFormField(
+                                obscureText: _obscureText,
                                 decoration: InputDecoration(
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.all(15),
                                   labelText: 'Password',
                                   fillColor: Colors.white,
-                                  border: new OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                    borderSide: new BorderSide(),
+                                  focusedBorder: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: new BorderSide(
+                                      color: Color(0xff032E6B),
+                                    ),
                                   ),
+                                  border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: new BorderSide(
+                                      color: Color(0xff032E6B),
+                                    ),
+                                  ),
+                                  suffixIcon: IconButton(
+                                      icon: Icon(
+                                        // Based on passwordVisible state choose the icon
+                                        !_obscureText
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color:
+                                           Colors.grey,
+                                            size: 18,
+                                      ),
+                                      onPressed: () {
+                                        // Update the state i.e. toogle the state of passwordVisible variable
+                                        setState(() {
+                                          _toggle();
+                                        });
+                                      }),
                                 ),
                                 onChanged: (val) {
                                   setState(() {
@@ -272,6 +309,7 @@ class _LoginPageState extends State<LoginPage> {
                                             .login(requestModel, context)
                                             .then((value) async {
                                           if (value != null) {
+                                            if(value.status=='0'){
                                             SharedPreferences preferences =
                                                 await SharedPreferences
                                                     .getInstance();
@@ -295,6 +333,9 @@ class _LoginPageState extends State<LoginPage> {
                                                   builder: (context) =>
                                                       MenuDashboard()),
                                             );
+                                            }else{
+                                              
+                                            }
                                           } else {
                                             setState(() {
                                               isApiCallProcess = false;
@@ -335,7 +376,7 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SignupPage()),
+                                    builder: (context) => SignUpBox()),
                               );
                             },
                             child: Text("SignUp",

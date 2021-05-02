@@ -115,10 +115,10 @@ class ProductSearch extends SearchDelegate<Product> {
             itemBuilder: (context, index) {
               return ListTile(
                 onTap: () {
-                  query = results[index].productName;
+                  query = results[index].pdmPdtNm;
                   showResults(context);
                 },
-                title: Text(results[index].productName),
+                title: Text(results[index].pdmPdtNm),
               );
             },
           );

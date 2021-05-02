@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:sanchika/model/myInformation.dart';
+import 'package:sanchika/model/paymentUpdate.dart';
+import 'package:sanchika/model/placedOrder.dart';
 import 'package:sanchika/pages/ui/screens/order_placed.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +11,7 @@ import 'package:toast/toast.dart';
 enum Payments { cod, payNow }
 
 class Payment extends StatefulWidget {
+ List<OrderUserDetails> orderdetails;
   double totalAmount;
   Payment({this.totalAmount});
   @override
@@ -53,6 +56,10 @@ class _PaymentState extends State<Payment> {
 
   void handlerpaymentSuccess(PaymentSuccessResponse response) {
     print('payment suxxessful');
+    PaymentUpdate paymentUpdate = new PaymentUpdate();
+    paymentUpdate.wohPymMod = _payment==Payments.cod? "cod":"net pay";
+    paymentUpdate.wohTxId = response.paymentId; 
+    apiService.postpaymentupdate(widget.orderdetails[0].orderHeader.wohOrdNum.toString(),paymentUpdate  );
     Toast.show("${response.paymentId}", context,
         duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
     Navigator.push(
@@ -77,7 +84,7 @@ class _PaymentState extends State<Payment> {
     var options = {
       "key": "rzp_test_qOyccsKnU5LoUi",
 
-      "amount": amount*100 ,
+      "amount":amount==0? 100 :amount*100 ,
       "name": "sanchika",
       "description": "Payment for grocery",
       "external": {

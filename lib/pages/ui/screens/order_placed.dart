@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sanchika/menu_dashboard/menu_dashboard.dart';
+import 'package:sanchika/model/placedOrder.dart';
 class Orderplaced extends StatefulWidget {
+   List<OrderUserDetails> orderdetails;
   String paymentId;
   Orderplaced({this.paymentId});
   @override

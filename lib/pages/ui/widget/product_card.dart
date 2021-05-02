@@ -107,190 +107,207 @@ class _ProductCardState extends State<ProductCard>
   @override
   Widget build(BuildContext context) {
     bool isInWishlist = false;
-    return _cardUi(
-        context: context, product: widget.product, inwishlist: isInWishlist);
-    // FutureBuilder(
-    //   future: translate(widget.product),
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasData) {
-    //       for (WishlistItem item in widget.wishlist ?? []) {
-    //         print('checking');
-    //         if (item.productId == snapshot.data.productId) {
-    //           print('present');
-    //           return _cardUi(
-    //               context: context, product: snapshot.data, inwishlist: true);
-    //         }
-    //       }
-    //       return
-    //        _cardUi(
-    //           context: context,
-    //           product: snapshot.data,
-    //           inwishlist: isInWishlist);
-    //     } else {
-    //       return Container();
-    //     }
-    //   },
-    // );
+    return FutureBuilder(
+      future: translate(widget.product),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          for (WishlistItem item in widget.wishlist ?? []) {
+            print('checking');
+            if (item.productId == snapshot.data.pdmPdtId) {
+              print('present');
+              return _cardUi(
+                  context: context, product: snapshot.data, inwishlist: true);
+            }
+          }
+          return _cardUi(
+              context: context,
+              product: snapshot.data,
+              inwishlist: isInWishlist);
+        } else {
+          return Container();
+        }
+      },
+    );
   }
 
   @override
   Widget _cardUi({BuildContext context, Product product, bool inwishlist}) {
-    return Container(
-      color: Colors.transparent,
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ProductView(
-                          inWishlist: inwishlist,
-                          product: product,
-                          userId: userId,
-                          cartItems: widget.cartItems,
-                          onMenuItemClicked: widget.onMenuItemClicked,
-                        )),
-              );
-            },
-            child: Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: EdgeInsets.all(.0),
-                    height: MediaQuery.of(context).size.height * .32,
-                    width: MediaQuery.of(context).size.width * 0.43,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6.0,vertical: 6.0),
-                      child: Column(
-                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Hero(
-                              tag: 'image' + product.pdmPdtId,
-                              child: Container(
-                                height: MediaQuery.of(context).size.height *
-                                    .28 *
-                                    0.6,
-                                width:
-                                    MediaQuery.of(context).size.width * 0.45 - 5,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 0.0, right: 0.0, bottom: 0.0),
-                                  child: Stack(children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.transparent,
-                                        // image: DecorationImage(
-                                        //     image: NetworkImage(
-                                        //         widget.product.pdmIm1),
-                                        //     fit: BoxFit.contain),
-                                      ),
-                                    ),
-                                  ]),
-                                ),
-                              ),
-                            ),
+    return Material(
+      child: Container(
+        color: Colors.transparent,
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProductView(
+                            inWishlist: inwishlist,
+                            product: product,
+                            userId: userId,
+                            cartItems: widget.cartItems,
+                            onMenuItemClicked: widget.onMenuItemClicked,
+                          )),
+                );
+              },
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Material(
+                      elevation: 2,
+                      shadowColor: Colors.grey[100],
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.white70, width: 0),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: Container(
+                          padding: EdgeInsets.all(.0),
+                          height: MediaQuery.of(context).size.height * .32,
+                          width: MediaQuery.of(context).size.width * 0.43,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: double.maxFinite,
-                                    child: Text(
-                                      product.pdmPdtNm,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            '₹${product.slPrc}',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6.0, vertical: 6.0),
+                            child: Column(
+                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Hero(
+                                    tag: 'image' + product.pdmPdtId,
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .28 *
+                                              0.6,
+                                      width: MediaQuery.of(context).size.width *
+                                              0.45 -
+                                          5,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 0.0, right: 0.0, bottom: 0.0),
+                                        child: Stack(children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.transparent,
+                                              image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      widget.product.pdmIm1),
+                                                  fit: BoxFit.contain),
                                             ),
                                           ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          // price1(double.parse(
-                                          //         widget.product?.mrpPr ??
-                                          //             "10") ??
-                                          //     0),
-                                        ],
+                                        ]),
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Container(
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: double.maxFinite,
+                                          child: Text(
+                                            product.pdmPdtNm,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  '₹${product.slPrc ?? '0'}',
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                // price1(double.parse(
+                                                //         widget.product?.mrpPr ??
+                                                //             "10") ??
+                                                //     0),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 0,
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(
-                            height: 0,
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                //Stepper buttom
-                button(),
-                discount(
-                    mrp: double.parse(product?.mrpPr ?? '0') ?? 0,
-                    slp: double.parse(product?.slPrc ?? "0") ?? 0),
-                Positioned(
-                  right: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: FavoriteButton(
-                      isFavorite: inwishlist,
-                      iconSize: 28,
-                      valueChanged: (value) {
-                        if (!inwishlist) {
-                          AddWishlistRequest addWishlistRequest =
-                              AddWishlistRequest();
-                          addWishlistRequest.userId = int.parse(userId);
-                          addWishlistRequest.productId = product.pdmPdtId;
-                          APIService apiService = new APIService();
-                          apiService
-                              .addToWishlist(addWishlistRequest)
-                              .then((value) {
-                            if (value == true) {
-                              widget.reload;
-                              setState(() {
-                                inwishlist = true;
-                              });
-                            }
-                          });
-                        } else {}
-                      },
+                  //Stepper buttom
+                  button(),
+                  discount(
+                      mrp: double.parse(product?.mrpPr ?? '0') ?? 0,
+                      slp: double.parse(product?.slPrc ?? "0") ?? 0),
+                  Positioned(
+                    right: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: FavoriteButton(
+                        isFavorite: inwishlist,
+                        iconSize: 28,
+                        valueChanged: (value) {
+                          if (!inwishlist) {
+                            AddWishlistRequest addWishlistRequest =
+                                AddWishlistRequest();
+                            addWishlistRequest.userId = int.parse(userId);
+                            addWishlistRequest.productId = product.pdmPdtId;
+                            APIService apiService = new APIService();
+                            apiService
+                                .addToWishlist(addWishlistRequest)
+                                .then((value) {
+                              if (value == true) {
+                                widget.reload;
+                                setState(() {
+                                  inwishlist = true;
+                                });
+                              }
+                            });
+                          } else {}
+                        },
+                      ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
 
-          //button
-        ],
+            //button
+          ],
+        ),
       ),
     );
   }
@@ -314,7 +331,7 @@ class _ProductCardState extends State<ProductCard>
     if (incart) {
       return Positioned(
         bottom: 0,
-        left: 10,
+        left: 8,
         child: Align(
           alignment: Alignment.bottomCenter,
           child: Container(
@@ -371,11 +388,11 @@ class _ProductCardState extends State<ProductCard>
                 addToCart(
                     productId: widget.product.pdmPdtId,
                     userId: userId,
-                    mrpPrice: double.parse(widget.product.mrpPr??'0'),
-                    slPrice: double.parse(widget.product.slPrc??'0'),
+                    mrpPrice: double.parse(widget.product.mrpPr ?? '0'),
+                    slPrice: double.parse(widget.product.slPrc ?? '0'),
                     productName: widget.product.pdmPdtNm,
                     quantity: 1,
-                    grandTotal: double.parse(widget.product.slPrc??'0'));
+                    grandTotal: double.parse(widget.product.slPrc ?? '0'));
               },
               state: stateTextWithIcon,
             ),

@@ -36,7 +36,7 @@ class _CategoriesState extends State<Categories> {
   Future<List<CtgyNameAndId>> getCtgNameandId() async {
     List<CtgyNameAndId> topMenulist = await apiService.getCatg();
     setState(() {
-      activeCtg = topMenulist[1];
+      activeCtg = topMenulist[0];
     });
     return topMenulist;
   }
@@ -91,7 +91,7 @@ class _CategoriesState extends State<Categories> {
           Stack(
             children: [
               IconButton(
-                padding: EdgeInsets.only(top: 8),
+                padding: EdgeInsets.only(top: 0),
                 icon: Icon(
                   Icons.shopping_cart,
                   color: Color(0xff032e6b).withAlpha(180),
@@ -171,7 +171,7 @@ class _Category_dispState extends State<Category_disp> {
     super.initState();
     apiService = APIService();
     setState(() {
-      activeCtg = widget.ctgNameandId[1];
+      activeCtg = widget.ctgNameandId[0];
       color = Colors.red;
     });
   }

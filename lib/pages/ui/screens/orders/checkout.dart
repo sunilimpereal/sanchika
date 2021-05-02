@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/model/getAddresss_model.dart';
+import 'package:sanchika/model/getShippingDetail.dart';
 import 'package:sanchika/model/multiitemSaveOrder.dart';
 import 'package:sanchika/model/myInformation.dart';
 import 'package:sanchika/model/product.dart';
+import 'package:sanchika/pages/ui/screens/payment/payment_page.dart';
 import 'package:sanchika/pages/ui/screens/saveOrderDetails.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:sanchika/utils/CartToOrder.dart';
@@ -21,14 +23,16 @@ class _CheckoutpageState extends State<Checkoutpage> {
   APIService apiService;
   String userId;
   List<OrderItem> orderItems = [];
-  void getOrderitems(MyInformationClass myInformationClass) {
-    
-    setState(() {
-      print("first Name :${myInformation?.firstName}");
-      ConvertCartToOrder conv =  ConvertCartToOrder(userId: userId,cartItems: widget.cartItems,myInformation: myInformationClass,address: address);
-      orderItems = conv.convert();
-    });
+  List<OrderItem> getOrderitems({ShippingAddress shippingAddress}) {
+    print("first Name :${shippingAddress?.firstName}");
+    ConvertCartToOrder conv = ConvertCartToOrder(
+        userId: userId, cartItems: widget.cartItems, address: shippingAddress);
+    orderItems =
+        conv.convert(address: shippingAddress, cartItems: widget.cartItems);
+    print(orderItems);
+    return orderItems;
   }
+  // http://sanchika.in:8081/sanchikaapi/sanchika/user/getShippingAddress?userId=1000
 
   Future<String> getUserId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -59,23 +63,11 @@ class _CheckoutpageState extends State<Checkoutpage> {
   ShippingAddress address;
   Future getAddress(String userId) async {
     APIService apiService = APIService();
-    await apiService.getAddress(userId).then((value) {
+    await apiService.getShippingDetail(userId).then((value) {
       setState(() {
         address = value;
       });
     });
-  }
-
-  MyInformationClass myInformation;
-  Future<MyInformationClass> getMyInformation(String userId) async {
-    APIService apiService = APIService();
-    await apiService.getuserInformation(userId).then((value) {
-      setState(() {
-        myInformation = value;
-      });
-      return value;
-    });
-    return myInformation;
   }
 
   @override
@@ -84,10 +76,10 @@ class _CheckoutpageState extends State<Checkoutpage> {
     apiService = APIService();
     getTotal();
     getUserId().then((value) {
-      getAddress(userId);
-      getMyInformation(userId).then((value) {
-        print(value);
-        getOrderitems(value);
+      apiService.getShippingDetail(userId).then((value) {
+        if (value != null) {
+          getOrderitems(shippingAddress: value);
+        }
       });
     });
   }
@@ -129,16 +121,27 @@ class _CheckoutpageState extends State<Checkoutpage> {
         padding: const EdgeInsets.all(20.0),
         child: GestureDetector(
           onTap: () {
+            apiService.getShippingDetail(userId).then((value) {
+              if (value != null) {
+                List<OrderItem> orderitems =
+                    getOrderitems(shippingAddress: value);
+                apiService.multiItemOrder(data: orderitems).then((value) {
+                  if (value != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Payment(
+                                totalAmount: totalAmount,
+                              )),
+                    );
+                  }
+                });
+              }
+            });
+
             // APIService apiService = APIService();
             // getOrderitems();
             print(orderItems);
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //       builder: (context) => Payment(
-            //             totalAmount: totalAmount,
-            //           )),
-            // );
           },
           child: Container(
             width: 250,
@@ -310,8 +313,8 @@ class _CheckoutpageState extends State<Checkoutpage> {
                     ],
                   ),
                   discount(
-                      mrp: double.parse(product.mrpPr??"0"),
-                      slp: double.parse(product.slPrc??'0')),
+                      mrp: double.parse(product.mrpPr ?? "0"),
+                      slp: double.parse(product.slPrc ?? '0')),
                 ],
               ),
             );
@@ -411,125 +414,138 @@ class _CheckoutpageState extends State<Checkoutpage> {
   }
 
   Widget addressDisplay() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width * 0.8,
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 3,
-                blurRadius: 5,
-                offset: Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Row(children: [
-                Icon(Icons.location_on),
-                SizedBox(width: 5),
-                Text(
-                  'Shipping Details',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
+    return FutureBuilder(
+        future: apiService.getShippingDetail(userId),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            ShippingAddress shippingDetail = snapshot.data;
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 3,
+                        blurRadius: 5,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
                   ),
-                ),
-              ]),
-              SizedBox(height: 5),
-              Row(children: [
-                SizedBox(width: 3),
-                Text(
-                  "${myInformation?.firstName}" + " " + "${myInformation?.lastName}",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ]),
-              SizedBox(height: 3),
-              Row(children: [
-                SizedBox(width: 3),
-                Text(
-                  "${myInformation?.mobile}",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ]),
-              SizedBox(height: 3),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(0),
-                    child: Text(
-                      address != null
-                          ? "${address?.asd1}" +
-                              ',' +
-                              "${address?.city1 }"+
-                              ',' +
-                              "${address.state1}" +
-                              ',' +
-                              "${address.pin1}"
-                          : 'No address.update your address',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-            ],
-          ),
-        ),
-        Container(
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 3,
-                      blurRadius: 5,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
                     children: [
-                      IconButton(
-                        padding: EdgeInsets.all(0),
-                        icon: Icon(Icons.edit),
-                        iconSize: 24,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SaveUserOrderdetail()),
-                          );
-                        },
+                      Row(children: [
+                        Icon(Icons.location_on),
+                        SizedBox(width: 5),
+                        Text(
+                          'Shipping Details',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ]),
+                      SizedBox(height: 5),
+                      Row(children: [
+                        SizedBox(width: 3),
+                        Text(
+                          "${shippingDetail?.firstName}" +
+                              " " +
+                              "${shippingDetail?.lastName}",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ]),
+                      SizedBox(height: 3),
+                      Row(children: [
+                        SizedBox(width: 3),
+                        Text(
+                          "${shippingDetail?.mobile}",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ]),
+                      SizedBox(height: 3),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: Text(
+                              shippingDetail.pin1 != null
+                                  ? "${shippingDetail?.asd1}" +
+                                      ',' +
+                                      "${shippingDetail?.city1}" +
+                                      ',' +
+                                      "${shippingDetail.state1}" +
+                                      ',' +
+                                      "${shippingDetail.pin1}"
+                                  : 'No address.update your address',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 3,
+                              blurRadius: 5,
+                              offset:
+                                  Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                padding: EdgeInsets.all(0),
+                                icon: Icon(Icons.edit),
+                                iconSize: 24,
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SaveUserOrderdetail()),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+              ],
+            );
+          } else {
+            return Container();
+          }
+        });
   }
 
   Widget progressBar() {

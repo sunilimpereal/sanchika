@@ -120,9 +120,9 @@ class _WishlistCardState extends State<WishlistCard> {
                     color: Colors.green.shade400)
               },
               onPressed: () {
-                print(product.pdmId);
+                print(product.pdmPdtId);
                 addToCart(
-                    productId: product.pdmId,
+                    productId: product.pdmPdtId,
                     userId: userId,
                     slPrice: double.parse(product.slPrc??'0'),
                     productName: product.pdmPdtNm,
@@ -295,9 +295,9 @@ class _WishlistCardState extends State<WishlistCard> {
                 icon: Icon(Icons.clear),
                 iconSize: 20,
                 onPressed: () {
-                  print(product.pdmId);
+                  print(product.pdmPdtId);
                   removeWishlistItem(
-                    pid: product.pdmId,
+                    pid: product.pdmPdtId,
                     uid: userId,
                   );
                 },

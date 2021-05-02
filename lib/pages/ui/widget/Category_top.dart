@@ -21,7 +21,7 @@ class _Category_topState extends State<Category_top> {
     super.initState();
     apiService = APIService();
     setState(() {
-      activeCtg = widget.ctgNameandId[1];
+      activeCtg = widget.ctgNameandId[0];
       color = Colors.red;
     });
   }

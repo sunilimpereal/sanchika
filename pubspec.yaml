@@ -63,6 +63,7 @@ dependencies:
   autocomplete_textfield: ^1.7.3
   razorpay_flutter: ^1.1.1
   fluttertoast: ^6.0.1
+  google_fonts: ^1.1.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

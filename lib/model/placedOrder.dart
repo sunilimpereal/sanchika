@@ -137,14 +137,14 @@ class OrderHeader {
     String wohUsrCmt;
     String wohTotQnt;
     String wohTotItm;
-    int wohMrp;
-    int wohTotPrc;
-    int wohDisAmt;
-    int wohSubsAmt;
-    int wohTxAmt;
-    int wohGrndTot;
-    int wohShpChrg;
-    int wohNetAmt;
+    double wohMrp;
+    double wohTotPrc;
+    double wohDisAmt;
+    double wohSubsAmt;
+    double wohTxAmt;
+    double wohGrndTot;
+    double wohShpChrg;
+    double wohNetAmt;
     String wohPymTyp;
     String wohPymMod;
     String wohPymRecd;
@@ -160,12 +160,12 @@ class OrderHeader {
         wohCmyCd: json["woh_cmy_cd"],
         wohStrCd: json["woh_str_cd"],
         wohOrdNum: json["woh_ord_num"],
-        wohOrdDt: DateTime.parse(json["woh_ord_dt"]),
+        wohOrdDt: json["woh_ord_dt"],
         wohOrdTime: json["woh_ord_time"],
         wohInvcNum: json["woh_invc_num"],
-        wohInvcDt: DateTime.parse(json["woh_invc_dt"]),
+        wohInvcDt: json["woh_invc_dt"],
         wohOrdMod: json["woh_ord_mod"],
-        wohDvDt: DateTime.parse(json["woh_dv_dt"]),
+        wohDvDt: json["woh_dv_dt"],
         wohUsrId: json["woh_usr_id"],
         wohUsrNm: json["woh_usr_nm"],
         wohPhNum: json["woh_ph_num"],
@@ -298,10 +298,10 @@ class OrderHeaderDetail {
     String wodPdtNm;
     String wodSlId;
     String wodQty;
-    int wodMrp;
-    int wodSlPrc;
-    int wodDisAmt;
-    int wodSubsAmt;
+    double wodMrp;
+    double wodSlPrc;
+    double wodDisAmt;
+    double wodSubsAmt;
     String wodSts;
     String wodSubsCd;
     String wodSubsRedmd;
@@ -329,8 +329,8 @@ class OrderHeaderDetail {
         wodId: json["wod_id"],
         wodCmyCd: json["wod_cmy_cd"],
         wodStrCd: json["wod_str_cd"],
-        wodOrdDt: DateTime.parse(json["wod_ord_dt"]),
-        wodDvDt: DateTime.parse(json["wod_dv_dt"]),
+        wodOrdDt: json["wod_ord_dt"],
+        wodDvDt: json["wod_dv_dt"],
         wodOrdNum: json["wod_ord_num"],
         wodGrndTot: json["wod_grnd_tot"],
         wodIsDltd: json["wod_is_dltd"],
@@ -352,16 +352,16 @@ class OrderHeaderDetail {
         wodSz: json["wod_sz"],
         wodTotPrc: json["wod_tot_prc"],
         wodTxCd: json["wod_tx_cd"],
-        wodCgstPer: json["wod_cgst_Per"].toDouble(),
-        wodCgstAmt: json["wod_cgst_amt"].toDouble(),
-        wodSgstPer: json["wod_sgst_Per"].toDouble(),
-        wodSgstAmt: json["wod_sgst_amt"].toDouble(),
-        wodIgstPer: json["wod_igst_Per"].toDouble(),
-        wodIgstAmt: json["wod_igst_amt"].toDouble(),
-        wodCessPer: json["wod_cess_Per"].toDouble(),
-        wodCessAmt: json["wod_cess_amt"].toDouble(),
-        wodKfcPer: json["wod_kfc_Per"].toDouble(),
-        wodKfcAmt: json["wod_kfc_amt"].toDouble(),
+        wodCgstPer: json["wod_cgst_Per"]?.toDouble(),
+        wodCgstAmt: json["wod_cgst_amt"]?.toDouble(),
+        wodSgstPer: json["wod_sgst_Per"]?.toDouble(),
+        wodSgstAmt: json["wod_sgst_amt"]?.toDouble(),
+        wodIgstPer: json["wod_igst_Per"]?.toDouble(),
+        wodIgstAmt: json["wod_igst_amt"]?.toDouble(),
+        wodCessPer: json["wod_cess_Per"]?.toDouble(),
+        wodCessAmt: json["wod_cess_amt"]?.toDouble(),
+        wodKfcPer: json["wod_kfc_Per"]?.toDouble(),
+        wodKfcAmt: json["wod_kfc_amt"]?.toDouble(),
         wodTotTxAmt: json["wod_tot_tx_amt"],
         wodSycDtTm: json["wod_syc_dt_tm"],
         wodShpChg: json["wod_shp_chg"],
@@ -477,7 +477,7 @@ class OrderShippingDetail {
         wosdId: json["wosd_id"],
         wosdOrdNum: json["wosd_ord_num"],
         wosdCmyCd: json["wosd_cmy_cd"],
-        wosdOrdDt: DateTime.parse(json["wosd_ord_dt"]),
+        wosdOrdDt: json["wosd_ord_dt"],
         wosdCty: json["wosd_cty"],
         wosdCy: json["wosd_cy"],
         wosdEmlAds: json["wosd_eml_ads"],

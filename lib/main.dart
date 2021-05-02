@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> {
     ]);
     return MaterialApp(
       locale: _locale,
-      title: 'Flutter Demo',
+      title: 'Sanchika',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,

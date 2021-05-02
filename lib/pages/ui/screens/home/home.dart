@@ -282,7 +282,7 @@ class _HomeState extends State<Home> {
               Stack(
                 children: [
                   IconButton(
-                    padding: EdgeInsets.only(top: 8),
+                    padding: EdgeInsets.only(top: 0),
                     icon: Icon(
                       Icons.shopping_cart,
                       color: Color(0xff032e6b).withAlpha(180),
@@ -408,7 +408,7 @@ class _HomeState extends State<Home> {
                             padding: const EdgeInsets.only(
                                 top: 8.0, left: 16.0, bottom: 8.0),
                             child: Text(
-                              "Killer Offers",
+                              "KILLER OFFERS",
                               style: TextStyle(
                                   color: Color(0xff032e6b),
                                   fontSize: 18,

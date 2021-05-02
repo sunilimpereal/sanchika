@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rive/rive.dart';
 import 'package:sanchika/model/signUp_model.dart';
+import 'package:sanchika/pages/authentication/signup/signupbox.dart';
 import 'package:sanchika/pages/ui/widget/check_address.dart';
 import 'package:sanchika/pages/ui/widget/termsConditions.dart';
 import 'package:sanchika/services/api_service.dart';
@@ -23,21 +24,21 @@ class _SignupPageState extends State<SignupPage> {
   RegisterRequestModel requestModel;
   APIService apiService;
   bool isApiCallProcess = false;
-    Artboard _riveArtboard;
+  Artboard _riveArtboard;
   RiveAnimationController _controller;
   @override
   void initState() {
     super.initState();
     requestModel = new RegisterRequestModel();
     apiService = new APIService();
-       rootBundle.load('assets/rive/login.riv').then((value) async{
-      final file =RiveFile();
-      if(file.import(value)){
+    rootBundle.load('assets/rive/login.riv').then((value) async {
+      final file = RiveFile();
+      if (file.import(value)) {
         final artboard = file.mainArtboard;
         artboard.addController(_controller = SimpleAnimation('loop'));
         setState(() {
           _riveArtboard = artboard;
-          _controller.isActive = true ;
+          _controller.isActive = true;
         });
       }
     });
@@ -53,27 +54,14 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Widget _uiSetup(BuildContext context) {
-    ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
-    ScreenUtil.instance =
-        ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
     return Scaffold(
       body: SingleChildScrollView(
           controller: controller,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              MyHeader(
-                child: Container(
-               width: MediaQuery.of(context).size.width*0.8,
-               height: 300,
-                child: _riveArtboard == null? const SizedBox():Rive(artboard: _riveArtboard,fit: BoxFit.contain,)),
-              
-                textTop: "Order and",
-                textBottom: "Get to door steps",
-                offset: offset,
-              ),
               Padding(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 0),
+                padding: EdgeInsets.only(left: 0, right: 0, top: 70),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -82,9 +70,9 @@ class _SignupPageState extends State<SignupPage> {
                       padding: EdgeInsets.only(bottom: 1),
                       child: Padding(
                         padding: EdgeInsets.only(
-                            left: 16.0, right: 16.0, top: 0.0, bottom: 8.0),
+                            left: 0.0, right: .0, top: 0.0, bottom: 8.0),
                         child: Form(
-                          key: globalFormKey,
+                         
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -97,184 +85,10 @@ class _SignupPageState extends State<SignupPage> {
                                     fontFamily: "Poppins-Bold",
                                     letterSpacing: .6),
                               ),
-                              SizedBox(height: 15),
-                              Container(
-                                height: 50,
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'First Name',
-                                    fillColor: Colors.white,
-                                    border: new OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                      borderSide: new BorderSide(),
-                                    ),
-                                  ),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      requestModel.firstName = val;
-                                    });
-                                  },
-                                  validator: (val) {
-                                    if (val.length == 0) {
-                                      return 'First name be empty';
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  keyboardType: TextInputType.emailAddress,
-                                  style: new TextStyle(
-                                    fontFamily: 'Poppins',
-                                  ),
-                                ),
-                              ),
-                               SizedBox(height: 15),
-                              Container(
-                                height: 50,
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Last Name',
-                                    fillColor: Colors.white,
-                                    border: new OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                      borderSide: new BorderSide(),
-                                    ),
-                                  ),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      requestModel.lastname= val;
-                                    });
-                                  },
-                                  validator: (val) {
-                                    if (val.length == 0) {
-                                      return 'Last name is empty';
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  keyboardType: TextInputType.emailAddress,
-                                  style: new TextStyle(
-                                    fontFamily: 'Poppins',
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 15),
-                              Container(
-                                height: 50,
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Mobile',
-                                    fillColor: Colors.white,
-                                    border: new OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                      borderSide: new BorderSide(),
-                                    ),
-                                  ),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      requestModel.mobile = val;
-                                    });
-                                  },
-                                  validator: (val) {
-                                    if (val.length == 0) {
-                                      return 'Mobile cannot be empty';
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  keyboardType: TextInputType.emailAddress,
-                                  style: new TextStyle(
-                                    fontFamily: 'Poppins',
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 15),
-                              Container(
-                                height: 50,
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Email',
-                                    fillColor: Colors.white,
-                                    border: new OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                      borderSide: new BorderSide(),
-                                    ),
-                                  ),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      requestModel.email = val;
-                                    });
-                                  },
-                                  validator: (val) {
-                                    if (val.length == 0) {
-                                      return 'Email cannot be empty';
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  keyboardType: TextInputType.emailAddress,
-                                  style: new TextStyle(
-                                    fontFamily: 'Poppins',
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 15),
-                              Container(
-                                height: 50,
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Password',
-                                    fillColor: Colors.white,
-                                    border: new OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                      borderSide: new BorderSide(),
-                                    ),
-                                  ),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      requestModel.password = val;
-                                    });
-                                  },
-                                  validator: (val) {
-                                    if (val.length == 0) {
-                                      return 'Password cannot be empty';
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  keyboardType: TextInputType.visiblePassword,
-                                  style: new TextStyle(
-                                    fontFamily: 'Poppins',
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 15),
-                              Container(
-                                height: 50,
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Confirm Password',
-                                    fillColor: Colors.white,
-                                    border: new OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                      borderSide: new BorderSide(),
-                                    ),
-                                  ),
-                                  onChanged: (val) {
-                                    setState(() {});
-                                  },
-                                  validator: (val) {
-                                    if (val.length == 0) {
-                                      return 'Password cannot be empty';
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  keyboardType: TextInputType.visiblePassword,
-                                  style: new TextStyle(
-                                    fontFamily: 'Poppins',
-                                  ),
-                                ),
-                              ),
+                             
+                              SignUpBox(),
+                             
+                             
                             ],
                           ),
                         ),
@@ -322,106 +136,111 @@ class _SignupPageState extends State<SignupPage> {
                                           print(requestModel.toJson());
                                           // apiService
                                           //     .register(requestModel)
-                                          //     .then((value) 
-                                              // {
-                                            if (true) {
-                                                Navigator.push(context, MaterialPageRoute(builder: (context)=>CheckAddress(registerRequestModel: requestModel,)));
-                                              // apiService
-                                              //     .getotp(requestModel.mobile)
-                                              //     .then((value) {
-                                              //   if (value != null) {
-                                              //     setState(() {
-                                              //       isApiCallProcess = true;
-                                              //     });
-                                                  
-                                              //     Navigator.push(
-                                              //       context,
-                                              //       MaterialPageRoute(
-                                              //           builder: (context) =>
-                                              //               Otp(
-                                              //                 otp: value,
-                                              //                 mobileNumber:
-                                              //                     requestModel
-                                              //                         .mobile,
-                                              //               )),
-                                              //     );
-                                              //   } else {
-                                              //     showDialog<void>(
-                                              //       context: context,
-                                              //       barrierDismissible:
-                                              //           false, // user must tap button!
-                                              //       builder:
-                                              //           (BuildContext context) {
-                                              //         return AlertDialog(
-                                              //           title:
-                                              //               Text('Try Later'),
-                                              //           content:
-                                              //               SingleChildScrollView(
-                                              //             child: ListBody(
-                                              //               children: <Widget>[
-                                              //                 Text(
-                                              //                     'Unable to send OTP'),
-                                              //               ],
-                                              //             ),
-                                              //           ),
-                                              //           actions: <Widget>[
-                                              //             TextButton(
-                                              //               child: Text('OK'),
-                                              //               onPressed: () {
-                                              //                 Navigator.of(
-                                              //                         context)
-                                              //                     .pop();
-                                              //               },
-                                              //             ),
-                                              //           ],
-                                              //         );
-                                              //       },
-                                              //     );
-                                              //     setState(() {
-                                              //       isApiCallProcess = false;
-                                              //     });
-                                              //   }
-                                              // });
-                                            } else {
-                                              setState(() {
-                                                isApiCallProcess = false;
-                                              });
-                                              showDialog<void>(
-                                                context: context,
-                                                barrierDismissible:
-                                                    false, // user must tap button!
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title:
-                                                        Text('Sign Up failed'),
-                                                    content:
-                                                        SingleChildScrollView(
-                                                      child: ListBody(
-                                                        children: <Widget>[
-                                                          Text(
-                                                              'Unable to Sign Up'),
-                                                        ],
-                                                      ),
+                                          //     .then((value)
+                                          // {
+                                          if (true) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CheckAddress(
+                                                          registerRequestModel:
+                                                              requestModel,
+                                                        )));
+                                            // apiService
+                                            //     .getotp(requestModel.mobile)
+                                            //     .then((value) {
+                                            //   if (value != null) {
+                                            //     setState(() {
+                                            //       isApiCallProcess = true;
+                                            //     });
+
+                                            //     Navigator.push(
+                                            //       context,
+                                            //       MaterialPageRoute(
+                                            //           builder: (context) =>
+                                            //               Otp(
+                                            //                 otp: value,
+                                            //                 mobileNumber:
+                                            //                     requestModel
+                                            //                         .mobile,
+                                            //               )),
+                                            //     );
+                                            //   } else {
+                                            //     showDialog<void>(
+                                            //       context: context,
+                                            //       barrierDismissible:
+                                            //           false, // user must tap button!
+                                            //       builder:
+                                            //           (BuildContext context) {
+                                            //         return AlertDialog(
+                                            //           title:
+                                            //               Text('Try Later'),
+                                            //           content:
+                                            //               SingleChildScrollView(
+                                            //             child: ListBody(
+                                            //               children: <Widget>[
+                                            //                 Text(
+                                            //                     'Unable to send OTP'),
+                                            //               ],
+                                            //             ),
+                                            //           ),
+                                            //           actions: <Widget>[
+                                            //             TextButton(
+                                            //               child: Text('OK'),
+                                            //               onPressed: () {
+                                            //                 Navigator.of(
+                                            //                         context)
+                                            //                     .pop();
+                                            //               },
+                                            //             ),
+                                            //           ],
+                                            //         );
+                                            //       },
+                                            //     );
+                                            //     setState(() {
+                                            //       isApiCallProcess = false;
+                                            //     });
+                                            //   }
+                                            // });
+                                          } else {
+                                            setState(() {
+                                              isApiCallProcess = false;
+                                            });
+                                            showDialog<void>(
+                                              context: context,
+                                              barrierDismissible:
+                                                  false, // user must tap button!
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text('Sign Up failed'),
+                                                  content:
+                                                      SingleChildScrollView(
+                                                    child: ListBody(
+                                                      children: <Widget>[
+                                                        Text(
+                                                            'Unable to Sign Up'),
+                                                      ],
                                                     ),
-                                                    actions: <Widget>[
-                                                      TextButton(
-                                                        child: Text('OK'),
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                              setState(() {
-                                                isApiCallProcess = false;
-                                              });
-                                            }
+                                                  ),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: Text('OK'),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                            setState(() {
+                                              isApiCallProcess = false;
+                                            });
+                                          }
                                           // },
-                                         
+
                                         }
                                       },
                                       child: Center(

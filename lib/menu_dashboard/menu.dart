@@ -68,11 +68,11 @@ class _MenuState extends State<Menu> {
                           Row(
                             children: [
                               Text(
-                                getTranslated(context, 'Hello'),
+                                getTranslated(context, 'Hello,'),
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
@@ -82,8 +82,8 @@ class _MenuState extends State<Menu> {
                                 name??'',
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w800),
                               ),
                             ],
                           ),
@@ -220,13 +220,13 @@ class _MenuState extends State<Menu> {
               color: widget.selectedIndex == selectednumber
                   ? Colors.white
                   : Colors.white70,
-              size: 22,
+              size: 20,
             ),
           ),
           Text(
             title,
             style: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 color: widget.selectedIndex == selectednumber
                     ? Colors.white
                     : Colors.white70,

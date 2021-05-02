@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sanchika/bloc/navigationBloc/Navigation_bloc.dart';
 import 'package:sanchika/localization/localization_methods.dart';
 import 'package:sanchika/main.dart';
 import 'package:sanchika/model/getAddresss_model.dart';
+import 'package:sanchika/model/getShippingDetail.dart';
 import 'package:sanchika/model/language.dart';
-import 'package:sanchika/model/myOrders.dart';
 import 'package:sanchika/pages/authentication/login_page.dart';
 import 'package:sanchika/pages/ui/screens/orders/myOrders.dart';
 import 'package:sanchika/pages/ui/sub_screens/changePassword/password%20change.dart';
@@ -130,7 +131,7 @@ class PprofileState extends State<Profile> {
           Stack(
             children: [
               IconButton(
-                padding: EdgeInsets.only(top: 8),
+                padding: EdgeInsets.only(top: 0),
                 icon: Icon(
                   Icons.shopping_cart,
                   color: Color(0xff032e6b).withAlpha(180),
@@ -296,32 +297,33 @@ class PprofileState extends State<Profile> {
                   leading: Icon(Icons.pin_drop),
                   title: Text('Address'),
                   trailing: Icon(Icons.keyboard_arrow_right),
-                  subtitle:FutureBuilder(
-                    future:apiService.getAddress(userId),
-                    builder:(context,snapshot){
-                      if(snapshot.hasData){
-                        ShippingAddress address= snapshot.data;
-                        return Text(
-                         
-                          "${address.asd1}"+","+"${address.city1}"+","+"${address.pin1}"+","+"${address.state1}"
-                        );
-                      }else{
-                        return Text("");
-                      }
-                    }
-
-                  ),
+                  subtitle: FutureBuilder(
+                      future: apiService.getShippingDetail(userId),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          ShippingAddress address = snapshot.data;
+                          return Text("${address.asd1}" +
+                              "," +
+                              "${address.city1}" +
+                              "," +
+                              "${address.pin1}" +
+                              "," +
+                              "${address.state1}");
+                        } else {
+                          return Text("");
+                        }
+                      }),
                 ),
               ),
               SizedBox(
                 height: 1,
               ),
               GestureDetector(
-                onTap: (){
-                     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MyOrders()));
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MyOrders()));
                 },
-                              child: Container(
+                child: Container(
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
@@ -358,13 +360,18 @@ class PprofileState extends State<Profile> {
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
                               children: [
-                                Icon(Icons.translate),
+                                Icon(
+                                  Icons.translate,
+                                  size: 18,
+                                ),
                                 Text(
-                                  '  Choosse language',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                                  '  Choose Language',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.normal,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -380,8 +387,8 @@ class PprofileState extends State<Profile> {
                               title: Text(
                                 'English',
                                 style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal,
                                 ),
                               ),
                               trailing: english
@@ -407,8 +414,8 @@ class PprofileState extends State<Profile> {
                               title: Text(
                                 'Malayalam',
                                 style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal,
                                 ),
                               ),
                               trailing: malayalam

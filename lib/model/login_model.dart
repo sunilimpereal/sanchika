@@ -23,7 +23,7 @@ class LoginResponseModel {
         status: json["status"],
         statusMsg: json["statusMsg"],
         errorCode: json["errorCode"],
-        data: Data.fromJson(json["data"]),
+        data:  Data.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {

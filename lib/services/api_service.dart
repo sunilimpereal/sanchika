@@ -16,6 +16,7 @@ import 'package:sanchika/model/getAllRatingReview_model.dart';
 import 'package:sanchika/model/getCatg_model.dart';
 import 'package:sanchika/model/getProductAttribute_model.dart';
 import 'package:sanchika/model/getProductDetail_model.dart';
+import 'package:sanchika/model/getShippingDetail.dart';
 import 'package:sanchika/model/killerOffer.dart';
 import 'dart:convert';
 
@@ -24,9 +25,9 @@ import 'package:sanchika/model/multiitemSaveOrder.dart';
 import 'package:sanchika/model/myInformation.dart';
 import 'package:sanchika/model/myOrders.dart';
 import 'package:sanchika/model/orderDetails.dart';
+import 'package:sanchika/model/paymentUpdate.dart';
 import 'package:sanchika/model/placedOrder.dart';
 import 'package:sanchika/model/product.dart';
-import 'package:sanchika/model/cat_product_model.dart';
 import 'package:sanchika/model/signUp_model.dart';
 import 'package:sanchika/model/userOrderDetails.dart';
 import 'package:sanchika/model/wishlist_model.dart';
@@ -58,7 +59,37 @@ class APIService {
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('login');
-      return loginResponseModelFromJson(response.body);
+      LoginResponseModel loginResponseModel =
+          loginResponseModelFromJson(response.body);
+      if (loginResponseModel.status == '0') {
+        print("status login ${loginResponseModel.status}");
+        return loginResponseModelFromJson(response.body);
+      }else{
+        showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Incorrect Details'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Email Or Password is wrong'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      }
     } else if (response.statusCode == 500) {
       showDialog<void>(
         context: context,
@@ -183,10 +214,12 @@ class APIService {
 
   //Remove from Wishlist
   Future<bool> removeWishlistitem({String uid, String pid}) async {
+    print("uid $uid  pid $pid");
     String url =
         "http://sanchika.in:8081/sanchikaapi/sanchika/user/wishList/removeWishList?uid=$uid&pid=$pid";
     final response = await http.delete(url);
     print('remove wishlist Item response ${response.statusCode}');
+    print('body ${response.body}');
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -331,6 +364,7 @@ class APIService {
   Future<bool> removeCartItem({String userId, String pid}) async {
     String url =
         "http://sanchika.in:8081/sanchikaapi/sanchika/user/cart/delete-cart-list?uid=$userId&pid=$pid";
+
     final response = await http.delete(url, headers: headerList);
 
     print('delete CartItem : ${response.statusCode} ${userId} ${pid}');
@@ -393,22 +427,22 @@ class APIService {
     }
   }
 
-  //get Address
-  Future<ShippingAddress> getAddress(String userId) async {
-    String url =
-        "http://sanchika.in:8081/sanchikaapi/sanchika/user/getShippingAddress?userId=$userId";
-    final response = await http.get(url);
-    print('get address response ${response.statusCode}');
-    if (response.statusCode == 200) {
-      GetAddress getAddress = getAddressFromJson(response.body);
-      ShippingAddress address = getAddress.data.shippingAddress;
-      print(address.asd1);
-      return address;
-    } else {
-      ShippingAddress address;
-      return address;
-    }
-  }
+  // //get Address
+  // Future<ShippingAddress> getAddress(String userId) async {
+  //   String url =
+  //       "http://sanchika.in:8081/sanchikaapi/sanchika/user/getShippingAddress?userId=$userId";
+  //   final response = await http.get(url);
+  //   print('get address response ${response.statusCode}');
+  //   if (response.statusCode == 200) {
+  //     GetAddress getAddress = getAddressFromJson(response.body);
+  //     ShippingAddress address = getAddress.data.shippingAddress;
+  //     print(address.asd1);
+  //     return address;
+  //   } else {
+  //     ShippingAddress address;
+  //     return address;
+  //   }
+  // }
 
   //get Ctg Name
   Future<List<CtgyNameAndId>> getCatg() async {
@@ -572,7 +606,7 @@ class APIService {
   Future<List<OderCheckOut>> orderDetail({String ordnum}) async {
     String url =
         "http://sanchika.in:8081/sanchikaapi/sanchika/user/order/after-order-summary?ordnum=$ordnum";
-    final response = await http.get("");
+    final response = await http.get(url);
     print("orderDetail response = ${response.statusCode}");
     if (response.statusCode == 200) {
       OrderDetail orderDetail = orderDetailFromJson(response.body);
@@ -585,19 +619,55 @@ class APIService {
 
   // save multi Item Order
   Future<List<OrderUserDetails>> multiItemOrder({List<OrderItem> data}) async {
-    String url = "";
-    final response = await http.post(url, body: orderItemToJson(data));
+    String url =
+        "http://sanchika.in:8081/sanchikaapi/sanchika/user/order/save-multi-item-order";
+    final response =
+        await http.post(url, body: orderItemToJson(data), headers: headerList);
     print("save multiItem Order = ${response.statusCode}");
+    print("save multiItem Order body = ${response.body}");
     if (response.statusCode == 200) {
       PlacedOrder placedOrder = placedOrderFromJson(response.body);
-      List<OrderUserDetails> orderUserDetailList;
-        placedOrder.data.orderUserDetails.forEach((key, value) {
-         orderUserDetailList.add(value);
-       });
+      List<OrderUserDetails> orderUserDetailList = [];
+      placedOrder.data.orderUserDetails.forEach((key, value) {
+        print('value : $value');
+        orderUserDetailList.add(value);
+      });
       return orderUserDetailList;
     } else {
-      return [];
+      return null;
+    }
+  }
 
+  //Get Shipping Details
+  Future<ShippingAddress> getShippingDetail(String userId) async {
+    String url =
+        "http://sanchika.in:8081/sanchikaapi/sanchika/user/getShippingAddress?userId=$userId";
+    final response = await http.get(
+      url,
+    );
+    print("Get Shipping  address = ${response.statusCode}");
+    if (response.statusCode == 200) {
+      GetShippingDetail getShippingDetail =
+          getShippingDetailFromJson(response.body);
+      ShippingAddress shippingAddress = getShippingDetail.data.shippingAddress;
+      return shippingAddress;
+    } else {
+      return null;
+    }
+  }
+
+  //Post Payment Update
+  Future<bool> postpaymentupdate(
+      String ordernum, PaymentUpdate paymentUpdate) async {
+    String url =
+        "http://sanchika.in:8081/sanchikaapi/sanchika/user/order/update-payment?orderNumber=$ordernum";
+    final response = await http.post(url,
+        body: paymentUpdateToJson(paymentUpdate), headers: headerList);
+    print("Post payment  update = ${response.statusCode}");
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

@@ -114,7 +114,7 @@ class OrderItem {
     String wohAdmCmt;
     String wohUsrCmt;
     int wohTotQnt;
-    double wohTotItm;
+    int wohTotItm;
     double wohMrp;
     double wohTotPrc;
     double wohDisAmt;
@@ -143,14 +143,14 @@ class OrderItem {
     String wodQty;
     double wodSlPrc;
     double wodDisAmt;
-    double wodSubsAmt;
+    String wodSubsAmt;
     String wodSts;
     String wodIsDltd;
     String wodSubsCd;
     String wodSubsRedmd;
     String wodSz;
-    double wodTotPrc;
-    double wodTxCd;
+    String wodTotPrc;
+    int wodTxCd;
     double wodCgstPer;
     double wodCgstAmt;
     double wodSgstPer;
@@ -161,10 +161,10 @@ class OrderItem {
     double wodCessAmt;
     double wodKfcPer;
     double wodKfcAmt;
-    double wodTotTxAmt;
+    int wodTotTxAmt;
     String wodSycDtTm;
-    double wodShpChg;
-    double wodNetAmt;
+    int wodShpChg;
+    int wodNetAmt;
     String wosdCty;
     String wosdCy;
     String wosdFsNm;
@@ -274,12 +274,12 @@ class OrderItem {
     Map<String, dynamic> toJson() => {
         "woh_cmy_cd": wohCmyCd,
         "woh_str_cd": wohStrCd,
-        "woh_ord_dt": "${wohOrdDt.year.toString().padLeft(4, '0')}-${wohOrdDt.month.toString().padLeft(2, '0')}-${wohOrdDt.day.toString().padLeft(2, '0')}",
+        "woh_ord_dt": wohOrdDt,
         "woh_ord_time": wohOrdTime,
         "woh_invc_num": wohInvcNum,
-        "woh_invc_dt": "${wohInvcDt.year.toString().padLeft(4, '0')}-${wohInvcDt.month.toString().padLeft(2, '0')}-${wohInvcDt.day.toString().padLeft(2, '0')}",
+        "woh_invc_dt": wohInvcDt,
         "woh_ord_mod": wohOrdMod,
-        "woh_dv_dt": "${wohDvDt.year.toString().padLeft(4, '0')}-${wohDvDt.month.toString().padLeft(2, '0')}-${wohDvDt.day.toString().padLeft(2, '0')}",
+        "woh_dv_dt": wohDvDt,
         "woh_usr_id": wohUsrId,
         "woh_usr_nm": wohUsrNm,
         "woh_ph_num": wohPhNum,

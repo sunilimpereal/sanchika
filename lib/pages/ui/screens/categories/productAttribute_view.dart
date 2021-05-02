@@ -14,7 +14,8 @@ class ProductAttribute extends StatefulWidget {
   final CategoryAttribute categoryAttribute;
   final CtgyNameAndId ctgyNameAndId;
   List<CartItem> cartitems;
-  ProductAttribute({this.categoryAttribute, this.ctgyNameAndId,this.cartitems});
+  ProductAttribute(
+      {this.categoryAttribute, this.ctgyNameAndId, this.cartitems});
   @override
   _ProductAttributeState createState() => _ProductAttributeState();
 }
@@ -37,7 +38,8 @@ class _ProductAttributeState extends State<ProductAttribute> {
       });
     });
   }
-    String userId;
+
+  String userId;
   Future<String> getUserId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String uid = preferences.getString('userId');
@@ -45,15 +47,15 @@ class _ProductAttributeState extends State<ProductAttribute> {
       userId = uid;
     });
   }
-   List<CartItem> cartItems;
-  Future<List<CartItem>> getCart(String userId)async{
+
+  List<CartItem> cartItems;
+  Future<List<CartItem>> getCart(String userId) async {
     APIService apiService = new APIService();
     List<CartItem> cartitems = await apiService.getCartItems(userId);
     setState(() {
       cartItems = cartitems;
-    }); 
+    });
     return cartitems;
-
   }
 
   List<String> filter = [
@@ -128,59 +130,59 @@ class _ProductAttributeState extends State<ProductAttribute> {
                   size: 24,
                 ),
                 onPressed: () {
-                Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Wishlist()),
-                      );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Wishlist()),
+                  );
                 },
               ),
               Stack(
                 children: [
                   IconButton(
-                    padding: EdgeInsets.only(top: 4),
-                    icon: Icon(
-                      Icons.shopping_cart,
-                      color: Color(0xff032e6b).withAlpha(180),
-                      size: 24,
-                    ),
-                    onPressed: () {
-                     Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Cart()),
-                      );
-                    }
-                  ),
-
-                    FutureBuilder(
-                  future: apiService.cartlength(uid: userId),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      if(int.parse(snapshot.data)>0){
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 8.0, left: 25),
-                        child: Container(
-                          height: 16,
-                          width: 18,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xff032e6b),
-                          ),
-                          child: Center(
-                            child: Text(
-                              snapshot.data,
-                              style: TextStyle(
-                                color: Colors.white,
+                      padding: EdgeInsets.only(top: 4),
+                      icon: Icon(
+                        Icons.shopping_cart,
+                        color: Color(0xff032e6b).withAlpha(180),
+                        size: 24,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Cart()),
+                        );
+                      }),
+                  FutureBuilder(
+                      future: apiService.cartlength(uid: userId),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          if (int.parse(snapshot.data) > 0) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, left: 25),
+                              child: Container(
+                                height: 16,
+                                width: 18,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xff032e6b),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    snapshot.data,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }else{
-                      return SizedBox();
-                    }} else {
-                      return SizedBox();
-                    }
-                  }),
+                            );
+                          } else {
+                            return SizedBox();
+                          }
+                        } else {
+                          return SizedBox();
+                        }
+                      }),
                 ],
               ),
               IconButton(
@@ -289,7 +291,11 @@ class _ProductAttributeState extends State<ProductAttribute> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       List<Product> products = snapshot.data;
-                      return ShowProducts(productList: products, type: type,cartItems:cartItems ,);
+                      return ShowProducts(
+                        productList: products,
+                        type: type,
+                        cartItems: cartItems,
+                      );
                     } else {
                       return Center(child: CircularProgressIndicator());
                     }
@@ -308,10 +314,10 @@ class ShowProducts extends StatefulWidget {
   final List<Product> productList;
   List<CartItem> cartItems;
   String type;
-  ShowProducts({this.productList, this.type,this.cartItems});
+  ShowProducts({this.productList, this.type, this.cartItems});
   @override
   _ShowProductsState createState() => _ShowProductsState();
-} 
+}
 
 class _ShowProductsState extends State<ShowProducts> {
   //sort Products
@@ -328,14 +334,15 @@ class _ShowProductsState extends State<ShowProducts> {
     }
     if (type == 'Price High to Low') {
       setState(() {
-        productList.sort((b, a) =>
-            double.parse(a.slPrc).compareTo(double.parse(b.slPrc)));
+        productList.sort((b, a) => double.parse(
+              a?.slPrc,
+            ).compareTo(double.parse(b?.slPrc ?? '0')));
       });
     }
     if (type == 'Price Low to High') {
       setState(() {
-        productList.sort((a, b) =>
-            double.parse(a.slPrc).compareTo(double.parse(b.slPrc)));
+        productList.sort((a, b) => double.parse(a?.slPrc ?? '0')
+            .compareTo(double.parse(b?.slPrc ?? '0')));
       });
     }
   }
@@ -373,9 +380,10 @@ class _ShowProductsState extends State<ShowProducts> {
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: 
-            
-            ProductCard(product: widget.productList[index],cartItems: widget.cartItems,),
+            child: ProductCard(
+              product: widget.productList[index],
+              cartItems: widget.cartItems,
+            ),
           );
         });
   }
