@@ -147,7 +147,7 @@ class _CategoriesState extends State<Categories> {
                 if (snapshot.hasData) {
                   return Category_disp(ctgNameandId: snapshot.data);
                 } else {
-                  return CircularProgressIndicator();
+                  return Center(child: CircularProgressIndicator());
                 }
               }),
         ],

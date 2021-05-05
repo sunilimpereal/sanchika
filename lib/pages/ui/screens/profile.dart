@@ -9,8 +9,10 @@ import 'package:sanchika/model/getAddresss_model.dart';
 import 'package:sanchika/model/getShippingDetail.dart';
 import 'package:sanchika/model/language.dart';
 import 'package:sanchika/pages/authentication/login_page.dart';
+import 'package:sanchika/pages/ui/screens/customerSupport.dart';
 import 'package:sanchika/pages/ui/screens/orders/myOrders.dart';
 import 'package:sanchika/pages/ui/sub_screens/changePassword/password%20change.dart';
+import 'package:sanchika/pages/ui/widget/forgotPassword.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -469,6 +471,12 @@ class PprofileState extends State<Profile> {
                 ),
                 child: ListTile(
                   tileColor: Colors.white,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CustomerSupport()),
+                    );
+                  },
                   leading: Icon(Icons.call),
                   title: Text(getTranslated(context, 'Customer_Support')),
                   trailing: Icon(Icons.keyboard_arrow_right),

@@ -56,7 +56,9 @@ class Product {
     String pdmPdtMdl;
     String pdmWt;
 
-    factory Product.fromJson(Map<String, dynamic> json) => Product(
+    factory Product.fromJson(Map<String, dynamic> json) {
+      print('product lav ${json["lv_pdt_nm"] as String }');
+      return  Product(
         pdmId: json["pdm_id"],
         pdmPdtId: json["pdm_pdt_id"],
         pdmAcv: json["pdm_acv"],
@@ -80,10 +82,12 @@ class Product {
         mrpPr: json["mrp_pr"],
         slPrc: json["sl_prc"],
         amAtrVl: json["am_atr_vl"],
-        lvPdtNm: json["lv_pdt_nm"],
+        lvPdtNm: json["lv_pdt_nm"] as String,
         pdmPdtMdl: json["pdm_pdt_mdl"],
         pdmWt: json["pdm_wt"],
     );
+
+    }
 
     Map<String, dynamic> toJson() => {
         "pdm_id": pdmId,

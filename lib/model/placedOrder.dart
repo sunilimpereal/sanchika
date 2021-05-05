@@ -60,18 +60,18 @@ class OrderUserDetails {
     });
 
     OrderHeader orderHeader;
-    OrderHeaderDetail orderHeaderDetail;
+    List<dynamic> orderHeaderDetail;
     OrderShippingDetail orderShippingDetail;
 
     factory OrderUserDetails.fromJson(Map<String, dynamic> json) => OrderUserDetails(
         orderHeader: OrderHeader.fromJson(json["OrderHeader"]),
-        orderHeaderDetail: OrderHeaderDetail.fromJson(json["OrderHeaderDetail"]),
+        orderHeaderDetail: List<dynamic>.from(json["OrderHeaderDetail"].map((x) => x)),
         orderShippingDetail: OrderShippingDetail.fromJson(json["OrderShippingDetail"]),
     );
 
     Map<String, dynamic> toJson() => {
         "OrderHeader": orderHeader.toJson(),
-        "OrderHeaderDetail": orderHeaderDetail.toJson(),
+        "OrderHeaderDetail": List<dynamic>.from(orderHeaderDetail.map((x) => x)),
         "OrderShippingDetail": orderShippingDetail.toJson(),
     };
 }
@@ -137,14 +137,14 @@ class OrderHeader {
     String wohUsrCmt;
     String wohTotQnt;
     String wohTotItm;
-    double wohMrp;
-    double wohTotPrc;
-    double wohDisAmt;
-    double wohSubsAmt;
-    double wohTxAmt;
-    double wohGrndTot;
-    double wohShpChrg;
-    double wohNetAmt;
+    int wohMrp;
+    int wohTotPrc;
+    int wohDisAmt;
+    int wohSubsAmt;
+    int wohTxAmt;
+    int wohGrndTot;
+    int wohShpChrg;
+    int wohNetAmt;
     String wohPymTyp;
     String wohPymMod;
     String wohPymRecd;
@@ -160,12 +160,12 @@ class OrderHeader {
         wohCmyCd: json["woh_cmy_cd"],
         wohStrCd: json["woh_str_cd"],
         wohOrdNum: json["woh_ord_num"],
-        wohOrdDt: json["woh_ord_dt"],
+        wohOrdDt: DateTime.parse(json["woh_ord_dt"]),
         wohOrdTime: json["woh_ord_time"],
         wohInvcNum: json["woh_invc_num"],
-        wohInvcDt: json["woh_invc_dt"],
+        wohInvcDt: DateTime.parse(json["woh_invc_dt"]),
         wohOrdMod: json["woh_ord_mod"],
-        wohDvDt: json["woh_dv_dt"],
+        wohDvDt: DateTime.parse(json["woh_dv_dt"]),
         wohUsrId: json["woh_usr_id"],
         wohUsrNm: json["woh_usr_nm"],
         wohPhNum: json["woh_ph_num"],
@@ -236,186 +236,6 @@ class OrderHeader {
     };
 }
 
-class OrderHeaderDetail {
-    OrderHeaderDetail({
-        this.wodId,
-        this.wodCmyCd,
-        this.wodStrCd,
-        this.wodOrdDt,
-        this.wodDvDt,
-        this.wodOrdNum,
-        this.wodGrndTot,
-        this.wodIsDltd,
-        this.wodItmTotWeght,
-        this.wodItmWeght,
-        this.wodOrdSchdDt,
-        this.wodPdtCtgy,
-        this.wodPdtId,
-        this.wodPdtNm,
-        this.wodSlId,
-        this.wodQty,
-        this.wodMrp,
-        this.wodSlPrc,
-        this.wodDisAmt,
-        this.wodSubsAmt,
-        this.wodSts,
-        this.wodSubsCd,
-        this.wodSubsRedmd,
-        this.wodSz,
-        this.wodTotPrc,
-        this.wodTxCd,
-        this.wodCgstPer,
-        this.wodCgstAmt,
-        this.wodSgstPer,
-        this.wodSgstAmt,
-        this.wodIgstPer,
-        this.wodIgstAmt,
-        this.wodCessPer,
-        this.wodCessAmt,
-        this.wodKfcPer,
-        this.wodKfcAmt,
-        this.wodTotTxAmt,
-        this.wodSycDtTm,
-        this.wodShpChg,
-        this.wodNetAmt,
-        this.wodUsrId,
-        this.wodTxId,
-    });
-
-    int wodId;
-    String wodCmyCd;
-    String wodStrCd;
-    DateTime wodOrdDt;
-    DateTime wodDvDt;
-    int wodOrdNum;
-    int wodGrndTot;
-    String wodIsDltd;
-    String wodItmTotWeght;
-    String wodItmWeght;
-    String wodOrdSchdDt;
-    String wodPdtCtgy;
-    String wodPdtId;
-    String wodPdtNm;
-    String wodSlId;
-    String wodQty;
-    double wodMrp;
-    double wodSlPrc;
-    double wodDisAmt;
-    double wodSubsAmt;
-    String wodSts;
-    String wodSubsCd;
-    String wodSubsRedmd;
-    String wodSz;
-    int wodTotPrc;
-    int wodTxCd;
-    double wodCgstPer;
-    double wodCgstAmt;
-    double wodSgstPer;
-    double wodSgstAmt;
-    double wodIgstPer;
-    double wodIgstAmt;
-    double wodCessPer;
-    double wodCessAmt;
-    double wodKfcPer;
-    double wodKfcAmt;
-    int wodTotTxAmt;
-    String wodSycDtTm;
-    int wodShpChg;
-    int wodNetAmt;
-    dynamic wodUsrId;
-    dynamic wodTxId;
-
-    factory OrderHeaderDetail.fromJson(Map<String, dynamic> json) => OrderHeaderDetail(
-        wodId: json["wod_id"],
-        wodCmyCd: json["wod_cmy_cd"],
-        wodStrCd: json["wod_str_cd"],
-        wodOrdDt: json["wod_ord_dt"],
-        wodDvDt: json["wod_dv_dt"],
-        wodOrdNum: json["wod_ord_num"],
-        wodGrndTot: json["wod_grnd_tot"],
-        wodIsDltd: json["wod_is_dltd"],
-        wodItmTotWeght: json["wod_itm_tot_weght"],
-        wodItmWeght: json["wod_itm_weght"],
-        wodOrdSchdDt: json["wod_ord_schd_dt"],
-        wodPdtCtgy: json["wod_pdt_ctgy"],
-        wodPdtId: json["wod_pdt_id"],
-        wodPdtNm: json["wod_pdt_nm"],
-        wodSlId: json["wod_sl_id"],
-        wodQty: json["wod_qty"],
-        wodMrp: json["wod_mrp"],
-        wodSlPrc: json["wod_sl_prc"],
-        wodDisAmt: json["wod_dis_amt"],
-        wodSubsAmt: json["wod_subs_amt"],
-        wodSts: json["wod_sts"],
-        wodSubsCd: json["wod_subs_cd"],
-        wodSubsRedmd: json["wod_subs_redmd"],
-        wodSz: json["wod_sz"],
-        wodTotPrc: json["wod_tot_prc"],
-        wodTxCd: json["wod_tx_cd"],
-        wodCgstPer: json["wod_cgst_Per"]?.toDouble(),
-        wodCgstAmt: json["wod_cgst_amt"]?.toDouble(),
-        wodSgstPer: json["wod_sgst_Per"]?.toDouble(),
-        wodSgstAmt: json["wod_sgst_amt"]?.toDouble(),
-        wodIgstPer: json["wod_igst_Per"]?.toDouble(),
-        wodIgstAmt: json["wod_igst_amt"]?.toDouble(),
-        wodCessPer: json["wod_cess_Per"]?.toDouble(),
-        wodCessAmt: json["wod_cess_amt"]?.toDouble(),
-        wodKfcPer: json["wod_kfc_Per"]?.toDouble(),
-        wodKfcAmt: json["wod_kfc_amt"]?.toDouble(),
-        wodTotTxAmt: json["wod_tot_tx_amt"],
-        wodSycDtTm: json["wod_syc_dt_tm"],
-        wodShpChg: json["wod_shp_chg"],
-        wodNetAmt: json["wod_net_amt"],
-        wodUsrId: json["wod_usr_id"],
-        wodTxId: json["wod_tx_id"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "wod_id": wodId,
-        "wod_cmy_cd": wodCmyCd,
-        "wod_str_cd": wodStrCd,
-        "wod_ord_dt": "${wodOrdDt.year.toString().padLeft(4, '0')}-${wodOrdDt.month.toString().padLeft(2, '0')}-${wodOrdDt.day.toString().padLeft(2, '0')}",
-        "wod_dv_dt": "${wodDvDt.year.toString().padLeft(4, '0')}-${wodDvDt.month.toString().padLeft(2, '0')}-${wodDvDt.day.toString().padLeft(2, '0')}",
-        "wod_ord_num": wodOrdNum,
-        "wod_grnd_tot": wodGrndTot,
-        "wod_is_dltd": wodIsDltd,
-        "wod_itm_tot_weght": wodItmTotWeght,
-        "wod_itm_weght": wodItmWeght,
-        "wod_ord_schd_dt": wodOrdSchdDt,
-        "wod_pdt_ctgy": wodPdtCtgy,
-        "wod_pdt_id": wodPdtId,
-        "wod_pdt_nm": wodPdtNm,
-        "wod_sl_id": wodSlId,
-        "wod_qty": wodQty,
-        "wod_mrp": wodMrp,
-        "wod_sl_prc": wodSlPrc,
-        "wod_dis_amt": wodDisAmt,
-        "wod_subs_amt": wodSubsAmt,
-        "wod_sts": wodSts,
-        "wod_subs_cd": wodSubsCd,
-        "wod_subs_redmd": wodSubsRedmd,
-        "wod_sz": wodSz,
-        "wod_tot_prc": wodTotPrc,
-        "wod_tx_cd": wodTxCd,
-        "wod_cgst_Per": wodCgstPer,
-        "wod_cgst_amt": wodCgstAmt,
-        "wod_sgst_Per": wodSgstPer,
-        "wod_sgst_amt": wodSgstAmt,
-        "wod_igst_Per": wodIgstPer,
-        "wod_igst_amt": wodIgstAmt,
-        "wod_cess_Per": wodCessPer,
-        "wod_cess_amt": wodCessAmt,
-        "wod_kfc_Per": wodKfcPer,
-        "wod_kfc_amt": wodKfcAmt,
-        "wod_tot_tx_amt": wodTotTxAmt,
-        "wod_syc_dt_tm": wodSycDtTm,
-        "wod_shp_chg": wodShpChg,
-        "wod_net_amt": wodNetAmt,
-        "wod_usr_id": wodUsrId,
-        "wod_tx_id": wodTxId,
-    };
-}
-
 class OrderShippingDetail {
     OrderShippingDetail({
         this.wosdId,
@@ -477,7 +297,7 @@ class OrderShippingDetail {
         wosdId: json["wosd_id"],
         wosdOrdNum: json["wosd_ord_num"],
         wosdCmyCd: json["wosd_cmy_cd"],
-        wosdOrdDt: json["wosd_ord_dt"],
+        wosdOrdDt: DateTime.parse(json["wosd_ord_dt"]),
         wosdCty: json["wosd_cty"],
         wosdCy: json["wosd_cy"],
         wosdEmlAds: json["wosd_eml_ads"],

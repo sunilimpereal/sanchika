@@ -356,16 +356,12 @@ class _HomeState extends State<Home> {
                               if (snapshot.hasData) {
                                 List<BannerMaster> banner = snapshot.data;
                                 List<BannerMaster> bannerpos = banner
-                                    .where((element) =>
-                                        element.textLine == "1")
+                                    .where((element) => element.textLine == "1")
                                     .toList();
                                 print("bannerpos $bannerpos");
                                 return HomeCrousal(banners: bannerpos);
                               } else {
-                                const spinkit = SpinKitDoubleBounce(
-                                  color: Color(0xff032e6b),
-                                  size: 50.0,
-                                );
+                              
                                 return Center(
                                   child: Shimmer.fromColors(
                                       baseColor: Colors.grey[300],
@@ -432,7 +428,7 @@ class _HomeState extends State<Home> {
                                 reload: reload,
                               );
                             } else {
-                              return CircularProgressIndicator();
+                              return Productloading();
                             }
                           }),
                       Container(
@@ -466,13 +462,15 @@ class _HomeState extends State<Home> {
                                                         bannerpos = banner
                                                             .where((element) =>
                                                                 element
-                                                                    .textLine == (index+1).toString())
+                                                                    .textLine ==
+                                                                (index + 1)
+                                                                    .toString())
                                                             .toList();
                                                     print(snapshot.data);
-                                                    if(bannerpos !=[]){
-                                                    return HomeCrousal(
-                                                        banners: bannerpos);
-                                                    }else{
+                                                    if (bannerpos != []) {
+                                                      return HomeCrousal(
+                                                          banners: bannerpos);
+                                                    } else {
                                                       return Container();
                                                     }
                                                   } else {
@@ -512,6 +510,57 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+   Widget wishlistloading() {
+    Widget card() {
+      return Container(
+        height: MediaQuery.of(context).size.height * 0.20,
+        width: MediaQuery.of(context).size.width,
+        child: Row(
+          children: [
+            Shimmer.fromColors(
+              baseColor: Colors.grey[300],
+              highlightColor: Colors.white,
+              period: Duration(milliseconds: 1000),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.09,
+                  width: MediaQuery.of(context).size.width * 0.20,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ),
+            Column(
+              children: [
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300],
+                  highlightColor: Colors.white,
+                  period: Duration(milliseconds: 1000),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 15.0),
+                    child: Container(
+                      height: 15,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      children: [card()],
+    );
+  }
+
 
   Padding cardcat({String img, String name}) {
     return Padding(
@@ -629,7 +678,7 @@ class HorizontalRow extends StatelessWidget {
       children: [
         Expanded(
           child: SizedBox(
-             height: MediaQuery.of(context).size.height * .38,
+            height: MediaQuery.of(context).size.height * .38,
             child: ListView.builder(
               cacheExtent: 10000.0,
               dragStartBehavior: DragStartBehavior.start,
@@ -642,8 +691,7 @@ class HorizontalRow extends StatelessWidget {
                 print('wishlist $wishlist');
                 Product product = productList[index];
                 return Container(
-                  child:
-                    ProductCard(
+                  child: ProductCard(
                     product: product,
                     wishlist: wishlist,
                     cartItems: cartItems,
@@ -651,16 +699,149 @@ class HorizontalRow extends StatelessWidget {
                   ),
                   // Padding(
                   //   padding: const EdgeInsets.all(8.0),
-                  //   child: 
+                  //   child:
                   //   Container(
                   //     width: 100,
                   //     height: 100,
                   //     color: Colors.red,
                   //   ),
                   // )
-                 
                 );
               },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class Productloading extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height * .35,
+          width: MediaQuery.of(context).size.width * 0.43,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300],
+                    highlightColor: Colors.white,
+                    period: Duration(milliseconds: 1000),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * .28 * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.45 - 5,
+                      color: Colors.grey,
+                    )),
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Shimmer.fromColors(
+                        baseColor: Colors.grey[300],
+                        highlightColor: Colors.white,
+                        period: Duration(milliseconds: 1000),
+                        child: Container(
+                          height: 20,
+                          width: 110,
+                          color: Colors.grey,
+                        )),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Shimmer.fromColors(
+                        baseColor: Colors.grey[300],
+                        highlightColor: Colors.white,
+                        period: Duration(milliseconds: 1000),
+                        child: Container(
+                          height: 20,
+                          width: 50,
+                          color: Colors.grey,
+                        )),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Container(
+          height: MediaQuery.of(context).size.height * .35,
+          width: MediaQuery.of(context).size.width * 0.43,
+          color: Colors.white,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300],
+                      highlightColor: Colors.white,
+                      period: Duration(milliseconds: 1000),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * .28 * 0.5,
+                        width: MediaQuery.of(context).size.width * 0.45 - 5,
+                        color: Colors.grey,
+                      )),
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Shimmer.fromColors(
+                          baseColor: Colors.grey[300],
+                          highlightColor: Colors.white,
+                          period: Duration(milliseconds: 1000),
+                          child: Container(
+                            height: 20,
+                            width: 110,
+                            color: Colors.grey,
+                          )),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Shimmer.fromColors(
+                          baseColor: Colors.grey[300],
+                          highlightColor: Colors.white,
+                          period: Duration(milliseconds: 1000),
+                          child: Container(
+                            height: 20,
+                            width: 50,
+                            color: Colors.grey,
+                          )),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Shimmer.fromColors(
+                          baseColor: Colors.grey[300],
+                          highlightColor: Colors.white,
+                          period: Duration(milliseconds: 1000),
+                          child: Container(
+                            height: 20,
+                            width: 50,
+                            color: Colors.grey,
+                          )),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),

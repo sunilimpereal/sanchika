@@ -10,6 +10,7 @@ import 'package:sanchika/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rive/rive.dart';
 import 'package:flutter/services.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Wishlist extends StatefulWidget with NavigationStates {
   const Wishlist({Key key, this.onMenuTap, this.onMenuItemClicked})
@@ -44,6 +45,10 @@ class _WishlistState extends State<Wishlist> {
     return cartitems;
   }
 
+  void reload() {
+    setState(() {});
+  }
+
   Artboard _riveArtboard;
   RiveAnimationController _controller;
 
@@ -51,7 +56,7 @@ class _WishlistState extends State<Wishlist> {
   void initState() {
     super.initState();
     getUserId().then((value) {
-        getCart(value);
+      getCart(value);
     });
     apiService = APIService();
     print(userId);
@@ -71,12 +76,6 @@ class _WishlistState extends State<Wishlist> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  reload() {
-    setState(() {
-      userId = userId;
-    });
   }
 
   @override
@@ -160,9 +159,7 @@ class _WishlistState extends State<Wishlist> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   WishlistItem item = snapshot.data[index];
-                  return
-                  
-                  WishlistCard(
+                  return WishlistCard(
                     productId: item.productId,
                     cartItems: cartItems,
                     notifyParent: reload,
@@ -196,33 +193,78 @@ class _WishlistState extends State<Wishlist> {
                       Text(
                         'No Items In Wishlist',
                         style: TextStyle(
-                          color: Colors.blue.shade400,
-                          fontSize: 27,
-                          fontWeight: FontWeight.w600,
-                        ),
+                            color: Colors.blue.shade400,
+                            fontSize: 27,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Poppins'),
                       ),
                       SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Explore More'),
-                      )
+                      // ElevatedButton(
+                      //   onPressed: () {},
+                      //   child: Text('Explore More'),
+                      // )
                     ],
                   ),
                 ),
               );
             }
           } else {
-            const spinkit = SpinKitDoubleBounce(
-              color: Color(0xff032e6b),
-              size: 50.0,
-            );
-            return Center(child: spinkit);
+            return wishlistloading();
           }
         },
       )),
     );
   }
-   InkWell leading() {
+
+  Widget wishlistloading() {
+    Widget card() {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.20,
+          width: MediaQuery.of(context).size.width,
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey[300],
+            highlightColor: Colors.white,
+            period: Duration(milliseconds: 1000),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.09,
+                width: MediaQuery.of(context).size.width * 0.20,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ),
+          // Column(
+          //   children: [
+          //     Shimmer.fromColors(
+          //       baseColor: Colors.grey[300],
+          //       highlightColor: Colors.white,
+          //       period: Duration(milliseconds: 1000),
+          //       child: Padding(
+          //         padding: const EdgeInsets.only(top: 15.0),
+          //         child: Container(
+          //           height: 15,
+          //           width: 80,
+          //           decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.circular(10),
+          //           ),
+          //         ),
+          //       ),
+          //     )
+          //   ],
+          // )
+        ),
+      );
+    }
+
+    return card();
+  }
+
+  InkWell leading() {
     if (widget.onMenuTap == null) {
       return InkWell(
         child: Icon(Icons.keyboard_arrow_left, color: Colors.black),

@@ -42,7 +42,7 @@ class _HomeCtgState extends State<HomeCtg> {
         return HorizontalRow(productList: snapshot.data,);
         }
         else{
-          return Center(child: CircularProgressIndicator());
+          return Productloading();
         } 
       }),
   );

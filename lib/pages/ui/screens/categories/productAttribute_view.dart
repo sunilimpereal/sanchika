@@ -38,7 +38,12 @@ class _ProductAttributeState extends State<ProductAttribute> {
       });
     });
   }
-
+  void reload(){
+    print('reloaded saw');
+    setState(() {
+      
+    });
+  }
   String userId;
   Future<String> getUserId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -122,19 +127,56 @@ class _ProductAttributeState extends State<ProductAttribute> {
               ),
             ),
             actions: [
-              IconButton(
-                padding: EdgeInsets.only(top: 0),
-                icon: Icon(
-                  Icons.favorite_rounded,
-                  color: Color(0xff032e6b).withAlpha(180),
-                  size: 24,
-                ),
-                onPressed: () {
-                  Navigator.push(
+                        Stack(
+                children: [
+                  IconButton(
+                    padding: EdgeInsets.only(top: 0),
+                    icon: Icon(
+                      Icons.favorite_rounded,
+                      color: Color(0xff032e6b).withAlpha(180),
+                      size: 24,
+                    ),
+                    onPressed: () {
+                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Wishlist()),
                   );
-                },
+                      // widget.onMenuItemClicked();
+                    },
+                  ),
+                  FutureBuilder(
+                      future: apiService.countWishlist(userId),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          if (int.parse(snapshot.data) > 0) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, left: 25),
+                              child: Container(
+                                height: 18,
+                                width: 18,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xff032e6b),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    snapshot.data,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            return SizedBox();
+                          }
+                        } else {
+                          return SizedBox();
+                        }
+                      }),
+                ],
               ),
               Stack(
                 children: [
@@ -295,6 +337,7 @@ class _ProductAttributeState extends State<ProductAttribute> {
                         productList: products,
                         type: type,
                         cartItems: cartItems,
+                        reload: reload,
                       );
                     } else {
                       return Center(child: CircularProgressIndicator());
@@ -314,7 +357,8 @@ class ShowProducts extends StatefulWidget {
   final List<Product> productList;
   List<CartItem> cartItems;
   String type;
-  ShowProducts({this.productList, this.type, this.cartItems});
+  Function reload;
+  ShowProducts({this.productList, this.type, this.cartItems,this.reload});
   @override
   _ShowProductsState createState() => _ShowProductsState();
 }
@@ -345,6 +389,9 @@ class _ShowProductsState extends State<ShowProducts> {
             .compareTo(double.parse(b?.slPrc ?? '0')));
       });
     }
+  }
+  void reload1(){
+  widget.reload();
   }
 
   List<String> filter = [
@@ -383,6 +430,7 @@ class _ShowProductsState extends State<ShowProducts> {
             child: ProductCard(
               product: widget.productList[index],
               cartItems: widget.cartItems,
+              reload: reload1,
             ),
           );
         });

@@ -143,18 +143,29 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             Container(
                               child: TextFormField(
+                                   textInputAction: TextInputAction.next,
                                 onTap: () {
                                   Timer(
-                                    Duration(milliseconds: 500),
+                                    Duration(milliseconds: 10),
                                     () => controller.jumpTo(
                                         controller.position.maxScrollExtent -
                                             20),
                                   );
                                 },
+                                
                                 decoration: InputDecoration(
+                                    focusedBorder: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: new BorderSide(
+                                      color: Color(0xff032E6B),
+                                    ),
+                                  ),
                                    isDense: true,
                                   contentPadding: EdgeInsets.all(15),
                                   labelText: 'Email',
+                                  labelStyle: TextStyle(
+                                    color: Color(0xff032E6B)
+                                  ),
                                   fillColor: Colors.white,
                                   border: new OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
@@ -182,13 +193,15 @@ class _LoginPageState extends State<LoginPage> {
                             SizedBox(
                               height: ScreenUtil.getInstance().setHeight(25),
                             ),
-                            Container(
-                              child: TextFormField(
+                         TextFormField(
                                 obscureText: _obscureText,
                                 decoration: InputDecoration(
                                   isDense: true,
                                   contentPadding: EdgeInsets.all(15),
                                   labelText: 'Password',
+                                  labelStyle: TextStyle(
+                                    color: Color(0xff032E6B)
+                                  ),
                                   fillColor: Colors.white,
                                   focusedBorder: new OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
@@ -236,7 +249,7 @@ class _LoginPageState extends State<LoginPage> {
                                   fontFamily: 'Poppins',
                                 ),
                               ),
-                            ),
+                            
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -297,6 +310,7 @@ class _LoginPageState extends State<LoginPage> {
                                 child: Material(
                                   color: Colors.transparent,
                                   child: InkWell(
+                                    splashColor:  Color(0xff032E6B),
                                     onTap: () {
                                       //Login Button
                                       if (validateAndSave()) {
@@ -315,6 +329,8 @@ class _LoginPageState extends State<LoginPage> {
                                                     .getInstance();
                                             preferences.setString(
                                                 'login', 'logged');
+                                                 preferences.setString(
+                                                'custId', value.data.login.userCtGrp);
                                             preferences.setString(
                                                 'email', requestModel.email);
 

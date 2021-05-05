@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sanchika/main.dart';
 import 'package:sanchika/model/signUp_model.dart';
 import 'package:sanchika/pages/ui/widget/admin_wait.dart';
+import 'package:sanchika/pages/ui/widget/otp.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:sanchika/utils/progressHUD.dart';
 
@@ -22,6 +23,7 @@ class _SignUpBoxState extends State<SignUpBox> {
   FocusNode node = new FocusNode();
   APIService apiService;
   bool isApiCallProcess = false;
+  String confirmPass='';
   bool _obscureText = false;
   double load = 0;
   void _toggle() {
@@ -272,7 +274,7 @@ class _SignUpBoxState extends State<SignUpBox> {
                     return null;
                   }
                 },
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.phone,
                 style: new TextStyle(fontFamily: 'Poppins', fontSize: 14),
               ),
             ),
@@ -441,13 +443,19 @@ class _SignUpBoxState extends State<SignUpBox> {
                       }),
                 ),
                 onChanged: (val) {
-                  setState(() {});
+                  setState(() {
+                    confirmPass = val;
+                  });
                 },
                 validator: (val) {
                   if (val.length == 0) {
                     return 'Password cannot be empty';
                   } else {
+                    if(val != requestModel.password){
+                      return 'Password does not match';
+                    }else{
                     return null;
+                    }
                   }
                 },
                 keyboardType: TextInputType.visiblePassword,
@@ -663,17 +671,21 @@ class _SignUpBoxState extends State<SignUpBox> {
                             isApiCallProcess = true;
                             load = 1;
                           });
-
                           APIService apiService = APIService();
-                          apiService.register(requestModel).then((value) {
+                          apiService.getotp(requestModel.mobile).then((value) {
                             if (value != null) {
                               setState(() {
                                 isApiCallProcess = true;
                               });
-                              Navigator.pushReplacement(
+
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => AdminWait()),
+                                    builder: (context) => Otp(
+                                          otp: value,
+                                          requestModel: requestModel,
+                                          mobileNumber: requestModel.mobile,
+                                        )),
                               );
                             } else {
                               showDialog<void>(
@@ -706,6 +718,8 @@ class _SignUpBoxState extends State<SignUpBox> {
                               });
                             }
                           });
+
+               
                         }
                       },
                       child: Text('SIGN UP')),

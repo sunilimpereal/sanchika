@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sanchika/menu_dashboard/menu_dashboard.dart';
+import 'package:sanchika/model/login_model.dart';
+import 'package:sanchika/pages/authentication/login_page.dart';
 
 class AdminWait extends StatefulWidget {
   @override
@@ -14,27 +16,40 @@ class _AdminWaitState extends State<AdminWait> {
       body: Container(
         child: Column(
           children: [
-            Container(
-              width: 550,
-              height: 400,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/wait1.png'),
-                      fit: BoxFit.cover)),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: MediaQuery.of(context).size.width - 30,
+                height: 300,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/images/wait1.png'),
+                        fit: BoxFit.cover)),
+              ),
             ),
+            SizedBox(height:10),
+             Text(
+              'Thank You For Signing Up',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 28),
+            ),
+            SizedBox(height:20),
             Text(
-              'Hang on for admin approval',
+              'Hang on for Admin approval',
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 35),
+                  fontSize: 30),
             ),
             SizedBox(
               height: 20,
             ),
             Text(
-              'we\'ll notify you once admin approves',
+              'we\'ll notify you once Admin approves',
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: Colors.grey,
@@ -44,7 +59,28 @@ class _AdminWaitState extends State<AdminWait> {
             SizedBox(
               height: 20,
             ),
-
+            Container(
+              width: 120,
+              height: 50,
+              child: ElevatedButton(
+                  onPressed: () {
+                        Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage(
+                                      )),
+                            );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.keyboard_arrow_left),
+                      Text('login  ',style: TextStyle(
+                        fontSize: 18
+                      ),),
+                    ],
+                  )),
+            )
             // ignore: deprecated_member_use
             // ElevatedButton(
             //   onPressed: () {

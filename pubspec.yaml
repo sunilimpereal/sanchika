@@ -64,6 +64,7 @@ dependencies:
   razorpay_flutter: ^1.1.1
   fluttertoast: ^6.0.1
   google_fonts: ^1.1.2
+  url_launcher:
 dev_dependencies:
   flutter_test:
     sdk: flutter

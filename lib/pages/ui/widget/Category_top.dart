@@ -6,6 +6,8 @@ import 'package:sanchika/pages/ui/widget/categories_home_card.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'dart:math';
 
+import 'package:shimmer/shimmer.dart';
+
 class Category_top extends StatefulWidget {
   List<CtgyNameAndId> ctgNameandId;
   Category_top({this.ctgNameandId});
@@ -105,7 +107,15 @@ class _Category_topState extends State<Category_top> {
                     }),
               );
             } else {
-              return CircularProgressIndicator();
+              return SingleChildScrollView(
+                child: Row(
+                  children: [
+                    cardLoading(),
+                    cardLoading(),
+                 
+                  ],
+                ),
+              );
             }
           }),
     );
@@ -159,6 +169,70 @@ class _Category_topState extends State<Category_top> {
                         fontWeight: FontWeight.w500,
                         color: Colors.black),
                   ),
+                )),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget cardLoading() {
+    return GestureDetector(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.07,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                offset: const Offset(1.0, 1.0),
+                color: Colors.grey[300],
+                blurRadius: 1.0,
+                spreadRadius: 0.2,
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300],
+                highlightColor: Colors.white,
+                period: Duration(milliseconds: 1000),
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  height: MediaQuery.of(context).size.height * 0.07,
+                  width: MediaQuery.of(context).size.width * 0.4 * 0.4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(20),
+                    // image: DecorationImage(
+                    //   image: NetworkImage(
+                    //       'http://sanchika.in:8082/sanchika/img/testing/dept/${categoryAttribute.categoryId}.png'),
+                    //   fit: BoxFit.cover,
+                    // ),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(5.0),
+                height: MediaQuery.of(context).size.height * 0.07,
+                decoration: BoxDecoration(),
+                child: Center(
+                    child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300],
+                      highlightColor: Colors.white,
+                      period: Duration(milliseconds: 1000),
+                      child: Container(
+                        height: 15,
+                        width: 30,
+                        color: Colors.grey,
+                      )),
                 )),
               )
             ],

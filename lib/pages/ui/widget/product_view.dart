@@ -20,6 +20,7 @@ import 'package:readmore/readmore.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:translator/translator.dart';
 
 class ProductView extends StatefulWidget {
   final Product product;
@@ -52,6 +53,24 @@ class _ProductViewState extends State<ProductView> {
       }
     }
   }
+  SharedPreferences preferences;
+    dynamic name = '';
+  void getname(Product product) async {
+    preferences = await SharedPreferences.getInstance();
+    final translator = GoogleTranslator();
+    if(preferences.getString('language') == 'malayalam'){
+    translator.translate(widget.product.pdmPdtNm, to: 'ml').then((result) {
+      setState(() {
+        name =result.text;
+      });
+    });
+    }else{
+      setState(() {
+        name = widget.product.pdmPdtNm;
+      });
+    }
+
+  }
 
   String userId;
   Future<String> getUserId() async {
@@ -68,6 +87,7 @@ class _ProductViewState extends State<ProductView> {
     checkCart();
     getUserId();
     super.initState();
+    getname(widget.product);
   }
 
   ButtonState stateTextWithIcon = ButtonState.idle;
@@ -89,7 +109,7 @@ class _ProductViewState extends State<ProductView> {
         ),
         titleSpacing: 0,
         title: Text(
-          widget.product.pdmPdtNm,
+          name,
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.normal,
@@ -225,7 +245,7 @@ class _ProductViewState extends State<ProductView> {
                     Container(
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: Text(
-                        widget.product.pdmPdtNm,
+                        name,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

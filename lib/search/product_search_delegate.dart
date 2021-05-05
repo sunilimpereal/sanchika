@@ -199,13 +199,7 @@ class SearchResult extends StatefulWidget {
 
 class _SearchResultState extends State<SearchResult> {
   APIService apiService = new APIService();
-  Future getProductListHo() async {
-    List<Product> productList = null;
-    await apiService.getAllProducts();
-    print('i am home');
-    print(productList);
-    return productList;
-  }
+
 
   Future<List<String>> addRecentSearch(String add) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -229,13 +223,13 @@ class _SearchResultState extends State<SearchResult> {
     if (type == 'Price High to Low') {
       setState(() {
         productList.sort((b, a) =>
-            double.parse(a.slPrc).compareTo(double.parse(b.slPrc)));
+            double.parse(a?.slPrc??'0').compareTo(double.parse(b?.slPrc??'0')));
       });
     }
     if (type == 'Price Low to High') {
       setState(() {
         productList.sort((a, b) =>
-            double.parse(a.slPrc).compareTo(double.parse(b.slPrc)));
+            double.parse(a?.slPrc??'0').compareTo(double.parse(b?.slPrc??'0')));
       });
     }
   }
@@ -260,6 +254,7 @@ class _SearchResultState extends State<SearchResult> {
   @override
   Widget build(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
+    filterProducts(productList:widget.productList,type: type);
 
     return Column(
       children: [
@@ -352,6 +347,9 @@ class _SearchResultState extends State<SearchResult> {
                                               return ListTile(
                                                 onTap: () {
                                                   type = filter[index];
+                                                   setState(() {
+                                                type = filter[index];
+                                              });
                                                   filterProducts(
                                                       productList:
                                                           widget.productList,

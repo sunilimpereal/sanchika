@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:sanchika/model/addToCart_model.dart';
 import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/model/product.dart';
@@ -70,8 +71,10 @@ class _ProductCardState extends State<ProductCard>
   //Animation for button
   bool incart = false;
   String userId;
+  SharedPreferences preferences;
   Future<String> getUserId() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences = await SharedPreferences.getInstance();
+
     String uid = preferences.getString('userId');
     setState(() {
       userId = uid;
@@ -88,12 +91,32 @@ class _ProductCardState extends State<ProductCard>
     }
   }
 
+  dynamic name = '';
+  void getname(Product product) async {
+    preferences = await SharedPreferences.getInstance();
+    final translator = GoogleTranslator();
+    if(preferences.getString('language') == 'malayalam'){
+    translator.translate(widget.product.pdmPdtNm, to: 'ml').then((result) {
+      setState(() {
+        name =result.text;
+      });
+    });
+    }else{
+      setState(() {
+        name = widget.product.pdmPdtNm;
+      });
+    }
+
+  }
+
   @override
   void initState() {
+    name = widget.product.pdmPdtNm;
     super.initState();
     getUserId();
     print(widget.product.pdmPdtId);
     checkCart();
+    getname(widget.product);
   }
 
   //dispose for animation
@@ -106,31 +129,21 @@ class _ProductCardState extends State<ProductCard>
 
   @override
   Widget build(BuildContext context) {
-    bool isInWishlist = false;
-    return FutureBuilder(
-      future: translate(widget.product),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          for (WishlistItem item in widget.wishlist ?? []) {
-            print('checking');
-            if (item.productId == snapshot.data.pdmPdtId) {
-              print('present');
-              return _cardUi(
-                  context: context, product: snapshot.data, inwishlist: true);
-            }
-          }
-          return _cardUi(
-              context: context,
-              product: snapshot.data,
-              inwishlist: isInWishlist);
-        } else {
-          return Container();
-        }
-      },
-    );
+    for (WishlistItem item in widget.wishlist ?? []) {
+      print('checking');
+      if (item.productId == widget.product.pdmPdtId) {
+        print('present');
+        return _cardUi(
+            context: context, product: widget.product, inwishlist: true);
+      } else {
+        return _cardUi(
+            context: context, product: widget.product, inwishlist: false);
+      }
+    }
+    return _cardUi(
+        context: context, product: widget.product, inwishlist: false);
   }
 
-  @override
   Widget _cardUi({BuildContext context, Product product, bool inwishlist}) {
     return Material(
       child: Container(
@@ -220,7 +233,7 @@ class _ProductCardState extends State<ProductCard>
                                         Container(
                                           width: double.maxFinite,
                                           child: Text(
-                                            product.pdmPdtNm,
+                                            name,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
                                             style: TextStyle(
@@ -290,7 +303,7 @@ class _ProductCardState extends State<ProductCard>
                                 .addToWishlist(addWishlistRequest)
                                 .then((value) {
                               if (value == true) {
-                                widget.reload;
+                                widget.reload();
                                 setState(() {
                                   inwishlist = true;
                                 });
@@ -467,6 +480,7 @@ class _ProductCardState extends State<ProductCard>
           if (value == true) {
             setState(() {
               stateTextWithIcon = ButtonState.success;
+              widget.reload();
             });
             setState(() {
               incart = true;

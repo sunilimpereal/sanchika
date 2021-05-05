@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sanchika/model/product.dart';
+import 'package:sanchika/pages/ui/widget/product_view.dart';
 import 'package:sanchika/pages/ui/widget/stepper.dart';
 import 'package:sanchika/services/api_service.dart';
-import 'package:sanchika/utils/numericStepButton.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CartCard extends StatefulWidget {
   final String productId;
@@ -40,11 +40,26 @@ class _CartCardState extends State<CartCard> {
         if (snapshot.hasData) {
           return cartCardUi(context, snapshot.data);
         } else {
-          const spinkit = SpinKitDoubleBounce(
-            color: Color(0xff032e6b),
-            size: 50.0,
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.158 + 15,
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                children: [
+                  Shimmer.fromColors(
+                      baseColor: Colors.grey[300],
+                      highlightColor: Colors.white,
+                      period: Duration(milliseconds: 1000),
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        height: MediaQuery.of(context).size.height * 0.15,
+                        width: MediaQuery.of(context).size.width * 0.26,
+                      ))
+                ],
+              ),
+            ),
           );
-          return Center(child: spinkit);
         }
       },
     );
@@ -52,164 +67,178 @@ class _CartCardState extends State<CartCard> {
 
   @override
   Widget cartCardUi(BuildContext context, Product product) {
-    return Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(
-            width: 1,
-            color: Colors.white,
-          ))),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  SizedBox(),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.158 + 15,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.white,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Stack(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(8.0),
-                                height:
-                                    MediaQuery.of(context).size.height * 0.15,
-                                width: MediaQuery.of(context).size.width * 0.26,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                    image: NetworkImage(
-                                      product?.pdmIm1 ?? '',
-                                    ),
-                                    fit: BoxFit.fill,
-                                  )),
-                                ),
-                              ),
-                              discount(
-                                  mrp: double.parse(product?.mrpPr ?? '0'),
-                                  slp: double.parse(product?.slPrc??'0')),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Container(
-                            color: Colors.white,
-                            width: MediaQuery.of(context).size.width * 0.65,
-                            child: Column(
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProductView(
+             inWishlist: true,
+                    product: product,
+                    userId: widget.userId,
+                
+          )),
+        );
+      },
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(
+              width: 1,
+              color: Colors.white,
+            ))),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    SizedBox(),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.158 + 15,
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.white,
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Stack(
                               children: [
                                 Container(
-                                  padding: EdgeInsets.all(0),
+                                  padding: const EdgeInsets.all(3.0),
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.15,
                                   width:
-                                      MediaQuery.of(context).size.width * 0.65,
-                                  height: 60,
-                                  color: Colors.white,
+                                      MediaQuery.of(context).size.width * 0.26,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                                   child: Container(
-                                    padding: EdgeInsets.only(top: 15),
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                      image: NetworkImage(
+                                        product?.pdmIm1 ?? '',
+                                      ),
+                                      fit: BoxFit.contain,
+                                    )),
+                                  ),
+                                ),
+                                discount(
+                                    mrp: double.parse(product?.mrpPr ?? '0'),
+                                    slp: double.parse(product?.slPrc ?? '0')),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Container(
+                              color: Colors.white,
+                              width: MediaQuery.of(context).size.width * 0.65,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(0),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.65,
+                                    height: 60,
+                                    color: Colors.white,
+                                    child: Container(
+                                      padding: EdgeInsets.only(top: 15),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.65,
+                                            child: Text(
+                                              product?.pdmPdtNm,
+                                              maxLines: 2,
+                                              style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.all(0),
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.8,
+                                    height: 45,
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.65,
-                                          child: Text(
-                                            product?.pdmPdtNm,
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                              fontFamily: 'Poppins',
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "₹${product?.slPrc ?? 0}",
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                             ),
-                                          ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            price1(double.parse(
+                                                product.mrpPr ?? '0')),
+                                          ],
                                         ),
+                                        Container(
+                                          child: Container(
+                                              color: Colors.transparent,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.3,
+                                              child: StepperTouch(
+                                                initialValue: 1,
+                                                direction: Axis.horizontal,
+                                                withSpring: true,
+                                                onChanged: (int value) {},
+                                              )),
+                                        )
                                       ],
                                     ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(0),
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  height: 45,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "₹${product?.slPrc??0}",
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          price1(
-                                              double.parse(product.mrpPr??'0')),
-                                        ],
-                                      ),
-                                      Container(
-                                        child: Container(
-                                            color: Colors.transparent,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.3,
-                                            child: StepperTouch(
-                                              initialValue: 1,
-                                              direction: Axis.horizontal,
-                                              withSpring: true,
-                                              onChanged: (int value) {},
-                                            )),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ],
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-        Positioned(
-            top: -10,
-            right: -5,
-            child: IconButton(
-              icon: Icon(
-                Icons.clear,
-                color: Colors.grey,
-                size: 18,
-              ),
-              onPressed: () {
-                removeCartitem(uid: widget.userId, pid: widget.productId);
-              },
-            ))
-      ],
+          Positioned(
+              top: -10,
+              right: -5,
+              child: IconButton(
+                icon: Icon(
+                  Icons.clear,
+                  color: Colors.grey,
+                  size: 18,
+                ),
+                onPressed: () {
+                  removeCartitem(uid: widget.userId, pid: widget.productId);
+                },
+              ))
+        ],
+      ),
     );
   }
 

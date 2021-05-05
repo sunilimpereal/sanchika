@@ -10,6 +10,7 @@ import 'package:sanchika/pages/ui/screens/orders/checkout.dart';
 import 'package:sanchika/pages/ui/widget/cart_card.dart';
 import 'package:sanchika/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Cart extends StatefulWidget with NavigationStates {
   final Function onMenuTap;
@@ -67,7 +68,7 @@ class _CartState extends State<Cart> {
       getCartTotal(value);
     });
     super.initState();
-    rootBundle.load('assets/rive/wishlist.riv').then((value) async {
+    rootBundle.load('assets/rive/emptycart.riv').then((value) async {
       final file = RiveFile();
       if (file.import(value)) {
         final artboard = file.mainArtboard;
@@ -89,6 +90,7 @@ class _CartState extends State<Cart> {
     }
 
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: leading(),
@@ -186,6 +188,22 @@ class _CartState extends State<Cart> {
                     }),
               ],
             ),
+            IconButton(
+                padding: EdgeInsets.only(bottom:10),
+                icon: Icon(
+                  Icons.remove_shopping_cart,
+                  color: Color(0xff032e6b),
+                       size: 24,
+                ),
+                onPressed: () {
+                  apiService.clearCartItem(userId: userId).then((value) {
+                    if(value!=null){
+                      setState(() {
+                        
+                      });
+                    }
+                  });
+                })
           ],
         ),
         body: FutureBuilder(
@@ -194,24 +212,72 @@ class _CartState extends State<Cart> {
             List<CartItem> cartitems = snapshot.data;
 
             if (snapshot.hasData) {
-              return ListView.builder(
-                  cacheExtent: 100000,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    CartItem cartItem = snapshot.data[index];
-                    return CartCard(
-                      userId: userId,
-                      productId: cartItem.productId,
-                      qty: cartItem.quantity,
-                      notifyParent: reload,
-                    );
-                  });
+              if (snapshot.data.length != 0) {
+                return ListView.builder(
+                    cacheExtent: 100000,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      CartItem cartItem = snapshot.data[index];
+                      return CartCard(
+                        userId: userId,
+                        productId: cartItem.productId,
+                        qty: cartItem.quantity,
+                        notifyParent: reload,
+                      );
+                    });
+              } else {
+                return Center(
+                  child: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(bottom: 30.0, right: 30),
+                          child: Container(
+                              height: 250,
+                              child: _riveArtboard == null
+                                  ? const SizedBox()
+                                  : Rive(
+                                      artboard: _riveArtboard,
+                                      fit: BoxFit.contain,
+                                    )),
+                        ),
+                        Text(
+                          'No Items In Cart',
+                          style: TextStyle(
+                              color: Colors.blue.shade400,
+                              fontSize: 27,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Poppins'),
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                    ),
+                  ),
+                );
+              }
             } else {
-              const spinkit = SpinKitDoubleBounce(
-                color: Color(0xff032e6b),
-                size: 50.0,
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.158 + 15,
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    children: [
+                      Shimmer.fromColors(
+                          baseColor: Colors.grey[300],
+                          highlightColor: Colors.white,
+                          period: Duration(milliseconds: 1000),
+                          child: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            height: MediaQuery.of(context).size.height * 0.15,
+                            width: MediaQuery.of(context).size.width * 0.26,
+                          ))
+                    ],
+                  ),
+                ),
               );
-              return Center(child: spinkit);
             }
           },
         ),
@@ -221,117 +287,116 @@ class _CartState extends State<Cart> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<CartItem> cartitems = snapshot.data;
-                if(cartitems.length>0){
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        offset: const Offset(3.0, 2.0),
-                        color: Colors.grey[400],
-                        blurRadius: 3.0,
-                        spreadRadius: 2.0,
-                      ),
-                    ],
-                  ),
-                  width: MediaQuery.of(context).size.width,
-                  height: 55,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 4.0, bottom: 3, top: 3),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.35,
-                          height: 45,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                          ),
-                          child: Center(
-                            child: Text(
-                              "₹$cartTotal",
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600,
+                if (cartitems.length > 0) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          offset: const Offset(3.0, 2.0),
+                          color: Colors.grey[400],
+                          blurRadius: 3.0,
+                          spreadRadius: 2.0,
+                        ),
+                      ],
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    height: 55,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 4.0, bottom: 3, top: 3),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.35,
+                            height: 45,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "₹$cartTotal",
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      FutureBuilder(
-                        future: getCart(userId),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Checkoutpage(
-                                            cartItems: snapshot.data,
-                                          )),
-                                );
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 0.0, bottom: 3, top: 3),
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.55,
-                                  height: 45,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Color(0xff0b3666),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        offset: const Offset(3.0, 2.0),
-                                        color: Colors.grey[200],
-                                        blurRadius: 3.0,
-                                        spreadRadius: 2.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Icon(
-                                            Icons.shopping_cart_outlined,
-                                            color: Colors.white70,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Checkout',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
-                                          ),
+                        FutureBuilder(
+                          future: getCart(userId),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Checkoutpage(
+                                              cartItems: snapshot.data,
+                                            )),
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 0.0, bottom: 3, top: 3),
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.55,
+                                    height: 45,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Color(0xff0b3666),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          offset: const Offset(3.0, 2.0),
+                                          color: Colors.grey[200],
+                                          blurRadius: 3.0,
+                                          spreadRadius: 2.0,
                                         ),
                                       ],
                                     ),
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Icon(
+                                              Icons.shopping_cart_outlined,
+                                              color: Colors.white70,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Checkout',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              }else{
-                return Container();
-              }
-              
-              }else{
+                              );
+                            } else {
+                              return Container();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              } else {
                 return Container();
               }
             }));
@@ -387,7 +452,7 @@ class _CartState extends State<Cart> {
       return InkWell(
         child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
         onTap: () {
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         },
       );
     }

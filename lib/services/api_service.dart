@@ -11,15 +11,14 @@ import 'package:sanchika/model/addRating.dart';
 import 'package:sanchika/model/addToCart_model.dart';
 import 'package:sanchika/model/cart_model.dart';
 import 'package:sanchika/model/ctg_secondAttribute_model.dart';
-import 'package:sanchika/model/getAddresss_model.dart';
 import 'package:sanchika/model/getAllRatingReview_model.dart';
 import 'package:sanchika/model/getCatg_model.dart';
+import 'package:sanchika/model/getOfferByCustId.dart';
 import 'package:sanchika/model/getProductAttribute_model.dart';
 import 'package:sanchika/model/getProductDetail_model.dart';
 import 'package:sanchika/model/getShippingDetail.dart';
 import 'package:sanchika/model/killerOffer.dart';
 import 'dart:convert';
-
 import 'package:sanchika/model/login_model.dart';
 import 'package:sanchika/model/multiitemSaveOrder.dart';
 import 'package:sanchika/model/myInformation.dart';
@@ -39,10 +38,14 @@ class APIService {
   String baseurl = "http://sanchika.in:8081/sanchikaapi//sanchika/user/";
   Map<String, String> headerList = {
     "Content-Type": "application/json",
-    "Accept": "*/*",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "Accept-Encoding": "gzip, deflate, br",
     "Connection": "keep-alive",
-    "Keep-Alive": "timeout=0",
+    "Keep-Alive": "timeout=20",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Transfer-Encoding":"chunked",
+    
+    
   };
 
   // Fect data api
@@ -140,7 +143,7 @@ class APIService {
   }
 
   Future<String> getotp(String mobileNumber) async {
-    String url = "http://sanchika.in//sanchikaapi/sanchika/user/genrateotp";
+    String url = "http://sanchika.in:8081/sanchikaapi/sanchika/user/genrateotp";
     final response = await http.post(url,
         headers: headerList,
         body: jsonEncode(<String, String>{"mobileNumber": "$mobileNumber"}));
@@ -375,6 +378,21 @@ class APIService {
     }
   }
 
+  //Clear cart
+    Future<bool> clearCartItem({String userId}) async {
+    String url =
+        "http://sanchika.in:8081/sanchikaapi/sanchika/user/cart/clear-cart?uid=$userId";
+
+    final response = await http.get(url, headers: headerList);
+
+    print('clear CartItem : ${response.statusCode} ${userId}');
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   //Get cart langth
   Future<String> cartlength({String uid}) async {
     String url =
@@ -399,7 +417,8 @@ class APIService {
     String url =
         "http://sanchika.in:8081/sanchikaapi/sanchika/user/searchAPI?nameOrId=$productId";
     final response = await http.get(url, headers: headerList);
-    print('ProductDetail response: ${response.statusCode}');
+     print('ProductDetail response: ${productId}');
+    print('ProductDetail response: ${response.body}');
     if (response.statusCode == 200) {
       GetProductDetail getProductDetail =
           getProductDetailFromJson(response.body);
@@ -514,8 +533,8 @@ class APIService {
     print('cap Id :$capId');
     String url =
         "http://sanchika.in:8081/sanchikaapi/sanchika/user/getProductAttribute?capId=$capId";
-    final response = await http.get(url);
-    print('getProduct Attribute :${response.statusCode}');
+    final response = await http.get(url,headers: headerList);
+    print('getProduct Attribute :${response.body}');
     if (response.statusCode == 200) {
       GetProductAttribute getProductAttribute =
           getProductAttributeFromJson(response.body);
@@ -668,6 +687,37 @@ class APIService {
       return true;
     } else {
       return false;
+    }
+  }
+  //Get Offer By CustomerID
+    Future<List<OfferItem>> getOffersBycustId(String custmId) async {
+    String url =
+        "http://sanchika.in:8081/sanchikaapi/sanchika/user/offer/get-offer-by-cust-id?custCatgyId=$custmId";
+    final response = await http.get( 
+      url,
+    );
+    print("Get Offer By CustId= ${response.body}");
+    if (response.statusCode == 200) {
+      GetOffersByCustCtg getOffersByCustCtg =getOffersByCustCtgFromJson(response.body);
+      List<OfferItem> offerItemList = getOffersByCustCtg.data.getOffer;
+      return offerItemList;
+    } else {
+      return [];
+    
+    }
+  }
+      Future<int> updateCartItem(String custmId) async {
+    String url =
+        "http://sanchika.in:8081/sanchikaapi/sanchika/user/cart/updateCartProductQuantity";
+    final response = await http.get( 
+      url,
+    );
+    print("Update cart item Qty= ${response.body}");
+    if (response.statusCode == 200) {
+
+    } else {
+      return 0;
+    
     }
   }
 }
